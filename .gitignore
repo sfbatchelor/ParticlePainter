@@ -1,0 +1,23 @@
+*.jpg
+*.png
+#Ignore files built by Visual Studio
+*.user
+*.aps
+*.pch
+*.vspscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.bak
+*.cache
+*.ilk
+*.log
+[Dd]ebug*/
+*.sbr
+*/obj/
+Application/obj/
+[Rr]elease*/
+_ReSharper*/
+*.pdb
+*/bin/
