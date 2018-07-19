@@ -191,10 +191,12 @@ rd /s /q "obj\$(Configuration)\"</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Content.h" />
+    <ClInclude Include="ContentLoader.h" />
     <ClInclude Include="ShaderWatcher.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Content.cpp" />
+    <ClCompile Include="ContentLoader.cpp" />
     <ClCompile Include="ShaderWatcher.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

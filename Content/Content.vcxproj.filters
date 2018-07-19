@@ -15,18 +15,24 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Content.h">
+    <ClInclude Include="ShaderWatcher.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ShaderWatcher.h">
+    <ClInclude Include="ContentLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Content.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Content.cpp">
+    <ClCompile Include="ShaderWatcher.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ShaderWatcher.cpp">
+    <ClCompile Include="ContentLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Content.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

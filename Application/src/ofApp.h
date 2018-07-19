@@ -1,6 +1,6 @@
 #pragma once
 #include "ofMain.h"
-#include "Content.h"
+#include "ContentLoader.h"
 #include "Filewatcher.h"
 
 struct WindowsContentCode
