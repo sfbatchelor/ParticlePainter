@@ -1,11 +1,12 @@
 #include "Content.h"
+#include <GLFW\glfw3.h>
 
 
 Content::Content(std::shared_ptr<ofMainLoop> mainLoop)
 {
 	s_loop = mainLoop;
 	ofSetMainLoop(mainLoop);
-	
+	ofSetCurrentRenderer(mainLoop->getCurrentWindow()->renderer());
 	ofSetLogLevel(OF_LOG_VERBOSE);
 	ofSetVerticalSync(true);
 
@@ -14,15 +15,12 @@ Content::Content(std::shared_ptr<ofMainLoop> mainLoop)
 	m_whiteThresh = 220;
 	m_snapshot = false;
 
-	m_shader.load("vert.glsl", "frag.glsl");
+	//m_shader.load("vert.glsl", "frag.glsl");
 
-	m_gui.setup("INFO");
-	m_gui.add(m_screenSize.set("Screen Size", ""));
-	m_gui.add(m_currentImageLabel.set("Image:", ""));
-	m_gui.add(m_currentShaderLabel.set("Shader", ""));
 	m_hideGUI = false;
 
 	m_plane.set(ofGetWidth(), ofGetHeight(), 10, 10);
+	m_plane.mapTexCoords(0, 0, ofGetWidth(), ofGetHeight());
 	m_files = ofDirectory("").getFiles();
 	ofSetBackgroundColor(0.2, 0.2, 0.2);
 
@@ -82,7 +80,6 @@ void Content::draw()
 	if (!m_helpText)
 	{
 
-		m_gui.draw();
 		stringstream ss;
 		ss << "FPS: " << ofToString(ofGetFrameRate(), 0) << endl << endl;
 		ss << "MODE: " << (m_cam.getOrtho() ? "ORTHO" : "PERSPECTIVE") << endl;

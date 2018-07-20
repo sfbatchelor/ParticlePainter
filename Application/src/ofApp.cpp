@@ -137,6 +137,7 @@ void ofApp::unloadContentCode(WindowsContentCode *contentCode)
 void ofApp::onDllWasModified()
 {
 	m_dllWatcher.lock();
+	m_content.m_exit();
 	unloadContentCode(&m_content);
 	m_content = loadContentCode();
 	m_dllWatcher.unlock();

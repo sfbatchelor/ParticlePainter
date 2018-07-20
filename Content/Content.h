@@ -1,7 +1,6 @@
 #pragma once
 #include "ofMain.h"
 #include "ShaderWatcher.h"
-#include "ofxGui.h"
 
 
 class Content {
@@ -31,7 +30,6 @@ public:
 
 private:
 
-	std::shared_ptr<ofMainLoop> s_loop;
 
 	vector <ofImage> m_draggedImages;
 	vector <ofRectangle> m_rectangles;
@@ -48,14 +46,14 @@ private:
 	ofEasyCam m_cam;
 	bool m_helpText;
 
-	ofxPanel m_gui;
-	ofParameter<string> m_currentImageLabel;
-	ofParameter<string> m_screenSize;
-	ofParameter<string> m_currentShaderLabel;
 	bool m_hideGUI;
 	vector<ofFile> m_files;
 
 	ShaderWatcher m_shader;
 	ofPlanePrimitive m_plane;
+
+
+
+	std::shared_ptr<ofMainLoop> s_loop;
 
 };
