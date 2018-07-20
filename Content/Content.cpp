@@ -1,17 +1,34 @@
 #include "Content.h"
 
-Content::Content(std::shared_ptr<ofAppBaseWindow> mainWindow)
-{
-	if (!mainWindow)
-		return;
 
-	m_mainWindow = mainWindow;
-	m_renderer = m_mainWindow->renderer();
-	m_mainWindow->setWindowTitle("Ex Anim");
-}
-
-void Content::setup()
+Content::Content(std::shared_ptr<ofMainLoop> mainLoop)
 {
+	s_loop = mainLoop;
+	ofSetMainLoop(mainLoop);
+	
+	ofSetLogLevel(OF_LOG_VERBOSE);
+	ofSetVerticalSync(true);
+
+	ofSetWindowTitle("Ex Anim");
+
+	m_whiteThresh = 220;
+	m_snapshot = false;
+
+	m_shader.load("vert.glsl", "frag.glsl");
+
+	m_gui.setup("INFO");
+	m_gui.add(m_screenSize.set("Screen Size", ""));
+	m_gui.add(m_currentImageLabel.set("Image:", ""));
+	m_gui.add(m_currentShaderLabel.set("Shader", ""));
+	m_hideGUI = false;
+
+	m_plane.set(ofGetWidth(), ofGetHeight(), 10, 10);
+	m_files = ofDirectory("").getFiles();
+	ofSetBackgroundColor(0.2, 0.2, 0.2);
+
+	m_cam.setVFlip(true); //flip for upside down image
+	m_draggedImages = {};
+
 }
 
 void Content::update()
@@ -21,16 +38,93 @@ void Content::update()
 void Content::draw()
 {
 
-	m_renderer->setBackgroundColor(300);
+	ofSetBackgroundColor(100);
 	for (auto image : m_draggedImages)
 	{
-		m_renderer->draw(image, 0, 0, 0, image.getWidth(), image.getHeight(), 0, 0, image.getWidth(), image.getHeight());
+		ofSetColor(255, 255, 255);
+		image.draw(0, 0);
 	}
+
+	/// WORLD
+	{
+		m_cam.begin();
+		for (auto image : m_draggedImages)
+		{
+			image.getTexture().setTextureWrap(GL_REPEAT, GL_REPEAT);
+			image.getTexture().bind();
+		}
+		m_shader.getShader().begin();
+		m_shader.getShader().setUniform1f("uTime", ofGetElapsedTimef());
+		ofPushMatrix();
+		m_plane.draw();
+		ofPopMatrix();
+		m_shader.getShader().end();
+
+		for (auto image : m_draggedImages)
+			image.getTexture().unbind();
+
+		/// SCREEN GRAB
+		if (m_snapshot == true) {
+			m_screenGrab.grabScreen(0, 0, ofGetWidth(), ofGetHeight());
+			string fileName = "snapshot_" + ofGetTimestampString() + ".png";
+			m_screenGrab.save(fileName);
+			m_screenGrabFilename = "saved " + fileName;
+			m_snapshot = false;
+		}
+
+		if (!m_helpText)
+			ofDrawGrid(5000, 5, true, true, true, true);
+		m_cam.end();
+	}
+
+
+	/// GUI
+	if (!m_helpText)
+	{
+
+		m_gui.draw();
+		stringstream ss;
+		ss << "FPS: " << ofToString(ofGetFrameRate(), 0) << endl << endl;
+		ss << "MODE: " << (m_cam.getOrtho() ? "ORTHO" : "PERSPECTIVE") << endl;
+		ss << "MOUSE INPUT ENABLED: " << (m_cam.getMouseInputEnabled() ? "TRUE" : "FALSE") << endl;
+		ss << "INERTIA ENABLED: " << (m_cam.getInertiaEnabled() ? "TRUE" : "FALSE") << endl;
+		ss << "ROTATION RELATIVE Y AXIS: " << (m_cam.getRelativeYAxis() ? "TRUE" : "FALSE") << endl;
+		if (m_cam.getOrtho()) {
+			ss << "    Notice that in ortho mode zoom will be centered at the mouse position." << endl;
+		}
+		ofDrawBitmapString(ss.str().c_str(), 20, 100);
+		// also interaction area
+		drawInteractionArea();
+	}
+
+
 }
+
+void Content::drawInteractionArea()
+{
+	ofRectangle vp = ofGetCurrentViewport();
+	float r = std::min<float>(vp.width, vp.height) * 0.5f;
+	float x = vp.width * 0.5f;
+	float y = vp.height * 0.5f;
+
+	ofPushStyle();
+	ofSetLineWidth(3);
+	ofSetColor(255, 255, 0);
+	ofNoFill();
+	glDepthMask(false);
+	ofSetCircleResolution(64);
+
+	ofDrawCircle(x, y, r);
+	glDepthMask(true);
+	ofPopStyle();
+}
+
 
 void Content::exit()
 {
+	m_shader.exit();
 }
+
 
 void Content::keyPressed(int key)
 {
@@ -76,11 +170,7 @@ void Content::dragEvent(ofDragInfo info)
 		for (unsigned int k = 0; k < info.files.size(); k++) {
 			m_draggedImages[k].load(info.files[k]);
 		}
-	}
-	m_draggedPixels.clear();
-	for (auto image : m_draggedImages)
-	{
-		m_draggedPixels.push_back(image.getPixels());
+		m_plane.mapTexCoordsFromTexture(m_draggedImages[0].getTexture());
 	}
 }
 
@@ -90,7 +180,7 @@ void Content::gotMessage(ofMessage msg)
 
 bool Content::isValid()
 {
-	if (m_mainWindow)
+	if (s_loop)
 		return true;
 	return false;
 }
