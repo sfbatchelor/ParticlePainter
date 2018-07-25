@@ -1,6 +1,5 @@
 #pragma once
 #include <Filewatcher.h>
-#include "ofShader.h"
 #include <vector>
 
 struct ThreadedShaderFile
@@ -20,13 +19,13 @@ public:
 	bool load(const std::filesystem::path& vertName, const std::filesystem::path& fragName);
 	void update();
 	void exit();
-	const ofShader& getShader() const;
+//	const ofShader& getShader() const;
 
 private:
 
 
-	ofShader m_shader;
-	ofShader m_frontShader;
+	//ofShader m_shader;
+	//ofShader m_frontShader;
 	ThreadedShaderFile m_vertex;
 	ThreadedShaderFile m_fragment;
 	void onFileWasModified();
@@ -45,11 +44,11 @@ public:
 	bool loadCompute(const std::filesystem::path& shaderName);
 	void update();
 	void exit();
-	const ofShader& getShader() const;
+//	const ofShader& getShader() const;
 
 private:
-	ofShader m_shader;
-	ofShader m_frontShader;
+//	ofShader m_shader;
+//	ofShader m_frontShader;
 	ThreadedShaderFile m_compute;
 	void onFileWasModified();
 	bool m_needsUpdating;

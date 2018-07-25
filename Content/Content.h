@@ -1,6 +1,5 @@
 #pragma once
 #include "ofMain.h"
-#include "ShaderWatcher.h"
 
 
 class Content {
@@ -23,7 +22,7 @@ public:
 	void mouseEntered(int x, int y);
 	void mouseExited(int x, int y);
 	void windowResized(int w, int h);
-	void dragEvent(ofDragInfo info);
+	void dragEvent(ofDragInfo dragInfo);
 	void gotMessage(ofMessage msg);
 
 	bool isValid();
@@ -31,29 +30,24 @@ public:
 private:
 
 
-	vector <ofImage> m_draggedImages;
-	vector <ofRectangle> m_rectangles;
-	vector <ofColor> m_colours;
+	//vector <ofImage> m_draggedImages;
+	//vector <ofRectangle> m_rectangles;
+	//vector <ofColor> m_colours;
 
 
-	int m_whiteThresh;
+	//int m_whiteThresh;
 
 
-	ofImage m_screenGrab;
-	string m_screenGrabFilename;
-	bool m_snapshot;
+	//ofImage m_screenGrab;
+	//string m_screenGrabFilename;
+	//bool m_snapshot;
 
-	ofEasyCam m_cam;
-	bool m_helpText;
+	//ofEasyCam m_cam;
+	//bool m_helpText;
 
-	bool m_hideGUI;
-	vector<ofFile> m_files;
+	//bool m_hideGUI;
+	//vector<ofFile> m_files;
 
-	ShaderWatcher m_shader;
-	ofPlanePrimitive m_plane;
-
-
-
-	std::shared_ptr<ofMainLoop> s_loop;
-
+	//ShaderWatcher m_shader;
+	//ofPlanePrimitive m_plane;
 };
