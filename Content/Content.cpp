@@ -1,12 +1,10 @@
 #include "Content.h"
-#include <GLFW\glfw3.h>
 
 
 Content::Content(std::shared_ptr<ofMainLoop> mainLoop)
 {
 	s_loop = mainLoop;
-	ofSetMainLoop(mainLoop);
-	ofSetCurrentRenderer(mainLoop->getCurrentWindow()->renderer());
+
 	ofSetLogLevel(OF_LOG_VERBOSE);
 	ofSetVerticalSync(true);
 
@@ -15,7 +13,7 @@ Content::Content(std::shared_ptr<ofMainLoop> mainLoop)
 	m_whiteThresh = 220;
 	m_snapshot = false;
 
-	//m_shader.load("vert.glsl", "frag.glsl");
+	m_shader.load("vert.glsl", "frag.glsl");
 
 	m_hideGUI = false;
 
@@ -36,7 +34,7 @@ void Content::update()
 void Content::draw()
 {
 
-	ofSetBackgroundColor(100);
+	ofSetBackgroundColor(250, 50, 50);
 	for (auto image : m_draggedImages)
 	{
 		ofSetColor(255, 255, 255);
@@ -54,7 +52,7 @@ void Content::draw()
 		m_shader.getShader().begin();
 		m_shader.getShader().setUniform1f("uTime", ofGetElapsedTimef());
 		ofPushMatrix();
-		m_plane.draw();
+		//m_plane.draw();
 		ofPopMatrix();
 		m_shader.getShader().end();
 

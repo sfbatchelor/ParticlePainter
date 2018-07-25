@@ -10,7 +10,7 @@
 
 //--------------------------------------------------------------
 //setup
-#define CONTENT_SETUP(name) void name(std::shared_ptr<ofMainLoop> & mainLoop, std::shared_ptr<ofAppBaseWindow> window)
+#define CONTENT_SETUP(name) void name(std::shared_ptr<ofMainLoop> & mainLoop, bool init)
 typedef CONTENT_SETUP(Content_Setup);
 inline CONTENT_SETUP(ContentSetupStub)
 {

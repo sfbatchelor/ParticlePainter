@@ -5,7 +5,7 @@
 void ofApp::setup(){
 
 	m_content = loadContentCode();
-	m_content.m_setup(ofGetMainLoop(), ofGetCurrentWindow());
+	m_content.m_setup(ofGetMainLoop(), false);
 	m_dllWatcher.lock();
 
 #ifdef _DEBUG
@@ -142,7 +142,7 @@ void ofApp::onDllWasModified()
 	m_content = loadContentCode();
 	m_dllWatcher.unlock();
 
-	m_content.m_setup(ofGetMainLoop(), ofGetCurrentWindow());
+	m_content.m_setup(ofGetMainLoop(), true);
 
 }
 
