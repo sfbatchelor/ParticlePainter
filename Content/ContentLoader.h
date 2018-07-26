@@ -10,7 +10,7 @@
 
 //--------------------------------------------------------------
 //setup
-#define CONTENT_SETUP(name) void name(std::shared_ptr<ofMainLoop> & mainLoop, bool init)
+#define CONTENT_SETUP(name) void name()
 typedef CONTENT_SETUP(Content_Setup);
 inline CONTENT_SETUP(ContentSetupStub)
 {

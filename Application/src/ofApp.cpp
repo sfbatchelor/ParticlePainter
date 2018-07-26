@@ -5,7 +5,9 @@
 void ofApp::setup(){
 
 	m_content = loadContentCode();
-	m_content.m_setup(ofGetMainLoop(), false);
+	m_content.m_setup();
+	m_needsSetup = false;
+
 	m_dllWatcher.lock();
 
 #ifdef _DEBUG
@@ -22,6 +24,13 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){
 	m_dllWatcher.lock();
+
+	if (m_needsSetup)
+	{
+		m_content.m_setup();
+		m_needsSetup = false;
+	}
+
 	m_content.m_update();
 	m_dllWatcher.unlock();
 }
@@ -140,9 +149,8 @@ void ofApp::onDllWasModified()
 	m_content.m_exit();
 	unloadContentCode(&m_content);
 	m_content = loadContentCode();
+	m_needsSetup = true;
 	m_dllWatcher.unlock();
-
-	m_content.m_setup(ofGetMainLoop(), true);
 
 }
 

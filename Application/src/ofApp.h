@@ -53,5 +53,6 @@ private:
 
 	WindowsContentCode m_content;
 	FileWatcher m_dllWatcher;
+	bool m_needsSetup;
 		
 };

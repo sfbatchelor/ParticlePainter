@@ -1,33 +1,34 @@
 #include "Content.h"
 
 
-Content::Content(std::shared_ptr<ofMainLoop> mainLoop)
+Content::Content()
 {
 	ofSetLogLevel(OF_LOG_VERBOSE);
 	ofSetVerticalSync(true);
 
-	ofSetWindowTitle("Ex Anim");
+	ofSetWindowTitle("Digital Painting");
 
-	//m_whiteThresh = 220;
-	//m_snapshot = false;
+	m_whiteThresh = 220;
+	m_snapshot = false;
+	m_helpText = true;
 
-	//m_shader.load("vert.glsl", "frag.glsl");
+	m_shader.load("vert.glsl", "frag.glsl");
 
 	//m_hideGUI = false;
 
-	//m_plane.set(ofGetWidth(), ofGetHeight(), 10, 10);
-	//m_plane.mapTexCoords(0, 0, ofGetWidth(), ofGetHeight());
+	m_plane.set(ofGetWidth(), ofGetHeight(), 10, 10);
+	m_plane.mapTexCoords(0, 0, ofGetWidth(), ofGetHeight());
 	//m_files = ofDirectory("").getFiles();
 	//ofSetBackgroundColor(0.2, 0.2, 0.2);
 
-	//m_cam.setVFlip(true); //flip for upside down image
+	m_cam.setVFlip(true); //flip for upside down image
 	//m_draggedImages = {};
 
 }
 
 void Content::update()
 {
-
+	m_shader.update();
 }
 
 void Content::draw()
@@ -44,18 +45,18 @@ void Content::draw()
 
 	///// WORLD
 	//{
-	//	m_cam.begin();
+		m_cam.begin();
 	//	for (auto image : m_draggedImages)
 	//	{
 	//		image.getTexture().setTextureWrap(GL_REPEAT, GL_REPEAT);
 	//		image.getTexture().bind();
 	//	}
-	//	m_shader.getShader().begin();
-	//	m_shader.getShader().setUniform1f("uTime", ofGetElapsedTimef());
-	//	ofPushMatrix();
-	//	//m_plane.draw();
-	//	ofPopMatrix();
-	//	m_shader.getShader().end();
+		m_shader.getShader().begin();
+		m_shader.getShader().setUniform1f("uTime", ofGetElapsedTimef());
+		ofPushMatrix();
+		m_plane.draw();
+		ofPopMatrix();
+		m_shader.getShader().end();
 
 	//	for (auto image : m_draggedImages)
 	//		image.getTexture().unbind();
@@ -69,9 +70,9 @@ void Content::draw()
 	//		m_snapshot = false;
 	//	}
 
-	//	if (!m_helpText)
-	//		ofDrawGrid(5000, 5, true, true, true, true);
-	//	m_cam.end();
+		if (!m_helpText)
+			ofDrawGrid(5000, 5, true, true, true, true);
+		m_cam.end();
 	//}
 
 
@@ -118,7 +119,7 @@ void Content::drawInteractionArea()
 
 void Content::exit()
 {
-	//m_shader.exit();
+	m_shader.exit();
 }
 
 

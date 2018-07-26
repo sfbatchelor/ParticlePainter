@@ -1,12 +1,13 @@
 #pragma once
 #include "ofMain.h"
+#include "ShaderWatcher.h"
 
 
 class Content {
 
 public:
 
-	Content(std::shared_ptr<ofMainLoop> mainLoop);
+	Content();
 
 	void update();
 	void draw();
@@ -35,19 +36,19 @@ private:
 	//vector <ofColor> m_colours;
 
 
-	//int m_whiteThresh;
+	int m_whiteThresh;
 
 
 	//ofImage m_screenGrab;
 	//string m_screenGrabFilename;
-	//bool m_snapshot;
+	bool m_snapshot;
 
-	//ofEasyCam m_cam;
-	//bool m_helpText;
+	ofEasyCam m_cam;
+	bool m_helpText;
 
 	//bool m_hideGUI;
 	//vector<ofFile> m_files;
 
-	//ShaderWatcher m_shader;
-	//ofPlanePrimitive m_plane;
+	ShaderWatcher m_shader;
+	ofPlanePrimitive m_plane;
 };

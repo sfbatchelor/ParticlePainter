@@ -11,7 +11,7 @@ class FileWatcher : public ofThread{
 
 			bool fileWasModified = false;
 			{
-				ofScopedLock lock(*mutex);
+				ofScopedLock lock(mutex);
 				m_file.open(m_path);
 				if (m_file.canRead())
 				{
