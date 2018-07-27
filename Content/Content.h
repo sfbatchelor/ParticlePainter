@@ -35,20 +35,20 @@ private:
 	//vector <ofRectangle> m_rectangles;
 	//vector <ofColor> m_colours;
 
-
 	int m_whiteThresh;
 
-
-	//ofImage m_screenGrab;
-	//string m_screenGrabFilename;
+	ofImage m_screenGrab;
+	string m_screenGrabFilename;
 	bool m_snapshot;
 
 	ofEasyCam m_cam;
 	bool m_helpText;
 
-	//bool m_hideGUI;
-	//vector<ofFile> m_files;
-
 	ShaderWatcher m_shader;
 	ofPlanePrimitive m_plane;
+	ofMesh mesh;
+	ofImage img;
+
+	ofColor m_color;
+
 };

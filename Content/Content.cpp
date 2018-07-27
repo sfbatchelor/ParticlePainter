@@ -1,6 +1,5 @@
 #include "Content.h"
 
-
 Content::Content()
 {
 	ofSetLogLevel(OF_LOG_VERBOSE);
@@ -61,59 +60,60 @@ void Content::draw()
 	//	for (auto image : m_draggedImages)
 	//		image.getTexture().unbind();
 
-	//	/// SCREEN GRAB
-	//	if (m_snapshot == true) {
-	//		m_screenGrab.grabScreen(0, 0, ofGetWidth(), ofGetHeight());
-	//		string fileName = "snapshot_" + ofGetTimestampString() + ".png";
-	//		m_screenGrab.save(fileName);
-	//		m_screenGrabFilename = "saved " + fileName;
-	//		m_snapshot = false;
-	//	}
+		/// SCREEN GRAB
+		if (m_snapshot == true) {
+			m_screenGrab.grabScreen(0, 0, ofGetWidth(), ofGetHeight());
+			string fileName = "snapshot_" + ofGetTimestampString() + ".png";
+			m_screenGrab.save(fileName);
+			m_screenGrabFilename = "saved " + fileName;
+			m_snapshot = false;
+		}
 
-		if (!m_helpText)
+		if (m_helpText)
 			ofDrawGrid(5000, 5, true, true, true, true);
 		m_cam.end();
 	//}
 
 
 	///// GUI
-	//if (!m_helpText)
-	//{
+	if (m_helpText)
+	{
 
-	//	stringstream ss;
-	//	ss << "FPS: " << ofToString(ofGetFrameRate(), 0) << endl << endl;
-	//	ss << "MODE: " << (m_cam.getOrtho() ? "ORTHO" : "PERSPECTIVE") << endl;
-	//	ss << "MOUSE INPUT ENABLED: " << (m_cam.getMouseInputEnabled() ? "TRUE" : "FALSE") << endl;
-	//	ss << "INERTIA ENABLED: " << (m_cam.getInertiaEnabled() ? "TRUE" : "FALSE") << endl;
-	//	ss << "ROTATION RELATIVE Y AXIS: " << (m_cam.getRelativeYAxis() ? "TRUE" : "FALSE") << endl;
-	//	if (m_cam.getOrtho()) {
-	//		ss << "    Notice that in ortho mode zoom will be centered at the mouse position." << endl;
-	//	}
-	//	ofDrawBitmapString(ss.str().c_str(), 20, 100);
-	//	// also interaction area
-	//	drawInteractionArea();
-	//}
+		stringstream ss;
+		ss << "FPS: " << ofToString(ofGetFrameRate(), 0) << endl << endl;
+		//ss << "MODE: " << (m_cam.getOrtho() ? "ORTHO" : "PERSPECTIVE") << endl;
+		//ss << "MOUSE INPUT ENABLED: " << (m_cam.getMouseInputEnabled() ? "TRUE" : "FALSE") << endl;
+		//ss << "INERTIA ENABLED: " << (m_cam.getInertiaEnabled() ? "TRUE" : "FALSE") << endl;
+		//ss << "ROTATION RELATIVE Y AXIS: " << (m_cam.getRelativeYAxis() ? "TRUE" : "FALSE") << endl;
+		//if (m_cam.getOrtho()) {
+		//	ss << "    Notice that in ortho mode zoom will be centered at the mouse position." << endl;
+		//}
+		const std::string string = ss.str();
+		ofDrawBitmapStringHighlight(string, glm::vec2(20, 100));
+		// also interaction area
+		drawInteractionArea();
+	}
 
 
 }
 
 void Content::drawInteractionArea()
 {
-	//ofRectangle vp = ofGetCurrentViewport();
-	//float r = std::min<float>(vp.width, vp.height) * 0.5f;
-	//float x = vp.width * 0.5f;
-	//float y = vp.height * 0.5f;
+	ofRectangle vp = ofGetCurrentViewport();
+	float r = std::min<float>(vp.width, vp.height) * 0.5f;
+	float x = vp.width * 0.5f;
+	float y = vp.height * 0.5f;
 
-	//ofPushStyle();
-	//ofSetLineWidth(3);
-	//ofSetColor(255, 255, 0);
-	//ofNoFill();
-	//glDepthMask(false);
-	//ofSetCircleResolution(64);
+	ofPushStyle();
+	ofSetLineWidth(3);
+	ofSetColor(255, 255, 0);
+	ofNoFill();
+	glDepthMask(false);
+	ofSetCircleResolution(64);
 
-	//ofDrawCircle(x, y, r);
-	//glDepthMask(true);
-	//ofPopStyle();
+	ofDrawCircle(x, y, r);
+	glDepthMask(true);
+	ofPopStyle();
 }
 
 
@@ -125,6 +125,11 @@ void Content::exit()
 
 void Content::keyPressed(int key)
 {
+	switch (key) {
+	case 'x':
+		m_snapshot = true;
+		break;
+	}
 }
 
 void Content::keyReleased(int key)
