@@ -42,12 +42,12 @@ private:
 	bool m_snapshot;
 
 	ofEasyCam m_cam;
-	bool m_helpText;
+	bool m_showGui;
 
 	ShaderWatcher m_shader;
 	ofPlanePrimitive m_plane;
-	ofMesh mesh;
-	ofImage img;
+	ofMesh m_mesh;
+	ofImage m_image;
 
 	ofColor m_color;
 

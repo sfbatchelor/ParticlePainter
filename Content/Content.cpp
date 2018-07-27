@@ -9,19 +9,43 @@ Content::Content()
 
 	m_whiteThresh = 220;
 	m_snapshot = false;
-	m_helpText = true;
+	m_showGui = true;
 
 	m_shader.load("vert.glsl", "frag.glsl");
 
-	//m_hideGUI = false;
+
+	// load an image from disk
+	m_image.load("paint1.png");
+
+	// we're going to load a ton of points into an ofMesh
+	m_mesh.setMode(OF_PRIMITIVE_POINTS);
+
+	// loop through the image in the x and y axes
+	int skip = 4; // load a subset of the points
+	for (int y = 0; y < m_image.getHeight(); y += skip) {
+		for (int x = 0; x < m_image.getWidth(); x += skip) {
+			ofColor cur = m_image.getColor(x, y);
+			if (cur.a > 0) {
+				// the alpha value encodes depth, let's remap it to a good depth range
+				float z = ofMap(cur.getBrightness(), 0, 255, -300, 300);
+				cur.a = 255;
+				m_mesh.addColor(cur);
+				ofVec3f pos(x, y, z);
+				m_mesh.addVertex(pos);
+			}
+		}
+	}
+
 
 	m_plane.set(ofGetWidth(), ofGetHeight(), 10, 10);
 	m_plane.mapTexCoords(0, 0, ofGetWidth(), ofGetHeight());
-	//m_files = ofDirectory("").getFiles();
-	//ofSetBackgroundColor(0.2, 0.2, 0.2);
-
 	m_cam.setVFlip(true); //flip for upside down image
-	//m_draggedImages = {};
+	ofEnableDepthTest();
+	glEnable(GL_POINT_SMOOTH); // use circular points instead of square point
+	glPointSize(6);
+//	ofSetBackgroundColor(5, 5, 5);
+	ofBackgroundGradient(ofColor::gray, ofColor::black, OF_GRADIENT_CIRCULAR);
+
 
 }
 
@@ -33,32 +57,25 @@ void Content::update()
 void Content::draw()
 {
 
-	ofSetBackgroundColor(250, 50, 50);
-	ofDrawCircle(glm::vec2(100, 100), 1000);
-
-	//for (auto image : m_draggedImages)
-	//{
-	//	ofSetColor(255, 255, 255);
-	//	image.draw(0, 0);
-	//}
 
 	///// WORLD
-	//{
+	{
 		m_cam.begin();
-	//	for (auto image : m_draggedImages)
-	//	{
-	//		image.getTexture().setTextureWrap(GL_REPEAT, GL_REPEAT);
-	//		image.getTexture().bind();
-	//	}
-		m_shader.getShader().begin();
-		m_shader.getShader().setUniform1f("uTime", ofGetElapsedTimef());
-		ofPushMatrix();
-		m_plane.draw();
-		ofPopMatrix();
-		m_shader.getShader().end();
+		//m_image.getTexture().setTextureWrap(GL_REPEAT, GL_REPEAT);
+		//m_image.getTexture().bind();
+		//m_shader.getShader().begin();
+		//m_shader.getShader().setUniform1f("uTime", ofGetElapsedTimef());
+		//ofPushMatrix();
+		//m_plane.draw();
+		//ofPopMatrix();
+		//m_image.getTexture().unbind();
+		//m_shader.getShader().end();
 
-	//	for (auto image : m_draggedImages)
-	//		image.getTexture().unbind();
+		ofScale(2, -2, 2); // flip the y axis and zoom in a bit
+		ofTranslate(-m_image.getWidth() / 2, -m_image.getHeight() / 2);
+		glEnable(GL_POINT_SMOOTH); // use circular points instead of square point
+		m_mesh.draw();
+
 
 		/// SCREEN GRAB
 		if (m_snapshot == true) {
@@ -69,14 +86,15 @@ void Content::draw()
 			m_snapshot = false;
 		}
 
-		if (m_helpText)
+		if (m_showGui)
 			ofDrawGrid(5000, 5, true, true, true, true);
+
 		m_cam.end();
-	//}
+	}
 
 
 	///// GUI
-	if (m_helpText)
+	if (m_showGui)
 	{
 
 		stringstream ss;
@@ -128,6 +146,9 @@ void Content::keyPressed(int key)
 	switch (key) {
 	case 'x':
 		m_snapshot = true;
+		break;
+	case 'h':
+		m_showGui = !m_showGui;
 		break;
 	}
 }
