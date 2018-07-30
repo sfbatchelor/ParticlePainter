@@ -2,6 +2,14 @@
 #include "ofMain.h"
 #include "ShaderWatcher.h"
 
+struct Ray
+{
+
+	ofVec4f m_id;
+	ofFloatColor m_col;
+	//ofVec4f m_origin;
+	//ofVec4f m_dir;
+};
 
 class Content {
 
@@ -28,6 +36,9 @@ public:
 
 	bool isValid();
 
+	void setRays();
+	void readRays();
+
 private:
 
 
@@ -50,5 +61,11 @@ private:
 	ofImage m_image;
 
 	ofColor m_color;
+
+	std::vector<Ray> m_rays;
+	std::vector<Ray> m_newRays;
+	ofBufferObject m_rayBuffer;
+	ofShader m_compute;
+	ofVbo m_vbo;
 
 };
