@@ -32,15 +32,24 @@ Content::Content()
 				m_mesh.addColor(cur);
 				ofVec3f pos(x, y, z);
 				m_mesh.addVertex(pos);
+
+
+				Point point{};
+				point.m_col = cur;
+				point.m_pos = pos;
+				m_points.push_back(point);
 			}
 		}
 	}
 
+	m_pointsBuffer.allocate(m_points, GL_DYNAMIC_DRAW);
+	m_pointsVbo.setVertexBuffer(m_pointsBuffer, 3, sizeof(Point)); // the id
+	m_pointsVbo.setColorBuffer(m_pointsBuffer, sizeof(Point), sizeof(ofVec3f) );// dir
+	m_pointsBuffer.bindBase(GL_SHADER_STORAGE_BUFFER, 1);
 
 	// SETUP RAY BUFFER ON GPU
 	m_cam.setVFlip(true); //flip for upside down image
 	setRays();
-
 
 	m_plane.set(ofGetWidth(), ofGetHeight(), 10, 10);
 	m_plane.mapTexCoords(0, 0, ofGetWidth(), ofGetHeight());
@@ -53,25 +62,30 @@ Content::Content()
 void Content::setRays()
 {
 
+	// setup
 	m_rayBuffer.unbindBase(GL_SHADER_STORAGE_BUFFER, 0);
 	int numRays = ofGetWidth()*ofGetHeight();
 	m_rays.resize(numRays);
 	int i = 0;
+	auto tanTheta = glm::tan(m_cam.getFov() / 2.*glm::pi<float>() / 180.);
+	auto ar = m_cam.getAspectRatio();
+	glm::vec3 rayWorldOrigin;
+	rayWorldOrigin.x = m_cam.getPosition().x;
+	rayWorldOrigin.y = m_cam.getPosition().y;
+	rayWorldOrigin.z = m_cam.getPosition().z;
+
+
+	// set individual rays
 	for (int x = 1; x <= ofGetWidth(); x++)
 	{
 		for (int y = 1; y <= ofGetHeight(); y++)
 		{
-			glm::vec3 rayWorldOrigin;
-			rayWorldOrigin.x = m_cam.getPosition().x;
-			rayWorldOrigin.y = m_cam.getPosition().y;
-			rayWorldOrigin.z = m_cam.getPosition().z;
-
-			float px = (2. * ((x+.5) / ofGetWidth()) - 1.) * glm::tan(m_cam.getFov() / 2.*glm::pi<float>() / 180.) * m_cam.getAspectRatio();
-			float py = (1. - 2. * ((y+.5) / ofGetHeight())) * glm::tan(m_cam.getFov() / 2.*glm::pi<float>() / 180.);
-			float pz = (ofGetHeight()/2.) /glm::tan(m_cam.getFov() / 2.*glm::pi<float>() / 180.);
-			glm::vec3 pos (px, py, -pz);
+			float px = (2. * ((x + .5) / ofGetWidth()) - 1.) * tanTheta* ar;
+			float py = (1. - 2. * ((y + .5) / ofGetHeight())) * tanTheta;
+			float pz = (ofGetHeight() / 2.) / tanTheta;
+			glm::vec3 pos(px, py, -pz);
 			auto rayWorldPos = m_cam.cameraToWorld(pos);
-			auto rayWorldDir =  rayWorldPos - rayWorldOrigin;
+			auto rayWorldDir = rayWorldPos - rayWorldOrigin;
 			rayWorldDir = glm::normalize(rayWorldDir);
 
 			m_rays[i].m_id = ofVec4f(x, y, 0, 1);
@@ -82,16 +96,15 @@ void Content::setRays()
 		}
 	}
 
+	// buffer and vbo allocation 
 	m_rayBuffer.allocate(m_rays, GL_DYNAMIC_DRAW);
-
-	m_vbo.setVertexBuffer(m_rayBuffer, 4, sizeof(Ray)); // the id
-	m_vbo.setColorBuffer(m_rayBuffer, sizeof(Ray), sizeof(ofVec4f) );// dir
-	m_vbo.setAttributeBuffer(4, m_rayBuffer, 4, sizeof(Ray), sizeof(ofVec4f) + sizeof(ofFloatColor));//ray origin
-	m_vbo.setAttributeBuffer(5, m_rayBuffer, 3, sizeof(Ray), 2*sizeof(ofVec4f) + sizeof(ofFloatColor));//ray dir 
-
+	m_raysVbo.setVertexBuffer(m_rayBuffer, 4, sizeof(Ray)); // the id
+	m_raysVbo.setColorBuffer(m_rayBuffer, sizeof(Ray), sizeof(ofVec4f) );// dir
+	m_raysVbo.setAttributeBuffer(4, m_rayBuffer, 4, sizeof(Ray), sizeof(ofVec4f) + sizeof(ofFloatColor));//ray origin
+	m_raysVbo.setAttributeBuffer(5, m_rayBuffer, 3, sizeof(Ray), 2*sizeof(ofVec4f) + sizeof(ofFloatColor));//ray dir 
 	m_rayBuffer.bindBase(GL_SHADER_STORAGE_BUFFER, 0);
-
 }
+
 void Content::readRays()
 {
 
@@ -131,15 +144,13 @@ void Content::update()
 void Content::draw()
 {
 
-	ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 	///// WORLD
 	{
 		m_cam.begin();
-
-		ofSetColor(255, 255);
-		glPointSize(10);
-		m_vbo.draw(GL_POINTS, 0, m_rays.size());
-
+		ofScale(2, -2, 2); // flip the y axis and zoom in a bit
+		ofTranslate(-m_image.getWidth() / 2, -m_image.getHeight() / 2);		ofEnableDepthTest();
+		glPointSize(6);		glEnable(GL_POINT_SMOOTH); // use circular points instead of square point		m_mesh.draw();
+		ofTranslate(m_image.getWidth() / 2, m_image.getHeight() / 2);
 
 		/// SCREEN GRAB
 		if (m_snapshot == true) {
@@ -150,9 +161,11 @@ void Content::draw()
 			m_snapshot = false;
 		}
 
-		drawRayDirs();
 		if (m_showGui)
+		{
 			ofDrawGrid(5000, 5, true, true, true, true);
+			drawRayDirs();
+		}
 
 		m_cam.end();
 	}
@@ -182,7 +195,7 @@ void Content::drawRayDirs()
 	for (int i = 0; i < m_rays.size(); )
 	{
 		ofSetColor(255, 0, 0, 255);
-		ofDrawLine(o, o + m_rays[i].m_dir*1000);
+		ofDrawLine(o, o + m_rays[i].m_dir*10000);
 		i += skip;
 	}
 }

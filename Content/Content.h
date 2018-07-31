@@ -11,6 +11,12 @@ struct Ray
 	ofVec3f m_dir;
 };
 
+struct Point
+{
+	ofVec3f m_pos;
+	ofFloatColor m_col;
+};
+
 class Content {
 
 public:
@@ -67,6 +73,10 @@ private:
 	std::vector<Ray> m_newRays;
 	ofBufferObject m_rayBuffer;
 	ComputeWatcher m_compute;
-	ofVbo m_vbo;
+	ofVbo m_raysVbo;
+
+	std::vector<Point> m_points;
+	ofBufferObject m_pointsBuffer;
+	ofVbo m_pointsVbo;
 
 };
