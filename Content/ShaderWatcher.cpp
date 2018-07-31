@@ -77,7 +77,7 @@ ComputeWatcher::~ComputeWatcher()
 	m_compute.m_fileWatcher.stopThread();
 }
 
-bool ComputeWatcher::loadCompute(const std::filesystem::path & shaderName)
+bool ComputeWatcher::load(const std::filesystem::path & shaderName)
 {
 	if (m_shader.loadCompute(shaderName))
 	{
@@ -87,6 +87,8 @@ bool ComputeWatcher::loadCompute(const std::filesystem::path & shaderName)
 		m_compute.m_fileWatcher.registerCallback(std::function<void()>([this]() {onFileWasModified(); }));
 		m_frontShader = m_shader;
 		m_compute.m_fileWatcher.unlock();
+		m_compute.m_fileWatcher.startThread();
+
 		return true;
 	}
 	return false;
@@ -97,7 +99,7 @@ void ComputeWatcher::update()
 	ofScopedLock(m_mutex);
 	if (m_needsUpdating)
 	{
-		loadCompute(m_compute.m_filePath);
+		load(m_compute.m_filePath);
 		m_needsUpdating = false;
 	}
 }

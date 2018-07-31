@@ -12,8 +12,7 @@ Content::Content()
 	m_showGui = true;
 
 	m_shader.load("vert.glsl", "frag.glsl");
-	m_compute.setupShaderFromFile(GL_COMPUTE_SHADER, "compute.glsl");
-	m_compute.linkProgram();
+	m_compute.load( "compute.glsl");
 
 
 	// GENERATE POINTS FROM IMAGE
@@ -39,14 +38,12 @@ Content::Content()
 
 
 	// SETUP RAY BUFFER ON GPU
+	m_cam.setVFlip(true); //flip for upside down image
 	setRays();
-	m_vbo.setVertexBuffer(m_rayBuffer, 4, sizeof(Ray)); // the id
-	m_vbo.setColorBuffer(m_rayBuffer, sizeof(Ray), sizeof(ofVec4f) );
-	m_rayBuffer.bindBase(GL_SHADER_STORAGE_BUFFER, 0);
+
 
 	m_plane.set(ofGetWidth(), ofGetHeight(), 10, 10);
 	m_plane.mapTexCoords(0, 0, ofGetWidth(), ofGetHeight());
-	m_cam.setVFlip(true); //flip for upside down image
 	ofEnableDepthTest();
 	glPointSize(6);
 	ofSetBackgroundColor(5, 5, 5);
@@ -56,7 +53,7 @@ Content::Content()
 void Content::setRays()
 {
 
-
+	m_rayBuffer.unbindBase(GL_SHADER_STORAGE_BUFFER, 0);
 	int numRays = ofGetWidth()*ofGetHeight();
 	m_rays.resize(numRays);
 	int i = 0;
@@ -64,23 +61,35 @@ void Content::setRays()
 	{
 		for (int y = 1; y <= ofGetHeight(); y++)
 		{
-			glm::vec4 origin;
-		origin.x = m_cam.getPosition().x;
-		origin.y = m_cam.getPosition().y;
-		origin.z = m_cam.getPosition().z;
-		origin.w = 1.;
-			float px = (2. * ((x*.5) / ofGetWidth()) - 1.) * glm::tan(m_cam.getFov() / 2.*glm::pi<float>() / 180.) * m_cam.getAspectRatio();
-			float py = (1. - 2. * ((y*.5) / ofGetHeight()) - 1.) * glm::tan(m_cam.getFov() / 2.*glm::pi<float>() / 180.);
-			glm::vec3 dirf = glm::vec3(origin.x, origin.y, origin.z) - glm::vec3(px, py, -1.);
-			ofVec3f dir = glm::normalize(dirf);
-			//m_rays[i].m_dir = ofVec4f(dir.x, dir.y, dir.z, 1.0);
-			m_rays[i].m_col = ofFloatColor(dir.x, dir.y, dir.z);
+			glm::vec3 rayWorldOrigin;
+			rayWorldOrigin.x = m_cam.getPosition().x;
+			rayWorldOrigin.y = m_cam.getPosition().y;
+			rayWorldOrigin.z = m_cam.getPosition().z;
+
+			float px = (2. * ((x+.5) / ofGetWidth()) - 1.) * glm::tan(m_cam.getFov() / 2.*glm::pi<float>() / 180.) * m_cam.getAspectRatio();
+			float py = (1. - 2. * ((y+.5) / ofGetHeight())) * glm::tan(m_cam.getFov() / 2.*glm::pi<float>() / 180.);
+			float pz = (ofGetHeight()/2.) /glm::tan(m_cam.getFov() / 2.*glm::pi<float>() / 180.);
+			glm::vec3 pos (px, py, -pz);
+			auto rayWorldPos = m_cam.cameraToWorld(pos);
+			auto rayWorldDir =  rayWorldPos - rayWorldOrigin;
+			rayWorldDir = glm::normalize(rayWorldDir);
+
 			m_rays[i].m_id = ofVec4f(x, y, 0, 1);
+			m_rays[i].m_col = ofFloatColor(rayWorldDir.x, rayWorldDir.y, rayWorldDir.z);
+			m_rays[i].m_origin = ofVec4f(rayWorldOrigin.x, rayWorldOrigin.y, rayWorldOrigin.z, 1.);
+			m_rays[i].m_dir = rayWorldDir;
 			i++;
 		}
 	}
 
 	m_rayBuffer.allocate(m_rays, GL_DYNAMIC_DRAW);
+
+	m_vbo.setVertexBuffer(m_rayBuffer, 4, sizeof(Ray)); // the id
+	m_vbo.setColorBuffer(m_rayBuffer, sizeof(Ray), sizeof(ofVec4f) );// dir
+	m_vbo.setAttributeBuffer(4, m_rayBuffer, 4, sizeof(Ray), sizeof(ofVec4f) + sizeof(ofFloatColor));//ray origin
+	m_vbo.setAttributeBuffer(5, m_rayBuffer, 3, sizeof(Ray), 2*sizeof(ofVec4f) + sizeof(ofFloatColor));//ray dir 
+
+	m_rayBuffer.bindBase(GL_SHADER_STORAGE_BUFFER, 0);
 
 }
 void Content::readRays()
@@ -111,10 +120,11 @@ void Content::readRays()
 void Content::update()
 {
 	m_shader.update();
+	m_compute.update();
 
-	m_compute.begin();
-	m_compute.dispatchCompute(m_rays.size(), 1, 1);
-	m_compute.end();
+	m_compute.getShader().begin();
+	m_compute.getShader().dispatchCompute(m_rays.size(), 1, 1);
+	m_compute.getShader().end();
 	//readRays();
 }
 
@@ -122,12 +132,13 @@ void Content::draw()
 {
 
 	ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-
-
 	///// WORLD
 	{
 		m_cam.begin();
 
+		ofSetColor(255, 255);
+		glPointSize(10);
+		m_vbo.draw(GL_POINTS, 0, m_rays.size());
 
 
 		/// SCREEN GRAB
@@ -139,11 +150,7 @@ void Content::draw()
 			m_snapshot = false;
 		}
 
-		ofSetColor(255, 255);
-		glPointSize(10);
-		m_vbo.draw(GL_POINTS, 0, m_rays.size());
-
-
+		drawRayDirs();
 		if (m_showGui)
 			ofDrawGrid(5000, 5, true, true, true, true);
 
@@ -157,20 +164,27 @@ void Content::draw()
 
 		stringstream ss;
 		ss << "FPS: " << ofToString(ofGetFrameRate(), 0) << endl << endl;
-		//ss << "MODE: " << (m_cam.getOrtho() ? "ORTHO" : "PERSPECTIVE") << endl;
-		//ss << "MOUSE INPUT ENABLED: " << (m_cam.getMouseInputEnabled() ? "TRUE" : "FALSE") << endl;
-		//ss << "INERTIA ENABLED: " << (m_cam.getInertiaEnabled() ? "TRUE" : "FALSE") << endl;
-		//ss << "ROTATION RELATIVE Y AXIS: " << (m_cam.getRelativeYAxis() ? "TRUE" : "FALSE") << endl;
-		//if (m_cam.getOrtho()) {
-		//	ss << "    Notice that in ortho mode zoom will be centered at the mouse position." << endl;
-		//}
+		ss << "CONTROLS" << endl;
+		ss << "SPACE TO RESET RAYS" <<endl << endl;
 		const std::string string = ss.str();
 		ofDrawBitmapStringHighlight(string, glm::vec2(20, 100));
-		// also interaction area
 		drawInteractionArea();
 	}
 
 
+}
+
+void Content::drawRayDirs()
+{
+
+	glm::vec3 o(m_rays[0].m_origin.x, m_rays[0].m_origin.y, m_rays[0].m_origin.z);
+	int skip = 1000;
+	for (int i = 0; i < m_rays.size(); )
+	{
+		ofSetColor(255, 0, 0, 255);
+		ofDrawLine(o, o + m_rays[i].m_dir*1000);
+		i += skip;
+	}
 }
 
 void Content::drawInteractionArea()
@@ -196,6 +210,7 @@ void Content::drawInteractionArea()
 void Content::exit()
 {
 	m_shader.exit();
+	m_compute.exit();
 }
 
 
@@ -207,6 +222,9 @@ void Content::keyPressed(int key)
 		break;
 	case 'h':
 		m_showGui = !m_showGui;
+		break;
+	case ' ':
+		setRays();
 		break;
 	}
 }

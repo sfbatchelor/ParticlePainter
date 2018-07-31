@@ -7,8 +7,8 @@ struct Ray
 
 	ofVec4f m_id;
 	ofFloatColor m_col;
-	//ofVec4f m_origin;
-	//ofVec4f m_dir;
+	ofVec4f m_origin;
+	ofVec3f m_dir;
 };
 
 class Content {
@@ -20,6 +20,7 @@ public:
 	void update();
 	void draw();
 	void drawInteractionArea();
+	void drawRayDirs();
 	void exit();
 
 	void keyPressed(int key);
@@ -65,7 +66,7 @@ private:
 	std::vector<Ray> m_rays;
 	std::vector<Ray> m_newRays;
 	ofBufferObject m_rayBuffer;
-	ofShader m_compute;
+	ComputeWatcher m_compute;
 	ofVbo m_vbo;
 
 };

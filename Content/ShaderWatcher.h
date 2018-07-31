@@ -42,7 +42,7 @@ public:
 
 	ComputeWatcher();
 	~ComputeWatcher();
-	bool loadCompute(const std::filesystem::path& shaderName);
+	bool load(const std::filesystem::path& shaderName);
 	void update();
 	void exit();
 	const ofShader& getShader() const;
