@@ -46,10 +46,10 @@ Content::Content()
 	m_pointsVbo.setVertexBuffer(m_pointsBuffer, 3, sizeof(Point)); // the id
 	m_pointsVbo.setColorBuffer(m_pointsBuffer, sizeof(Point), sizeof(ofVec3f) );// dir
 	m_pointsBuffer.bindBase(GL_SHADER_STORAGE_BUFFER, 1);
+	setRays();
 
 	// SETUP RAY BUFFER ON GPU
 	m_cam.setVFlip(true); //flip for upside down image
-	setRays();
 
 	m_plane.set(ofGetWidth(), ofGetHeight(), 10, 10);
 	m_plane.mapTexCoords(0, 0, ofGetWidth(), ofGetHeight());
@@ -138,7 +138,6 @@ void Content::update()
 	m_compute.getShader().begin();
 	m_compute.getShader().dispatchCompute(m_rays.size(), 1, 1);
 	m_compute.getShader().end();
-	//readRays();
 }
 
 void Content::draw()
@@ -146,11 +145,8 @@ void Content::draw()
 
 	///// WORLD
 	{
-		m_cam.begin();
-		ofScale(2, -2, 2); // flip the y axis and zoom in a bit
-		ofTranslate(-m_image.getWidth() / 2, -m_image.getHeight() / 2);		ofEnableDepthTest();
-		glPointSize(6);		glEnable(GL_POINT_SMOOTH); // use circular points instead of square point		m_mesh.draw();
-		ofTranslate(m_image.getWidth() / 2, m_image.getHeight() / 2);
+		m_cam.begin();		ofScale(2, -2, 2); // flip the y axis and zoom in a bit
+		ofTranslate(-m_image.getWidth() / 2, -m_image.getHeight() / 2);		ofPointSmooth();		m_mesh.draw();
 
 		/// SCREEN GRAB
 		if (m_snapshot == true) {
@@ -189,14 +185,17 @@ void Content::draw()
 
 void Content::drawRayDirs()
 {
-
-	glm::vec3 o(m_rays[0].m_origin.x, m_rays[0].m_origin.y, m_rays[0].m_origin.z);
-	int skip = 1000;
-	for (int i = 0; i < m_rays.size(); )
+	if (!m_rays.empty())
 	{
-		ofSetColor(255, 0, 0, 255);
-		ofDrawLine(o, o + m_rays[i].m_dir*10000);
-		i += skip;
+
+		glm::vec3 o(m_rays[0].m_origin.x, m_rays[0].m_origin.y, m_rays[0].m_origin.z);
+		int skip = 1000;
+		for (int i = 0; i < m_rays.size(); )
+		{
+			ofSetColor(255, 0, 0, 255);
+			ofDrawLine(o, o + m_rays[i].m_dir * 10000);
+			i += skip;
+		}
 	}
 }
 
