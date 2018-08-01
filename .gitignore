@@ -20,4 +20,15 @@ Application/obj/
 [Rr]elease*/
 _ReSharper*/
 *.pdb
-*/bin/
+*.exe
+
+*.exp
+
+*.png
+*.dll
+*.map
+*.lib
+*.pdb
+*.ipdb
+*.ilk
+*.iobj
