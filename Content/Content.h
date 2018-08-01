@@ -79,4 +79,6 @@ private:
 	ofBufferObject m_pointsBuffer;
 	ofVbo m_pointsVbo;
 
+	ofImage m_outputImage;
+
 };

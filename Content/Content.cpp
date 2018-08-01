@@ -14,6 +14,10 @@ Content::Content()
 	m_shader.load("vert.glsl", "frag.glsl");
 	m_compute.load( "compute.glsl");
 
+	m_plane.set(ofGetWidth(), ofGetHeight(), 10, 10);
+	m_outputImage.allocate(ofGetWidth()*2.5, ofGetHeight()*2.5, OF_IMAGE_COLOR);
+	//m_outputImage.setColor(ofColor(0, 0, 0, 255));
+	//m_outputImage.getPixels().setColor(ofColor(0, 0, 0, 255));
 
 	// GENERATE POINTS FROM IMAGE
 	// load an image from disk
@@ -89,7 +93,8 @@ void Content::setRays()
 			rayWorldDir = glm::normalize(rayWorldDir);
 
 			m_rays[i].m_id = ofVec4f(x, y, 0, 1);
-			m_rays[i].m_col = ofFloatColor(rayWorldDir.x, rayWorldDir.y, rayWorldDir.z);
+			//m_rays[i].m_col = ofFloatColor(rayWorldDir.x, rayWorldDir.y, rayWorldDir.z);
+			m_rays[i].m_col = ofFloatColor(0, 0, 0);
 			m_rays[i].m_origin = ofVec4f(rayWorldOrigin.x, rayWorldOrigin.y, rayWorldOrigin.z, 1.);
 			m_rays[i].m_dir = rayWorldDir;
 			i++;
@@ -103,6 +108,12 @@ void Content::setRays()
 	m_raysVbo.setAttributeBuffer(4, m_rayBuffer, 4, sizeof(Ray), sizeof(ofVec4f) + sizeof(ofFloatColor));//ray origin
 	m_raysVbo.setAttributeBuffer(5, m_rayBuffer, 3, sizeof(Ray), 2*sizeof(ofVec4f) + sizeof(ofFloatColor));//ray dir 
 	m_rayBuffer.bindBase(GL_SHADER_STORAGE_BUFFER, 0);
+
+	m_compute.getShader().begin();
+	m_outputImage.getTexture().bindAsImage(0, GL_READ_WRITE);
+	m_compute.getShader().dispatchCompute(m_rays.size(), 1, 1);
+	m_outputImage.getTexture().unbind();
+	m_compute.getShader().end();
 }
 
 void Content::readRays()
@@ -135,9 +146,7 @@ void Content::update()
 	m_shader.update();
 	m_compute.update();
 
-	m_compute.getShader().begin();
-	m_compute.getShader().dispatchCompute(m_rays.size(), 1, 1);
-	m_compute.getShader().end();
+
 }
 
 void Content::draw()
@@ -147,6 +156,19 @@ void Content::draw()
 	{
 		m_cam.begin();		ofScale(2, -2, 2); // flip the y axis and zoom in a bit
 		ofTranslate(-m_image.getWidth() / 2, -m_image.getHeight() / 2);		ofPointSmooth();		m_mesh.draw();
+		m_cam.end();		m_cam.begin();		ofSetColor(255, 255);		glPointSize(10);		ofTranslate(-m_image.getWidth() *2, 0);
+		m_raysVbo.draw(GL_POINTS, 0, m_rays.size());
+		m_cam.end();
+
+		m_cam.begin();
+		m_outputImage.getTexture().bind();
+		m_shader.getShader().begin();
+		ofTranslate(2*ofGetWidth() / 2, 0);
+		m_plane.draw();
+		m_shader.getShader().end();
+		m_outputImage.getTexture().unbind();
+		m_cam.end();
+
 
 		/// SCREEN GRAB
 		if (m_snapshot == true) {
@@ -159,11 +181,12 @@ void Content::draw()
 
 		if (m_showGui)
 		{
+			m_cam.begin();
 			ofDrawGrid(5000, 5, true, true, true, true);
 			drawRayDirs();
+			m_cam.end();
 		}
 
-		m_cam.end();
 	}
 
 
@@ -187,7 +210,6 @@ void Content::drawRayDirs()
 {
 	if (!m_rays.empty())
 	{
-
 		glm::vec3 o(m_rays[0].m_origin.x, m_rays[0].m_origin.y, m_rays[0].m_origin.z);
 		int skip = 1000;
 		for (int i = 0; i < m_rays.size(); )
