@@ -80,5 +80,6 @@ private:
 	ofVbo m_pointsVbo;
 
 	ofImage m_outputImage;
+	ofTexture m_outputTexture;
 
 };

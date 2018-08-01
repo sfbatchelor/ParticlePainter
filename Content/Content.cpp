@@ -16,8 +16,10 @@ Content::Content()
 
 	m_plane.set(ofGetWidth(), ofGetHeight(), 10, 10);
 	m_outputImage.allocate(ofGetWidth()*2.5, ofGetHeight()*2.5, OF_IMAGE_COLOR);
-	//m_outputImage.setColor(ofColor(0, 0, 0, 255));
-	//m_outputImage.getPixels().setColor(ofColor(0, 0, 0, 255));
+	m_outputTexture.allocate(ofGetWidth()*2.5, ofGetHeight()*2.5, GL_RGBA8);
+
+	m_outputImage.setColor(ofColor(0, 0, 0, 255));
+	m_outputImage.getPixels().setColor(ofColor(0, 0, 0, 255));
 
 	// GENERATE POINTS FROM IMAGE
 	// load an image from disk
@@ -54,12 +56,13 @@ Content::Content()
 
 	// SETUP RAY BUFFER ON GPU
 	m_cam.setVFlip(true); //flip for upside down image
+	m_cam.setFarClip(100000000.);
 
 	m_plane.set(ofGetWidth(), ofGetHeight(), 10, 10);
 	m_plane.mapTexCoords(0, 0, ofGetWidth(), ofGetHeight());
 	ofEnableDepthTest();
 	glPointSize(6);
-	ofSetBackgroundColor(5, 5, 5);
+	ofSetBackgroundColor(50, 50, 50);
 
 }
 
@@ -80,9 +83,10 @@ void Content::setRays()
 
 
 	// set individual rays
-	for (int x = 1; x <= ofGetWidth(); x++)
+	int skip = 10;
+	for (int x = 1; x <= ofGetWidth(); x += skip)
 	{
-		for (int y = 1; y <= ofGetHeight(); y++)
+		for (int y = 1; y <= ofGetHeight();  y += skip)
 		{
 			float px = (2. * ((x + .5) / ofGetWidth()) - 1.) * tanTheta* ar;
 			float py = (1. - 2. * ((y + .5) / ofGetHeight())) * tanTheta;
@@ -110,9 +114,8 @@ void Content::setRays()
 	m_rayBuffer.bindBase(GL_SHADER_STORAGE_BUFFER, 0);
 
 	m_compute.getShader().begin();
-	m_outputImage.getTexture().bindAsImage(0, GL_READ_WRITE);
-	m_compute.getShader().dispatchCompute(m_rays.size(), 1, 1);
-	m_outputImage.getTexture().unbind();
+	m_outputTexture.bindAsImage(0, GL_READ_WRITE);
+	m_compute.getShader().dispatchCompute(100, 100, 1);
 	m_compute.getShader().end();
 }
 
@@ -145,29 +148,30 @@ void Content::update()
 {
 	m_shader.update();
 	m_compute.update();
-
-
 }
 
 void Content::draw()
 {
 
+
+
+
 	///// WORLD
 	{
 		m_cam.begin();		ofScale(2, -2, 2); // flip the y axis and zoom in a bit
 		ofTranslate(-m_image.getWidth() / 2, -m_image.getHeight() / 2);		ofPointSmooth();		m_mesh.draw();
-		m_cam.end();		m_cam.begin();		ofSetColor(255, 255);		glPointSize(10);		ofTranslate(-m_image.getWidth() *2, 0);
-		m_raysVbo.draw(GL_POINTS, 0, m_rays.size());
-		m_cam.end();
-
-		m_cam.begin();
-		m_outputImage.getTexture().bind();
+		m_cam.end();		m_cam.begin();
+		m_outputTexture.bind();
 		m_shader.getShader().begin();
-		ofTranslate(2*ofGetWidth() / 2, 0);
+		ofTranslate(2*ofGetWidth(), 0);
+		ofSetColor(255, 255, 255);
 		m_plane.draw();
 		m_shader.getShader().end();
-		m_outputImage.getTexture().unbind();
+		m_outputTexture.unbind();
 		m_cam.end();
+
+
+		//m_outputTexture.draw(0, 0);
 
 
 		/// SCREEN GRAB
