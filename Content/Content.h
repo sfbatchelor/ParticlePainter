@@ -6,14 +6,14 @@ struct Ray
 {
 
 	glm::ivec2 m_id;
-	ofVec4f m_origin;
-	ofVec3f m_dir;
+	glm::vec4 m_origin;
+	glm::vec3 m_dir;
 };
 
 struct Point
 {
-	ofVec3f m_pos;
-	ofFloatColor m_col;
+	glm::vec3 m_pos;
+	glm::vec4 m_col;
 };
 
 class Content {
@@ -79,7 +79,7 @@ private:
 	int m_numRays;
 
 	ofBufferObject m_computeReadBuffer;
-	ofFloatPixels m_computeReadPixels;
+	ofPixels m_computeReadPixels;
 	std::vector<glm::vec4> m_computePixelCache;
 
 

@@ -35,24 +35,22 @@ Content::Content()
 		int x = ofRandom(float(m_image.getWidth()));
 		int y = ofRandom(float(m_image.getHeight()));
 
-			ofColor cur = m_image.getColor(x, y);
-			if (cur.a > 0) {
-				// the alpha value encodes depth, let's remap it to a good depth range
-				float z = ofMap(cur.getBrightness(), 0, 255, -300, 300);
-				cur.a = 255;
-				m_mesh.addColor(cur);
-				ofVec3f pos(x, y, z);
-				m_mesh.addVertex(pos);
+		ofColor cur = m_image.getColor(x, y);
+		if (cur.a > 0) {
+			// the alpha value encodes depth, let's remap it to a good depth range
+			float z = ofMap(cur.getBrightness(), 0, 255, -300, 300);
+			cur.a = 255;
+			m_mesh.addColor(cur);
+			ofVec3f pos(x, y, z);
+			m_mesh.addVertex(pos);
 
-
-				Point point{};
-				point.m_col = cur;
-				point.m_pos = pos;
-				m_points.push_back(point);
-			}
+			Point point{};
+			point.m_col = glm::vec4(cur.r, cur.g, cur.b, cur.a);
+			point.m_pos = glm::vec3(pos.x, pos.y, pos.z);
+			m_points.push_back(point);
+		}
 	}
 	m_pointsBuffer.allocate(m_points, GL_DYNAMIC_DRAW);
-	m_pointsBuffer.bindBase(GL_SHADER_STORAGE_BUFFER, 1);
 	setRays();
 
 
@@ -95,11 +93,11 @@ void Content::setRays()
 		float pz = (ofGetHeight() / 2.) / tanTheta;
 		glm::vec3 pos(px, py, -pz);
 		auto rayWorldPos = m_cam.cameraToWorld(pos);
-		auto rayWorldDir = rayWorldPos - rayWorldOrigin;
+		auto rayWorldDir = glm::vec3(rayWorldPos - rayWorldOrigin);
 		rayWorldDir = glm::normalize(rayWorldDir);
 
 		m_rays[i].m_id = glm::ivec2(x, y);
-		m_rays[i].m_origin = ofVec4f(rayWorldOrigin.x, rayWorldOrigin.y, rayWorldOrigin.z, 1.);
+		m_rays[i].m_origin = glm::vec4(rayWorldOrigin.x, rayWorldOrigin.y, rayWorldOrigin.z, 1.);
 		m_rays[i].m_dir = rayWorldDir;
 		i++;
 	}
@@ -107,6 +105,7 @@ void Content::setRays()
 	// buffer and vbo allocation 
 	m_rayBuffer.allocate(m_rays, GL_DYNAMIC_DRAW);
 	m_rayBuffer.bindBase(GL_SHADER_STORAGE_BUFFER, 0);
+	m_pointsBuffer.bindBase(GL_SHADER_STORAGE_BUFFER, 1);
 
 	m_compute.getShader().begin();
 	m_outputTexture.bindAsImage(0, GL_READ_WRITE);
@@ -118,7 +117,7 @@ void Content::setRays()
 void Content::readComputeOutput()
 {
 	m_outputTexture.copyTo(m_computeReadBuffer);
-	float* p = m_computeReadBuffer.map<float>(GL_READ_ONLY);
+	unsigned char* p = m_computeReadBuffer.map<unsigned char>(GL_READ_ONLY);
 	m_computeReadPixels.setFromPixels(p, m_outputTexture.getWidth(), m_outputTexture.getHeight(), 4);
 	m_computeReadBuffer.unmap();
 	m_computePixelCache.clear();
@@ -131,7 +130,6 @@ void Content::readComputeOutput()
 				m_computeReadPixels[i + 2], 
 				m_computeReadPixels[i + 3]));
 	}
-
 }
 
 void Content::update()

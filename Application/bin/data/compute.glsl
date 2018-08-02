@@ -40,10 +40,10 @@ float distMap(in vec3 pos, out vec4 col)
 	float d = 0;
 	for( int i = 0; i< u_numPoints; i++)
 	{
-		if(d > sdSphere(pos, p[i].pos, 50))
+		if(d > sdSphere(pos, p[i].pos, 150))
 		{
 			col = p[i].col;
-			d = sdSphere(pos, p[i].pos, 50);
+			d = sdSphere(pos, p[i].pos, 150);
 		}
 	}
 	return d;
