@@ -1,79 +1,67 @@
 #version 440
 
-struct Ray{
-    ivec2 id;
-	vec4 origin;
-	vec3 dir;
-};
 
 struct Point{
 	vec3 pos;
 	vec4 col;
+	vec3 vel;
+	vec3 accel;
 };
 
 const float EPSILON = 0.0001;
 
-layout(std140, binding=0) buffer rays{
-    Ray r[];
-};
-
-layout(std140, binding=1) buffer points{
+layout(std140, binding=0) buffer points{
     Point p[];
 };
 
-layout(rgba32f, binding=0) uniform image2D dst;
-
+layout(rgba8, binding=0) uniform readonly image2D src;
 
 uniform int u_numPoints = 0;
+uniform ivec2 u_pixSampleSize = ivec2(100,100);
+
+uniform float u_pixAttractMax = 100.;
+uniform float u_pixRepulseMax = 100.;
 
 layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
 
-float sdSphere(in vec3 pos, in vec3 centre, in float radius )
+float map(float value, float min1, float max1, float min2, float max2)
 {
+	// Convert the current value to a percentage
+	// 0% - min1, 100% - max1
+	float perc = (value - min1) / (max1 - min1);
 
-	return length(pos - centre) - radius;
+	// Do the same operation backwards with min2 and max2
+	return  perc * (max2 - min2) + min2;
 
-}
-
-float distMap(in vec3 pos, out vec4 col)
-{
-	float d = 0;
-	for( int i = 0; i< u_numPoints; i++)
-	{
-		if(d > sdSphere(pos, p[i].pos, 150))
-		{
-			col = p[i].col;
-			d = sdSphere(pos, p[i].pos, 150);
-		}
-	}
-	return d;
-}
-
-
-float worldIntersect(in vec3 ro, in vec3 rd, out vec4 col)
-{
-	float tmax = 100000.;
-	for (float t = .01; t <tmax;)
-	{
-		float h = distMap(ro + rd*vec3(t), col);
-		if(h<.001)
-		{
-			return t;
-		}
-		t += h.x;
-	}
-	col = vec4(0,0,0,1);
-	return float(-1.);
 }
 
 void main(){
 
-	Ray ray = r[gl_GlobalInvocationID.x * gl_GlobalInvocationID.y];
+	Point point = p[gl_GlobalInvocationID.x * gl_GlobalInvocationID.y];
 
-	vec4 col = vec4(0,0,0,1);
-	worldIntersect(ray.origin.xyz, ray.dir, col);
-	col = p[gl_GlobalInvocationID.x * gl_GlobalInvocationID.y].col;
+	// Lookup Pixels from underlying image
+	ivec2 lookup = ivec2(point.pos.xy);
+	int xMin = lookup.x - int(u_pixSampleSize.x/2);
+	int xMax = lookup.x + int(u_pixSampleSize.x/2);
+	int yMin = lookup.y - int(u_pixSampleSize.y/2);
+	int yMax = lookup.y + int(u_pixSampleSize.y/2);
+	for (int x = xMin; x < xMax; x++)
+	{
+		for (int y = yMin; y < yMax; y++)
+		{
+			// get colour at point, work out difference, remap to 0-1, use as an attraction force
+			vec4 imageCol = imageLoad(src, ivec2(x,y));
+			float imageDiff = distance(imageCol.rgb, point.col.rgb);
+			float coeff = map(imageDiff, 0, 200, 0, 1);
 
-	imageStore( dst, ray.id.yx, vec4(col)); 
+			float pixAttractMag = u_pixAttractMax * coeff;
+			vec3 pixAttractDir = vec3(point.pos.xy - vec2(x,y), 0.0); //no depth component atm
+			point.accel += pixAttractDir * pixAttractMag;
+		}
+	}
+
+
+	point.vel += point.accel;
+	point.pos += point.vel;
 
 }
