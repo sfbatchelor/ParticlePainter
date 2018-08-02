@@ -11,15 +11,21 @@ Content::Content()
 	m_snapshot = false;
 	m_showGui = true;
 
+	m_numPoints = 1000;
+	m_numRays = 10000;
+
 	m_shader.load("vert.glsl", "frag.glsl");
 	m_compute.load( "compute.glsl");
 
 	m_plane.set(ofGetWidth(), ofGetHeight(), 10, 10);
 	m_outputImage.allocate(ofGetWidth()*2.5, ofGetHeight()*2.5, OF_IMAGE_COLOR);
-	m_outputTexture.allocate(ofGetWidth()*2.5, ofGetHeight()*2.5, GL_RGBA8);
+	m_outputTexture.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA32F);
 
 	m_outputImage.setColor(ofColor(0, 0, 0, 255));
 	m_outputImage.getPixels().setColor(ofColor(0, 0, 0, 255));
+
+
+
 
 	// GENERATE POINTS FROM IMAGE
 	// load an image from disk
@@ -27,9 +33,11 @@ Content::Content()
 	// we're going to load a ton of points into an ofMesh
 	m_mesh.setMode(OF_PRIMITIVE_POINTS);
 	// loop through the image in the x and y axes
-	int skip = 4; // load a subset of the points
-	for (int y = 0; y < m_image.getHeight(); y += skip) {
-		for (int x = 0; x < m_image.getWidth(); x += skip) {
+	for(int i = 0; i<m_numPoints; i++)
+	{
+		int x = ofRandom(float(m_image.getWidth()));
+		int y = ofRandom(float(m_image.getHeight()));
+
 			ofColor cur = m_image.getColor(x, y);
 			if (cur.a > 0) {
 				// the alpha value encodes depth, let's remap it to a good depth range
@@ -45,18 +53,16 @@ Content::Content()
 				point.m_pos = pos;
 				m_points.push_back(point);
 			}
-		}
 	}
-
 	m_pointsBuffer.allocate(m_points, GL_DYNAMIC_DRAW);
-	m_pointsVbo.setVertexBuffer(m_pointsBuffer, 3, sizeof(Point)); // the id
-	m_pointsVbo.setColorBuffer(m_pointsBuffer, sizeof(Point), sizeof(ofVec3f) );// dir
 	m_pointsBuffer.bindBase(GL_SHADER_STORAGE_BUFFER, 1);
 	setRays();
+
 
 	// SETUP RAY BUFFER ON GPU
 	m_cam.setVFlip(true); //flip for upside down image
 	m_cam.setFarClip(100000000.);
+
 
 	m_plane.set(ofGetWidth(), ofGetHeight(), 10, 10);
 	m_plane.mapTexCoords(0, 0, ofGetWidth(), ofGetHeight());
@@ -83,38 +89,31 @@ void Content::setRays()
 
 
 	// set individual rays
-	int skip = 10;
-	for (int x = 1; x <= ofGetWidth(); x += skip)
+	for(int i = 0; i<m_numRays; i++)
 	{
-		for (int y = 1; y <= ofGetHeight();  y += skip)
-		{
-			float px = (2. * ((x + .5) / ofGetWidth()) - 1.) * tanTheta* ar;
-			float py = (1. - 2. * ((y + .5) / ofGetHeight())) * tanTheta;
-			float pz = (ofGetHeight() / 2.) / tanTheta;
-			glm::vec3 pos(px, py, -pz);
-			auto rayWorldPos = m_cam.cameraToWorld(pos);
-			auto rayWorldDir = rayWorldPos - rayWorldOrigin;
-			rayWorldDir = glm::normalize(rayWorldDir);
+		int x = ofRandom(ofGetWidth());
+		int y = ofRandom(ofGetHeight());
+		float px = (2. * ((x + .5) / ofGetWidth()) - 1.) * tanTheta* ar;
+		float py = (1. - 2. * ((y + .5) / ofGetHeight())) * tanTheta;
+		float pz = (ofGetHeight() / 2.) / tanTheta;
+		glm::vec3 pos(px, py, -pz);
+		auto rayWorldPos = m_cam.cameraToWorld(pos);
+		auto rayWorldDir = rayWorldPos - rayWorldOrigin;
+		rayWorldDir = glm::normalize(rayWorldDir);
 
-			m_rays[i].m_id = ofVec4f(x, y, 0, 1);
-			//m_rays[i].m_col = ofFloatColor(rayWorldDir.x, rayWorldDir.y, rayWorldDir.z);
-			m_rays[i].m_col = ofFloatColor(0, 0, 0);
-			m_rays[i].m_origin = ofVec4f(rayWorldOrigin.x, rayWorldOrigin.y, rayWorldOrigin.z, 1.);
-			m_rays[i].m_dir = rayWorldDir;
-			i++;
-		}
+		m_rays[i].m_id = glm::ivec2(x, y);
+		m_rays[i].m_origin = ofVec4f(rayWorldOrigin.x, rayWorldOrigin.y, rayWorldOrigin.z, 1.);
+		m_rays[i].m_dir = rayWorldDir;
+		i++;
 	}
 
 	// buffer and vbo allocation 
 	m_rayBuffer.allocate(m_rays, GL_DYNAMIC_DRAW);
-	m_raysVbo.setVertexBuffer(m_rayBuffer, 4, sizeof(Ray)); // the id
-	m_raysVbo.setColorBuffer(m_rayBuffer, sizeof(Ray), sizeof(ofVec4f) );// dir
-	m_raysVbo.setAttributeBuffer(4, m_rayBuffer, 4, sizeof(Ray), sizeof(ofVec4f) + sizeof(ofFloatColor));//ray origin
-	m_raysVbo.setAttributeBuffer(5, m_rayBuffer, 3, sizeof(Ray), 2*sizeof(ofVec4f) + sizeof(ofFloatColor));//ray dir 
 	m_rayBuffer.bindBase(GL_SHADER_STORAGE_BUFFER, 0);
 
 	m_compute.getShader().begin();
 	m_outputTexture.bindAsImage(0, GL_READ_WRITE);
+	m_compute.getShader().setUniform1i("u_numPoints", m_numPoints);
 	m_compute.getShader().dispatchCompute(100, 100, 1);
 	m_compute.getShader().end();
 }
@@ -148,14 +147,18 @@ void Content::update()
 {
 	m_shader.update();
 	m_compute.update();
+	//ofBufferObject buffer;
+	//ofPixels pixels;
+	//pixels.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA32F);
+	//buffer.allocate(pixels, GL_DYNAMIC_READ);
+	//unsigned char* p = buffer.map<unsigned char>(GL_READ_ONLY);
+	//pixels.setFromPixels(p, ofGetWidth(), ofGetHeight());
+	//m_outputTexture.copyTo(buffer);
+
 }
 
 void Content::draw()
 {
-
-
-
-
 	///// WORLD
 	{
 		m_cam.begin();		ofScale(2, -2, 2); // flip the y axis and zoom in a bit
@@ -262,7 +265,9 @@ void Content::keyPressed(int key)
 		m_showGui = !m_showGui;
 		break;
 	case ' ':
-		setRays();
+		for(int i = 0; i< 100;i ++)
+			setRays();
+
 		break;
 	}
 }

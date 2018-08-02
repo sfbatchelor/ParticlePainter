@@ -5,8 +5,7 @@
 struct Ray
 {
 
-	ofVec4f m_id;
-	ofFloatColor m_col;
+	glm::ivec2 m_id;
 	ofVec4f m_origin;
 	ofVec3f m_dir;
 };
@@ -14,7 +13,7 @@ struct Ray
 struct Point
 {
 	ofVec3f m_pos;
-	ofFloatColor m_col;
+	ofColor m_col;
 };
 
 class Content {
@@ -48,11 +47,6 @@ public:
 
 private:
 
-
-	//vector <ofImage> m_draggedImages;
-	//vector <ofRectangle> m_rectangles;
-	//vector <ofColor> m_colours;
-
 	int m_whiteThresh;
 
 	ofImage m_screenGrab;
@@ -81,5 +75,13 @@ private:
 
 	ofImage m_outputImage;
 	ofTexture m_outputTexture;
+
+	int m_numPoints;
+	int m_numRays;
+
+	ofBufferObject m_computeReadBuffer;
+	ofPixels m_computeReadPixels;
+
+
 
 };
