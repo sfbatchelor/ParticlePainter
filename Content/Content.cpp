@@ -18,13 +18,10 @@ Content::Content()
 	m_compute.load( "compute.glsl");
 
 	m_plane.set(ofGetWidth(), ofGetHeight(), 10, 10);
-	m_outputImage.allocate(ofGetWidth()*2.5, ofGetHeight()*2.5, OF_IMAGE_COLOR);
 	m_outputTexture.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA32F);
 
-	m_outputImage.setColor(ofColor(0, 0, 0, 255));
-	m_outputImage.getPixels().setColor(ofColor(0, 0, 0, 255));
-
-
+	m_computeReadPixels.allocate(m_outputTexture.getWidth(), m_outputTexture.getHeight(), 4);//use same specs as outputTex
+	m_computeReadBuffer.allocate(m_computeReadPixels, GL_DYNAMIC_READ);
 
 
 	// GENERATE POINTS FROM IMAGE
@@ -118,28 +115,22 @@ void Content::setRays()
 	m_compute.getShader().end();
 }
 
-void Content::readRays()
+void Content::readComputeOutput()
 {
-
-	struct Ray* rays = NULL;
-	try {
-		rays = (Ray*)m_rayBuffer.map(GL_MAP_READ_BIT| GL_MAP_WRITE_BIT);
-	}
-	catch (std::runtime_error e) {
-		ofLogError() << e.what();
-	}
-	if (glGetError() != GL_NO_ERROR || rays == NULL) {
-		ofLogError() << "Could not map the shader storage buffer for particles";
-	}
-
-	m_newRays.resize(m_rays.size());
-	for (int i = 0; i < m_newRays.size(); i++)
+	m_outputTexture.copyTo(m_computeReadBuffer);
+	float* p = m_computeReadBuffer.map<float>(GL_READ_ONLY);
+	m_computeReadPixels.setFromPixels(p, m_outputTexture.getWidth(), m_outputTexture.getHeight(), 4);
+	m_computeReadBuffer.unmap();
+	m_computePixelCache.clear();
+	m_computePixelCache.resize(0);
+	for (int i = 0; i < m_computeReadPixels.size(); i+= 4)
 	{
-		Ray r = rays[i];
-		m_newRays.push_back(r);
+			m_computePixelCache.push_back(glm::vec4(
+				m_computeReadPixels[i], 
+				m_computeReadPixels[i + 1], 
+				m_computeReadPixels[i + 2], 
+				m_computeReadPixels[i + 3]));
 	}
-
-	m_rayBuffer.unmap();
 
 }
 
@@ -147,14 +138,6 @@ void Content::update()
 {
 	m_shader.update();
 	m_compute.update();
-	//ofBufferObject buffer;
-	//ofPixels pixels;
-	//pixels.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA32F);
-	//buffer.allocate(pixels, GL_DYNAMIC_READ);
-	//unsigned char* p = buffer.map<unsigned char>(GL_READ_ONLY);
-	//pixels.setFromPixels(p, ofGetWidth(), ofGetHeight());
-	//m_outputTexture.copyTo(buffer);
-
 }
 
 void Content::draw()
@@ -267,7 +250,7 @@ void Content::keyPressed(int key)
 	case ' ':
 		for(int i = 0; i< 100;i ++)
 			setRays();
-
+		readComputeOutput();;
 		break;
 	}
 }

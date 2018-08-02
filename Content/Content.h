@@ -13,7 +13,7 @@ struct Ray
 struct Point
 {
 	ofVec3f m_pos;
-	ofColor m_col;
+	ofFloatColor m_col;
 };
 
 class Content {
@@ -43,7 +43,7 @@ public:
 	bool isValid();
 
 	void setRays();
-	void readRays();
+	void readComputeOutput();
 
 private:
 
@@ -73,14 +73,14 @@ private:
 	ofBufferObject m_pointsBuffer;
 	ofVbo m_pointsVbo;
 
-	ofImage m_outputImage;
 	ofTexture m_outputTexture;
 
 	int m_numPoints;
 	int m_numRays;
 
 	ofBufferObject m_computeReadBuffer;
-	ofPixels m_computeReadPixels;
+	ofFloatPixels m_computeReadPixels;
+	std::vector<glm::vec4> m_computePixelCache;
 
 
 
