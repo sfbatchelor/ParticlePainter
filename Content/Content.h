@@ -4,10 +4,9 @@
 
 struct Point
 {
-	ofVec3f m_pos;
-	ofVec4f m_col;
-	ofVec3f m_vel;
-	ofVec3f m_accel;
+	ofVec4f m_pos;
+	ofFloatColor m_col;
+	ofVec4f m_vel;
 };
 
 class Content {
@@ -36,6 +35,7 @@ public:
 	bool isValid();
 
 	void readComputeOutput();
+	void initSimPoints();
 
 private:
 
@@ -57,5 +57,8 @@ private:
 	ofVbo m_pointsVbo;
 
 	int m_numPoints;
+
+	bool m_pause;
+	bool m_restart;
 
 };

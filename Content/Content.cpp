@@ -7,9 +7,13 @@ Content::Content()
 	ofSetWindowTitle("Digital Painting");
 	m_snapshot = false;
 	m_showGui = true;
-	m_numPoints = 1000;
+	m_numPoints = 1024 * 8;
 	m_shader.load("vert.glsl", "frag.glsl");
 	m_compute.load( "compute.glsl");
+
+	m_pause = false;
+	m_restart = false;
+
 
 	// GENERATE POINTS FROM IMAGE
 	// load an image from disk
@@ -32,16 +36,18 @@ Content::Content()
 			m_mesh.addVertex(pos);
 
 			Point point{};
-			point.m_col = ofVec4f(cur.r, cur.g, cur.b, cur.a);
-			point.m_pos = ofVec3f(pos.x, pos.y, pos.z);
-			point.m_vel = ofVec3f(0);
-			point.m_accel = ofVec3f(0);
+			point.m_col = ofFloatColor(cur.r, cur.g, cur.b, cur.a);
+			//point.m_col = ofFloatColor(.6, 0.7, 0, 1.0);
+			point.m_pos = ofVec4f(pos.x, pos.y, pos.z, 1.);
+			point.m_vel = ofVec4f(0);
 			m_points.push_back(point);
 		}
 	}
 	m_pointsBuffer.allocate(m_points, GL_DYNAMIC_DRAW);
-	m_pointsVbo.setVertexBuffer(m_pointsBuffer,3,sizeof(Point));
-	m_pointsVbo.setColorBuffer(m_pointsBuffer,sizeof(Point),sizeof(ofVec3f));
+	m_pointsVbo.setVertexBuffer(m_pointsBuffer,4,sizeof(Point));
+	m_pointsVbo.setColorBuffer(m_pointsBuffer,sizeof(Point),sizeof(ofVec4f));
+	m_pointsBuffer.bindBase(GL_SHADER_STORAGE_BUFFER, 0);
+	m_texture.loadData(m_image.getPixels());
 
 	// SETUP RAY BUFFER ON GPU
 	m_cam.setVFlip(true); //flip for upside down image
@@ -51,8 +57,7 @@ Content::Content()
 	glPointSize(6);
 	ofSetBackgroundColor(50, 50, 50);
 
-	m_pointsBuffer.bindBase(GL_SHADER_STORAGE_BUFFER, 0);
-	m_texture.loadData(m_image.getPixels());
+
 }
 
 void Content::readComputeOutput()
@@ -73,23 +78,41 @@ void Content::readComputeOutput()
 	}*/
 }
 
+void Content::initSimPoints()
+{
+	m_pointsBuffer.unbindBase(GL_SHADER_STORAGE_BUFFER, 0);
+	m_pointsBuffer.allocate(m_points, GL_DYNAMIC_DRAW);
+	m_pointsVbo.setVertexBuffer(m_pointsBuffer,4,sizeof(Point));
+	m_pointsVbo.setColorBuffer(m_pointsBuffer,sizeof(Point),sizeof(ofVec4f));
+	m_pointsBuffer.bindBase(GL_SHADER_STORAGE_BUFFER, 0);
+}
+
 void Content::update()
 {
 	m_shader.update();
 	m_compute.update();
 
 
-	m_compute.getShader().begin();	m_texture.bindAsImage(0, GL_READ_ONLY);	m_compute.getShader().setUniform1i("u_numPoints", m_numPoints);	m_compute.getShader().dispatchCompute(100, 100, 1);	m_compute.getShader().end();
+	if (m_restart)
+	{
+		initSimPoints();
+		m_restart = false;
+	}
+
+	if (!m_pause)
+	{
+		m_compute.getShader().begin();		m_texture.bindAsImage(0, GL_READ_ONLY);		m_compute.getShader().setUniform1i("u_numPoints", m_numPoints);		m_compute.getShader().setUniform1i("u_width", m_image.getWidth());		m_compute.getShader().setUniform1i("u_height", m_image.getHeight());		m_compute.getShader().dispatchCompute((m_points.size() + 1024 - 1) / 1024, 1, 1);		m_compute.getShader().end();
+	}
 }
 
 void Content::draw()
 {
 	///// WORLD
 	{
-		//m_cam.begin();		//ofScale(2, -2, 2); // flip the y axis and zoom in a bit
+		m_cam.begin();		//ofScale(2, -2, 2); // flip the y axis and zoom in a bit
 		//ofTranslate(-m_image.getWidth() / 2, -m_image.getHeight() / 2);		//ofPointSmooth();		//m_mesh.draw();
-		//m_cam.end();		ofPointSmooth();		glPointSize(16);		ofSetColor(255);
-		m_pointsVbo.draw(GL_POINTS, 0, m_points.size());		glPointSize(6);		/// SCREEN GRAB
+		ofPointSmooth();		ofSetColor(255);
+		glPointSize(6);		m_texture.draw(0, 0, -1000, m_image.getWidth(), m_image.getHeight());			m_pointsVbo.draw(GL_POINTS, 0, m_points.size());		m_cam.end();		/// SCREEN GRAB
 		if (m_snapshot == true) {
 			m_screenGrab.grabScreen(0, 0, ofGetWidth(), ofGetHeight());
 			string fileName = "snapshot_" + ofGetTimestampString() + ".png";
@@ -160,6 +183,10 @@ void Content::keyPressed(int key)
 		m_showGui = !m_showGui;
 		break;
 	case ' ':
+		m_pause = !m_pause;
+		break;
+	case 'r':
+		m_restart = true;
 		break;
 	}
 }
