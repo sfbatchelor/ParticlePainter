@@ -55,6 +55,7 @@ private:
 
 	std::vector<Point> m_points;
 	ofBufferObject m_pointsBuffer;
+	ofBufferObject m_pointsBufferOld;
 	ofVbo m_pointsVbo;
 
 	int m_numPoints;

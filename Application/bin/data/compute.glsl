@@ -9,90 +9,92 @@ struct Point{
 
 const float EPSILON = 0.0001;
 
-layout(std140, binding=0) buffer points{
-    Point p[];
+layout(std140, binding=0) buffer newPoints{
+    Point np[];
+};
+layout(std140, binding=1) buffer prevPoints{
+    Point pp[];
 };
 
 layout(rgba8, binding=0) uniform readonly image2D src;
 
-uniform int u_numPoints = 0;
-uniform int u_width = 1000;
-uniform int u_height = 1000;
-uniform ivec2 u_pixSampleSize = ivec2(200,200);
+uniform int uNumPoints = 0;
+uniform int uWidth = 1000;
+uniform int uHeight = 1000;
+uniform ivec2 uPixSampleSize = ivec2(10);
 
-uniform float u_pixAttractMax = .001;
-uniform float u_pixRepulseMax = .01;
+uniform float uMaxCohDist = 5;
+uniform float uMinCohDist = 0;
+float uCohDistRange = uMaxCohDist - uMinCohDist;
+uniform float uMaxCohAccel = 2;
 
 layout(local_size_x = 1024, local_size_y = 1, local_size_z = 1) in;
 
-float map(float value, float min1, float max1, float min2, float max2)
-{
-	// Convert the current value to a percentage
-	// 0% - min1, 100% - max1
-	float perc = (value - min1) / (max1 - min1);
-
-	// Do the same operation backwards with min2 and max2
-	return  perc * (max2 - min2) + min2;
-
-}
-
 void main(){
 
-	Point point = p[gl_GlobalInvocationID.x];
+// SETUP
+	Point point = pp[gl_GlobalInvocationID.x];
+
+	//accel value to add to vel, vel to add to pos
+	vec3 totalAccel = vec3(0);
 
 	// Lookup Pixels from underlying image
 	ivec2 lookup = ivec2(point.pos.xy);
-	int xMin = lookup.x - int(u_pixSampleSize.x/2.);
-	int xMax = lookup.x + int(u_pixSampleSize.x/2.);
-	int yMin = lookup.y - int(u_pixSampleSize.y/2.);
-	int yMax = lookup.y + int(u_pixSampleSize.y/2.);
+	int xMin = lookup.x - int(uPixSampleSize.x/2.);
+	int xMax = lookup.x + int(uPixSampleSize.x/2.);
+	int yMin = lookup.y - int(uPixSampleSize.y/2.);
+	int yMax = lookup.y + int(uPixSampleSize.y/2.);
+
+
+// COLOUR COHESION
+	// 1- find the closest matching pixel colour in an area, set that pixel pos to be the new 'target'
+	float closestColL = 100000.;
+	vec3 cohesionTarget = point.pos.xyz;
 	for (int x = xMin; x < xMax; x++)
 	{
-//		if (x < 0 || x > u_width)
-//			continue;
+		if (x < 0 || x > uWidth)
+			continue;
 		for (int y = yMin; y < yMax; y++)
 		{
-//			if (y < 0 || y > u_height)
-//				continue;
-			if(x == point.pos.x && y == point.pos.y)
+			if (y < 0 || y > uHeight)
 				continue;
 
-			// get colour at point, work out difference, remap to 0-1, use as an attraction force
 			vec4 imageCol = imageLoad(src, ivec2(x,y));
 			float imageDiff = distance(imageCol.rgb, point.col.rgb);
-			float coeff = smoothstep( 200, 0, imageDiff);
-
-			// colour attraction component
-			float pixAttractMag = u_pixAttractMax * coeff;
-			vec2 dir =  point.pos.xy - vec2(x,y)  ;
-		//	vec3 pixAttractDir = (vec3(normalize(), 0.0)); //no depth component atm
-			vec3 pixAttractDir = vec3(dir,0);//no depth component atm
-
-			float dcoeff =  length(point.pos.xy - vec2(x,y));
-			dcoeff = smoothstep(100, 0, dcoeff);
-
-			point.vel.xyz += pixAttractDir * pixAttractMag * dcoeff;
-
-//			// colour repulsion component
-//			coeff = smoothstep( 200, 0, imageDiff);
-//			float pixRepulseMag = u_pixRepulseMax * coeff;
-//			vec3 pixRepulseDir = vec3((point.pos.xy - vec2(x,y)), 0.0); //no depth component atm
-//			dcoeff =  length(point.pos.xy - vec2(x,y));
-//			dcoeff = smoothstep(10, 0, dcoeff);
-//			point.vel.xyz += pixRepulseDir * pixRepulseMag * dcoeff;
+			if(imageDiff < closestColL)
+			{
+				cohesionTarget = vec3(x,y,point.pos.z);//using same depth for now
+				closestColL = imageDiff;
+			}
 		}
 	}
+	// 2- 'Target' - point pos, normalize for direction
+	vec3 toTarget = cohesionTarget - point.pos.xyz;
+	toTarget.z = 0;
+	vec3 toTargetDir = normalize(toTarget);
+	// 3 - Get distance to centre (float), clamp to min and max values (0 to 2). 
+	//     Calc accel strength = dist2Centre/distRange. So strength is faster the further away the point is
+	float toTargetDist = length(toTarget);
+	toTargetDist = clamp(toTargetDist, uMinCohDist, uMaxCohDist);
+	float cohAccelMag =  (toTargetDist/ uCohDistRange) * uMaxCohAccel;
+	// 4 - Add dir*accel strength to accel;
+	totalAccel += toTargetDir * cohAccelMag;
 
 
-	//boundary checks
-	if( point.pos.y < 0 || point.pos.y > u_height || point.pos.x < 0 || point.pos.x > u_width)
+
+
+// INTEGRATION 
+	// 1 - Velocity += Accel
+	point.pos.xyz += totalAccel;
+	// 2 - Pos += velocity
+	point.pos += point.vel;
+	// 3 - accel = 0
+	// 4- Boundary check
+	if( point.pos.y < 0 || point.pos.y > uHeight || point.pos.x < 0 || point.pos.x > uWidth)
 	{
 		point.vel *= -1.;
 	}
 
-
-	point.pos += point.vel;
-
-
-	p[gl_GlobalInvocationID.x ] = point;
+// WRITE OUT
+	np[gl_GlobalInvocationID.x ] = point;
 }
