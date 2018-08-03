@@ -7,8 +7,9 @@ Content::Content()
 	ofSetWindowTitle("Digital Painting");
 	m_snapshot = false;
 	m_showGui = true;
-	m_numPoints = 1024 * 8;
-	m_shader.load("vert.glsl", "frag.glsl");
+	m_numPoints = 1024 * 12;
+	m_constantShader.load("constantVert.glsl", "constantFrag.glsl");
+	m_imageShader.load("imageVert.glsl", "imageFrag.glsl");
 	m_compute.load( "compute.glsl");
 
 	m_pause = false;
@@ -59,7 +60,7 @@ Content::Content()
 
 	ofEnableDepthTest();
 	glPointSize(6);
-	ofSetBackgroundColor(50, 50, 50);
+	ofSetBackgroundColor(10, 10, 10);
 
 
 }
@@ -93,7 +94,8 @@ void Content::initSimPoints()
 
 void Content::update()
 {
-	m_shader.update();
+	m_imageShader.update();
+	m_constantShader.update();
 	m_compute.update();
 
 
@@ -116,7 +118,7 @@ void Content::draw()
 		m_cam.begin();		ofScale(2, -2, 2); // flip the y axis and zoom in a bit
 		ofTranslate(-m_image.getWidth() / 2, -m_image.getHeight() / 2);		//ofPointSmooth();		//m_mesh.draw();
 		ofPointSmooth();		ofSetColor(255);
-		glPointSize(6);		m_texture.draw(0, 0, -1000, m_image.getWidth(), m_image.getHeight());			m_pointsVbo.draw(GL_POINTS, 0, m_points.size());		m_cam.end();		/// SCREEN GRAB
+		glPointSize(6);		m_texture.draw(10000, 0, -1000, m_image.getWidth(), m_image.getHeight());			m_constantShader.getShader().begin();		ofSetColor(255, 10);		glPointSize(5);		m_constantShader.getShader().setUniform1f("uAlpha", .5f);		m_pointsVbo.draw(GL_LINES, 0, m_points.size());		glPointSize(6);		ofSetColor(255);		m_constantShader.getShader().setUniform1f("uAlpha", 1.2f);		m_pointsVbo.draw(GL_POINTS, 0, m_points.size());		m_constantShader.getShader().end();		m_cam.end();		/// SCREEN GRAB
 		if (m_snapshot == true) {
 			m_screenGrab.grabScreen(0, 0, ofGetWidth(), ofGetHeight());
 			string fileName = "snapshot_" + ofGetTimestampString() + ".png";
@@ -140,8 +142,9 @@ void Content::draw()
 
 		stringstream ss;
 		ss << "FPS: " << ofToString(ofGetFrameRate(), 0) << endl << endl;
-		ss << "CONTROLS" << endl;
-		ss << "SPACE TO RESET RAYS" <<endl << endl;
+		ss << "CONTROLS" << endl << endl;
+		ss << "R TO RESET POINTS" <<endl << endl;
+		ss << "SPACE TO PAUSE" <<endl << endl;
 		const std::string string = ss.str();
 		ofDrawBitmapStringHighlight(string, glm::vec2(20, 100));
 		drawInteractionArea();
@@ -172,7 +175,8 @@ void Content::drawInteractionArea()
 
 void Content::exit()
 {
-	m_shader.exit();
+	m_imageShader.exit();
+	m_constantShader.exit();
 	m_compute.exit();
 }
 

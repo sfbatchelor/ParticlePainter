@@ -21,4 +21,8 @@
   <ItemGroup>
     <ResourceCompile Include="icon.rc" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\data\constantVert.glsl" />
+    <None Include="bin\data\constantFrag.glsl" />
+  </ItemGroup>
 </Project>

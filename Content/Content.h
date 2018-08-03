@@ -46,7 +46,8 @@ private:
 	ofEasyCam m_cam;
 	bool m_showGui;
 
-	ShaderWatcher m_shader;
+	ShaderWatcher m_imageShader;
+	ShaderWatcher m_constantShader;
 	ComputeWatcher m_compute;
 	ofMesh m_mesh;
 	ofImage m_image;
