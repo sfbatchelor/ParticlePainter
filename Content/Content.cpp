@@ -46,6 +46,7 @@ Content::Content()
 	m_pointsBuffer.allocate(m_points, GL_DYNAMIC_DRAW);
 	m_pointsVbo.setVertexBuffer(m_pointsBuffer,4,sizeof(Point));
 	m_pointsVbo.setColorBuffer(m_pointsBuffer,sizeof(Point),sizeof(ofVec4f));
+	m_pointsVbo.enableColors();
 	m_pointsVbo.disableNormals();
 	m_pointsVbo.disableIndices();
 	m_pointsVbo.disableTexCoords();
@@ -112,8 +113,8 @@ void Content::draw()
 {
 	///// WORLD
 	{
-		m_cam.begin();		//ofScale(2, -2, 2); // flip the y axis and zoom in a bit
-		//ofTranslate(-m_image.getWidth() / 2, -m_image.getHeight() / 2);		//ofPointSmooth();		//m_mesh.draw();
+		m_cam.begin();		ofScale(2, -2, 2); // flip the y axis and zoom in a bit
+		ofTranslate(-m_image.getWidth() / 2, -m_image.getHeight() / 2);		//ofPointSmooth();		//m_mesh.draw();
 		ofPointSmooth();		ofSetColor(255);
 		glPointSize(6);		m_texture.draw(0, 0, -1000, m_image.getWidth(), m_image.getHeight());			m_pointsVbo.draw(GL_POINTS, 0, m_points.size());		m_cam.end();		/// SCREEN GRAB
 		if (m_snapshot == true) {

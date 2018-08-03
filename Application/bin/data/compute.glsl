@@ -84,11 +84,11 @@ void main(){
 	}
 
 
-//	//boundary checks
-//	if( point.pos.y < 0 || point.pos.y > u_height )
-//	{
-//		point.vel *= -1.;
-//	}
+	//boundary checks
+	if( point.pos.y < 0 || point.pos.y > u_height || point.pos.x < 0 || point.pos.x > u_width)
+	{
+		point.vel *= -.8;
+	}
 
 
 	point.pos += point.vel;
