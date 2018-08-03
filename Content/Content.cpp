@@ -46,6 +46,9 @@ Content::Content()
 	m_pointsBuffer.allocate(m_points, GL_DYNAMIC_DRAW);
 	m_pointsVbo.setVertexBuffer(m_pointsBuffer,4,sizeof(Point));
 	m_pointsVbo.setColorBuffer(m_pointsBuffer,sizeof(Point),sizeof(ofVec4f));
+	m_pointsVbo.disableNormals();
+	m_pointsVbo.disableIndices();
+	m_pointsVbo.disableTexCoords();
 	m_pointsBuffer.bindBase(GL_SHADER_STORAGE_BUFFER, 0);
 	m_texture.loadData(m_image.getPixels());
 

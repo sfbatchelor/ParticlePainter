@@ -18,9 +18,9 @@ layout(rgba8, binding=0) uniform readonly image2D src;
 uniform int u_numPoints = 0;
 uniform int u_width = 1000;
 uniform int u_height = 1000;
-uniform ivec2 u_pixSampleSize = ivec2(100,100);
+uniform ivec2 u_pixSampleSize = ivec2(200,200);
 
-uniform float u_pixAttractMax = .01;
+uniform float u_pixAttractMax = .001;
 uniform float u_pixRepulseMax = .01;
 
 layout(local_size_x = 1024, local_size_y = 1, local_size_z = 1) in;
@@ -60,7 +60,7 @@ void main(){
 			// get colour at point, work out difference, remap to 0-1, use as an attraction force
 			vec4 imageCol = imageLoad(src, ivec2(x,y));
 			float imageDiff = distance(imageCol.rgb, point.col.rgb);
-			float coeff = smoothstep( 0, 200, imageDiff);
+			float coeff = smoothstep( 200, 0, imageDiff);
 
 			// colour attraction component
 			float pixAttractMag = u_pixAttractMax * coeff;
@@ -69,7 +69,7 @@ void main(){
 			vec3 pixAttractDir = vec3(dir,0);//no depth component atm
 
 			float dcoeff =  length(point.pos.xy - vec2(x,y));
-			dcoeff = smoothstep(50, 0, dcoeff);
+			dcoeff = smoothstep(100, 0, dcoeff);
 
 			point.vel.xyz += pixAttractDir * pixAttractMag * dcoeff;
 
