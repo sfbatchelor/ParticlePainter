@@ -162,9 +162,10 @@ void Content::draw()
 
 		stringstream ss;
 		ss << "FPS: " << ofToString(ofGetFrameRate(), 0) << endl << endl;
-		ss << "CONTROLS" << endl << endl;
-		ss << "R TO RESET POINTS" <<endl << endl;
-		ss << "SPACE TO PAUSE" <<endl << endl;
+		ss << "--CONTROLS--" << endl ;
+		ss << "'R' TO RESET POINTS" << endl;
+		ss << "'F' TO DRAW TO FBO" << endl;
+		ss << "' ' TO PAUSE" << endl;
 		const std::string string = ss.str();
 		ofDrawBitmapStringHighlight(string, glm::vec2(20, 100));
 		drawInteractionArea();
