@@ -154,6 +154,22 @@ void Content::draw()
 		const std::string string = ss.str();
 		ofDrawBitmapStringHighlight(string, glm::vec2(20, 100));
 		drawInteractionArea();
+
+		if (m_pause) // draw a pause symbol
+		{
+
+			ofSetColor(255);
+			ofDrawRectangle(glm::vec2(ofGetWidth() - 100, ofGetHeight() - 200), 35, 80);
+			ofDrawRectangle(glm::vec2(ofGetWidth() - 150, ofGetHeight() - 200), 35, 80);
+		}
+		else
+		{
+			ofSetColor(0,255, 0);
+			ofDrawTriangle(glm::vec2(ofGetWidth() - 150, ofGetHeight() - 200), glm::vec2(ofGetWidth() - 150, ofGetHeight() - 120),  glm::vec2(ofGetWidth() - 65, ofGetHeight() - 160));
+
+
+			ofSetColor(255);
+		}
 	}
 
 
