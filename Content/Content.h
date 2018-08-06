@@ -17,6 +17,7 @@ public:
 
 	void update();
 	void draw();
+	void drawScene();
 	void drawInteractionArea();
 	void exit();
 
@@ -34,14 +35,17 @@ public:
 
 	bool isValid();
 
-	void readComputeOutput();
 	void initSimPoints();
+
+	void clearFbo();
 
 private:
 
 	ofImage m_screenGrab;
 	string m_screenGrabFilename;
 	bool m_snapshot;
+
+	ofFbo m_fbo;
 
 	ofEasyCam m_cam;
 	bool m_showGui;
@@ -62,5 +66,6 @@ private:
 
 	bool m_pause;
 	bool m_restart;
+	bool m_fboActive;
 
 };

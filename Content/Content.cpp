@@ -7,13 +7,14 @@ Content::Content()
 	ofSetWindowTitle("Digital Painting");
 	m_snapshot = false;
 	m_showGui = true;
-	m_numPoints = 1024 * 10;
+	m_numPoints = 1024 * 12;
 	m_constantShader.load("constantVert.glsl", "constantFrag.glsl");
 	m_imageShader.load("imageVert.glsl", "imageFrag.glsl");
 	m_compute.load( "compute.glsl");
 
 	m_pause = false;
 	m_restart = false;
+	m_fboActive = false;
 
 
 	// GENERATE POINTS FROM IMAGE
@@ -56,6 +57,10 @@ Content::Content()
 	m_pointsBufferOld.bindBase(GL_SHADER_STORAGE_BUFFER, 1);
 	m_texture.loadData(m_image.getPixels());
 
+
+	m_fbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
+	clearFbo();
+
 	// SETUP RAY BUFFER ON GPU
 	m_cam.setVFlip(true); //flip for upside down image
 	m_cam.setFarClip(100000000.);
@@ -66,24 +71,6 @@ Content::Content()
 	ofSetBackgroundColor(50, 50, 50);
 
 
-}
-
-void Content::readComputeOutput()
-{
-	/*m_outputTexture.copyTo(m_computeReadBuffer);
-	unsigned char* p = m_computeReadBuffer.map<unsigned char>(GL_READ_ONLY);
-	m_computeReadPixels.setFromPixels(p, m_outputTexture.getWidth(), m_outputTexture.getHeight(), 4);
-	m_computeReadBuffer.unmap();
-	m_computePixelCache.clear();
-	m_computePixelCache.resize(0);
-	for (int i = 0; i < m_computeReadPixels.size(); i+= 4)
-	{
-			m_computePixelCache.push_back(glm::vec4(
-				m_computeReadPixels[i], 
-				m_computeReadPixels[i + 1], 
-				m_computeReadPixels[i + 2], 
-				m_computeReadPixels[i + 3]));
-	}*/
 }
 
 void Content::initSimPoints()
@@ -107,24 +94,51 @@ void Content::update()
 	if (m_restart)
 	{
 		initSimPoints();
+		clearFbo();
 		m_restart = false;
 	}
 
 	if (!m_pause)
 	{
-		m_compute.getShader().begin();		m_texture.bindAsImage(0, GL_READ_ONLY);		m_compute.getShader().setUniform1i("uNumPoints", m_numPoints);		m_compute.getShader().setUniform1i("uWidth", m_image.getWidth());		m_compute.getShader().setUniform1i("uHeight", m_image.getHeight());		m_compute.getShader().dispatchCompute((m_points.size() + 1024 - 1) / 1024, 1, 1);		m_compute.getShader().end();
+		m_compute.getShader().begin();		m_texture.bindAsImage(0, GL_READ_ONLY);		m_compute.getShader().setUniform1i("uNumPoints", m_numPoints);		m_compute.getShader().setUniform1i("uWidth", m_image.getWidth());		m_compute.getShader().setUniform1i("uHeight", m_image.getHeight());		m_compute.getShader().setUniform1f("uTime", ofGetElapsedTimef());		m_compute.getShader().dispatchCompute((m_points.size() + 1024 - 1) / 1024, 1, 1);		m_compute.getShader().end();
 		m_pointsBuffer.copyTo(m_pointsBufferOld);
 	}
+
+
+
+	if (m_fboActive)
+	{
+		m_fbo.begin();
+		drawScene();
+		m_fbo.end();
+	}
+}
+
+void Content::drawScene()
+{
+	m_cam.begin();
+	ofScale(2, -2, 2); // flip the y axis and zoom in a bit
+	ofTranslate(-m_image.getWidth() / 2, -m_image.getHeight() / 2);
+	//ofPointSmooth();
+	//m_mesh.draw();
+
+	ofPointSmooth();
+	ofSetColor(255);
+	glPointSize(3);
+	m_texture.draw(10000, 0, -1000, m_image.getWidth(), m_image.getHeight());
+
+	m_constantShader.getShader().begin();
+	m_constantShader.getShader().setUniform1f("uAlpha", 1.f);
+	m_pointsVbo.draw(GL_POINTS, 0, m_points.size());
+	m_constantShader.getShader().end();
+	m_cam.end();
 }
 
 void Content::draw()
 {
 	///// WORLD
 	{
-		m_cam.begin();		ofScale(2, -2, 2); // flip the y axis and zoom in a bit
-		ofTranslate(-m_image.getWidth() / 2, -m_image.getHeight() / 2);		//ofPointSmooth();		//m_mesh.draw();
-		ofPointSmooth();		ofSetColor(255);
-		glPointSize(6);		m_texture.draw(10000, 0, -1000, m_image.getWidth(), m_image.getHeight());			m_constantShader.getShader().begin();		m_constantShader.getShader().setUniform1f("uAlpha", 1.f);		m_pointsVbo.draw(GL_POINTS, 0, m_points.size());		m_constantShader.getShader().end();		m_cam.end();		/// SCREEN GRAB
+		if (m_fboActive)			m_fbo.draw(0, 0);		else			drawScene();		/// SCREEN GRAB
 		if (m_snapshot == true) {
 			m_screenGrab.grabScreen(0, 0, ofGetWidth(), ofGetHeight());
 			string fileName = "snapshot_" + ofGetTimestampString() + ".png";
@@ -175,6 +189,14 @@ void Content::draw()
 
 }
 
+
+void Content::clearFbo()
+{
+	m_fbo.begin();
+	ofClear(0, 0, 0, 255);
+	m_fbo.end();
+}
+
 void Content::drawInteractionArea()
 {
 	ofRectangle vp = ofGetCurrentViewport();
@@ -217,6 +239,9 @@ void Content::keyPressed(int key)
 		break;
 	case 'r':
 		m_restart = true;
+		break;
+	case 'f':
+		m_fboActive = !m_fboActive;
 		break;
 	}
 }
