@@ -8,7 +8,7 @@ Content::Content()
 	ofSetWindowTitle("Digital Painting");
 	m_snapshot = false;
 	m_showGui = true;
-	m_numPoints = 1024 * 14;
+	m_numPoints = 1024 * 28;
 	m_constantShader.load("constantVert.glsl", "constantFrag.glsl");
 	m_imageShader.load("imageVert.glsl", "imageFrag.glsl");
 	m_compute.load( "compute.glsl");
@@ -35,7 +35,7 @@ Content::Content()
 			float z = ofMap(cur.getBrightness(), 0, 255, -300, 300);
 			cur.a = 255;
 			m_mesh.addColor(cur);
-			ofVec3f pos(x, y, 0);
+			ofVec3f pos(x, y, z);
 			m_mesh.addVertex(pos);
 
 			Point point{};
@@ -101,7 +101,7 @@ void Content::update()
 
 	if (!m_pause)
 	{
-		m_compute.getShader().begin();		m_texture.bindAsImage(0, GL_READ_ONLY);		m_compute.getShader().setUniform1i("uNumPoints", m_numPoints);		m_compute.getShader().setUniform1f("uWidth", m_image.getWidth());		m_compute.getShader().setUniform1f("uHeight", m_image.getHeight());		m_compute.getShader().setUniform1f("uTime", ofGetElapsedTimef());		m_compute.getShader().dispatchCompute((m_points.size() + 1024 - 1) / 1024, 1, 1);		m_compute.getShader().end();
+		m_compute.getShader().begin();		m_texture.bindAsImage(0, GL_READ_ONLY);		m_compute.getShader().setUniform1i("uNumPointsSF", m_numPoints/1024);		m_compute.getShader().setUniform1f("uWidth", m_image.getWidth());		m_compute.getShader().setUniform1f("uHeight", m_image.getHeight());		m_compute.getShader().setUniform1f("uTime", ofGetElapsedTimef());		m_compute.getShader().dispatchCompute((m_points.size() + 1024 - 1) / 1024, 1, 1);		m_compute.getShader().end();
 		m_pointsBuffer.copyTo(m_pointsBufferOld);
 	}
 
@@ -125,7 +125,7 @@ void Content::drawScene()
 
 	ofPointSmooth();
 	ofSetColor(255);
-	glPointSize(6);
+	glPointSize(3);
 	m_texture.draw(10000, 0, -1000, m_image.getWidth(), m_image.getHeight());
 
 	m_constantShader.getShader().begin();

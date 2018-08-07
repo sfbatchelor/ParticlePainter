@@ -19,10 +19,11 @@ layout(std140, binding=1) buffer prevPoints{
 layout(rgba8, binding=0) uniform readonly image2D src;
 
 uniform float uTime = 1.0;
-uniform int uNumPoints = 0;
+uniform int uNumPointsSF = 1;
 uniform float uWidth = 1000.;
 uniform float uHeight = 1000.;
 uniform float uDepth = 1000.;
+uniform float uAccelScale = .01;
 uniform vec2 uPixSampleSize = vec2(10.);// 100 sample pixels
 uniform float uAlignPointSampleRadius = 5; // ~10 pointrs - very close 
 uniform float uSeperationPointSampleRadius = 20; // ~100 points - surrounding area
@@ -30,7 +31,7 @@ uniform float uSeperationPointSampleRadius = 20; // ~100 points - surrounding ar
 uniform float uMaxCohDist = 100;
 uniform float uMinCohDist = 0;
 float uCohDistRange = uMaxCohDist - uMinCohDist;
-uniform float uMaxCohAccel = 5;
+uniform float uMaxCohAccel = 50;
 
 
 uniform float uNearAlignDist = 1.;
@@ -78,8 +79,8 @@ void main(){
 	}
 
 	// values for particle sampling
-	uint m = uint(1024.0*14.0*uTime);
-	uint start = uint(mod(m, 1024*14-512));
+	uint m = uint(1024.0*uNumPointsSF*uTime);
+	uint start = uint(mod(m, 1024*uNumPointsSF-512));
 	uint end = start + 512;
 
 	//accel value to add to vel, vel to add to pos
@@ -177,9 +178,9 @@ void main(){
 
 		}
 	}
-//	totalAccel += fuzzySpeed;
-//	totalAccel += fuzzyHeading;
-//	totalAccel += seperation;
+	totalAccel += fuzzySpeed;
+	totalAccel += fuzzyHeading;
+	totalAccel += seperation;
 	totalAccel.z = 0.;
 
 
@@ -190,7 +191,7 @@ void main(){
 
 // INTEGRATION 
 	// 1 - Velocity += Accel
-	point.vel.xyz += totalAccel;
+	point.vel.xyz += totalAccel* uAccelScale;
 	// 2- Boundary check
 	if( point.pos.y < 0 || point.pos.y > uHeight || point.pos.x < 0 || point.pos.x > uWidth || point.pos.z < -uDepth || point.pos.z > uDepth)
 	{
