@@ -24,6 +24,7 @@ uniform int uWidth = 1000;
 uniform int uHeight = 1000;
 uniform int uDepth = 1000;
 uniform ivec2 uPixSampleSize = ivec2(50);
+uniform float uPointSampleRadius = 50;
 
 uniform float uMaxCohDist = 5;
 uniform float uMinCohDist = 0;
@@ -32,13 +33,13 @@ uniform float uMaxCohAccel = .01;
 
 
 uniform float uNearAlignDist = 1.;
-uniform float uFarAlignDist = 1000.;
-uniform float uAlignSpeedMax = 500;
-uniform float uAlignSpeedMag = .01;
+uniform float uFarAlignDist = 10.;
+uniform float uAlignSpeedDiffMax= 500;
+uniform float uAlignSpeedMag = 0.01;
 
 uniform float uNearSepDist = 0.;
-uniform float uFarSepDist = 50000.;
-uniform float uSepMag = .00000001;
+uniform float uFarSepDist = 50.;
+uniform float uSepMag = .000001;
 
 // in 2d on the x-y plane, assuming a & b are normalized
 // returns -1 if heading is left, +1 if right
@@ -151,6 +152,8 @@ void main(){
 			Point samplePoint = pp[i];
 			vec3 distVec = samplePoint.pos.xyz - point.pos.xyz;
 			float dist = length(distVec);
+			if(dist > uPointSampleRadius) // only points within a certain radius
+				continue;
 			float sig = 1. - map(dist, uNearAlignDist, uFarAlignDist, 0.0, 1.0);
 			
 			// work out heading-correction
@@ -166,12 +169,12 @@ void main(){
 			//compute fuzzy-speed & speed correction
 			vec3 speedDiffV = samplePoint.vel.xyz - point.vel.xyz;
 			float speedDiffF = length(speedDiffV);
-			float sc = map ( speedDiffF, 0, uAlignSpeedMax, 0., 1.);
+			float sc = map ( speedDiffF, 0, uAlignSpeedDiffMax, 0., 1.);
 			fuzzySpeed += speedDiffV * sc * sig * uAlignSpeedMag;
 
 
 			float colDiff = length(samplePoint.col.rgb - point.col.rgb);
-			sig = map(colDiff, 0., 300., .0, 1.0);
+			sig = map(colDiff, 0., 256., .0, 1.0);
 			float sepStrength = map(dist, uNearSepDist, uFarSepDist, uSepMag, 0);
 			seperation += (-dist* sig) *sepStrength ;
 
@@ -179,7 +182,7 @@ void main(){
 	}
 	totalAccel += fuzzySpeed;
 	totalAccel += fuzzyHeading;
-	//totalAccel += seperation;
+	totalAccel += seperation;
 	totalAccel.z = 0.;
 
 
