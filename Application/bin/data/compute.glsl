@@ -24,18 +24,19 @@ uniform float uWidth = 1000.;
 uniform float uHeight = 1000.;
 uniform float uDepth = 1000.;
 uniform vec2 uPixSampleSize = vec2(50.);
-uniform float uPointSampleRadius = 20;
+uniform float uAlignPointSampleRadius = 5; // ~10 pointrs - very close 
+uniform float uSeperationPointSampleRadius = 20; // ~100 points - surrounding area
 
 uniform float uMaxCohDist = 1000;
 uniform float uMinCohDist = 0;
 float uCohDistRange = uMaxCohDist - uMinCohDist;
-uniform float uMaxCohAccel = .5;
+uniform float uMaxCohAccel = .05;
 
 
 uniform float uNearAlignDist = 1.;
 uniform float uFarAlignDist = 10.;
-uniform float uAlignSpeedDiffMax= 500;
-uniform float uAlignSpeedMag = 0.3;
+uniform float uAlignSpeedDiffMax= 5.;
+uniform float uAlignSpeedMag = 0.0003;
 
 uniform float uSepFalloffDist = 10.;
 uniform float uSepDistMag = .1;
@@ -164,37 +165,40 @@ void main(){
 			Point samplePoint = pp[i];
 			vec3 distVec = samplePoint.pos.xyz - point.pos.xyz;
 			float dist = length(distVec);
-			if(dist > uPointSampleRadius) // only points within a certain radius
-				continue;
-			float distSig= 1. - (dist-uNearAlignDist / uFarAlignDist - uNearAlignDist);
+			if(dist < uAlignPointSampleRadius) // only points within a certain radius
+			{
+				float distSig= 1. - (dist-uNearAlignDist / uFarAlignDist - uNearAlignDist);
 			
-			// work out heading-correction
-			vec3 sDir = safeNormalize(samplePoint.vel.xyz);
-			float hc = 1. - dot(pDir, sDir);
-			//compute fuzzy-heading
-			if(leftOrRight(pDir, sDir) == 1)
-				fuzzyHeading += correctionRt *hc* distSig;
-			else
-				fuzzyHeading -= correctionRt*hc* distSig;
+				// work out heading-correction
+				vec3 sDir = safeNormalize(samplePoint.vel.xyz);
+				float hc = 1. - dot(pDir, sDir);
+				//compute fuzzy-heading
+				if(leftOrRight(pDir, sDir) == 1)
+					fuzzyHeading += correctionRt *hc* distSig;
+				else
+					fuzzyHeading -= correctionRt*hc* distSig;
 
 
-			//compute fuzzy-speed & speed correction
-			vec3 speedDiffV = samplePoint.vel.xyz - point.vel.xyz;
-			float speedDiffF = length(speedDiffV);
-			float sc = ( speedDiffF/ uAlignSpeedDiffMax);
-			fuzzySpeed += speedDiffV * sc * distSig * uAlignSpeedMag;
+				//compute fuzzy-speed & speed correction
+				vec3 speedDiffV = samplePoint.vel.xyz - point.vel.xyz;
+				float speedDiffF = length(speedDiffV);
+				float sc = clamp( max(speedDiffF,0.)/ uAlignSpeedDiffMax, 0,  uAlignSpeedDiffMax);
+				fuzzySpeed += speedDiffV* sc * distSig * uAlignSpeedMag;
+			}
+			if(dist < uSeperationPointSampleRadius) // only points within a certain radius
+			{
 
-
-			float colDiff = length(samplePoint.col.rgb - point.col.rgb);
-			float colSig = colDiff/255.; //force is less the more similar they are
-			distSig = 1. - (dist / uSepFalloffDist); // force is less the further away the point is
-			distSig*= uSepDistMag;
-			vec3 sepDir = -safeNormalize(distVec); // repulsive so minus the direction
-			seperation += sepDir*colSig *distSig;
+				float colDiff = length(samplePoint.col.rgb - point.col.rgb);
+				float colSig = colDiff/255.; //force is less the more similar they are
+				float distSig = 1. - (dist / uSepFalloffDist); // force is less the further away the point is
+				distSig*= uSepDistMag;
+				vec3 sepDir = -safeNormalize(distVec); // repulsive so minus the direction
+				seperation += sepDir*colSig *distSig;
+			}
 
 		}
 	}
-//	totalAccel += fuzzySpeed;
+	totalAccel += fuzzySpeed;
 	totalAccel += fuzzyHeading;
 	totalAccel += seperation;
 	totalAccel.z = 0.;
