@@ -20,26 +20,25 @@ layout(rgba8, binding=0) uniform readonly image2D src;
 
 uniform float uTime = 1.0;
 uniform int uNumPoints = 0;
-uniform int uWidth = 1000;
-uniform int uHeight = 1000;
-uniform int uDepth = 1000;
-uniform ivec2 uPixSampleSize = ivec2(50);
-uniform float uPointSampleRadius = 50;
+uniform float uWidth = 1000.;
+uniform float uHeight = 1000.;
+uniform float uDepth = 1000.;
+uniform vec2 uPixSampleSize = vec2(50.);
+uniform float uPointSampleRadius = 20;
 
-uniform float uMaxCohDist = 5;
+uniform float uMaxCohDist = 1000;
 uniform float uMinCohDist = 0;
 float uCohDistRange = uMaxCohDist - uMinCohDist;
-uniform float uMaxCohAccel = .01;
+uniform float uMaxCohAccel = .5;
 
 
 uniform float uNearAlignDist = 1.;
 uniform float uFarAlignDist = 10.;
 uniform float uAlignSpeedDiffMax= 500;
-uniform float uAlignSpeedMag = 0.01;
+uniform float uAlignSpeedMag = 0.3;
 
-uniform float uNearSepDist = 0.;
-uniform float uFarSepDist = 50.;
-uniform float uSepMag = .000001;
+uniform float uSepFalloffDist = 10.;
+uniform float uSepDistMag = .1;
 
 // in 2d on the x-y plane, assuming a & b are normalized
 // returns -1 if heading is left, +1 if right
@@ -53,17 +52,6 @@ int leftOrRight(vec3 a, vec3 b)
 		return -1;
 }
 
-float map(float value, float min1, float max1, float min2, float max2)
-{
-	// Convert the current value to a percentage
-	// 0% - min1, 100% - max1
-	float perc = (value - min1) / (max1 - min1);
-	perc = clamp(perc, 0.0, 1.0);
-	
-	// Do the same operation backwards with min2 and max2
-	return  perc * (max2 - min2) + min2;
-
-}
 
 vec3 safeNormalize(vec3 vec) 
 {
@@ -93,34 +81,58 @@ void main(){
 	uint start = uint(mod(m, 1024*14-512));
 	uint end = start + 512;
 
-
-
 	//accel value to add to vel, vel to add to pos
 	vec3 totalAccel = vec3(0);
 
 	// Lookup Pixels from underlying image
-	ivec2 lookup = ivec2(point.pos.xy);
-	int xMin = lookup.x - int(uPixSampleSize.x/2.);
-	int xMax = lookup.x + int(uPixSampleSize.x/2.);
-	int yMin = lookup.y - int(uPixSampleSize.y/2.);
-	int yMax = lookup.y + int(uPixSampleSize.y/2.);
+	vec2 lookup = vec2(point.pos.xy);
+	float xMin = lookup.x - uPixSampleSize.x/2.;
+	float xMax = lookup.x + uPixSampleSize.x/2.;
+	float yMin = lookup.y - uPixSampleSize.y/2.;
+	float yMax = lookup.y + uPixSampleSize.y/2.;
+
+
+	if(xMin < 0.)
+	{
+		xMax -= xMin;
+		xMin = 0.;
+	}
+	else if(xMax > uWidth)
+	{
+		xMin += xMax - uWidth;
+		xMax = uWidth;
+	}
+	if(yMin < 0.)
+	{
+		yMax -= yMin;
+		yMin = 0.;
+	}
+	else if(yMax > uHeight)
+	{
+		yMin += yMax - uHeight;
+		yMax = uHeight;
+	}
 
 
 // COLOUR COHESION
 	// 1- find the closest matching pixel colour in an area, set that pixel pos to be the new 'target'
 	float closestColL = 100000.;
 	vec3 cohesionTarget = point.pos.xyz;
-	for (int x = xMin; x < xMax; x++)
+	for (float x = xMin; x < xMax; x+= 1.)
 	{
-		if (x < 0 || x > uWidth)
-			continue;
-		for (int y = yMin; y < yMax; y++)
+		for (float y = yMin; y < yMax; y+= 1.)
 		{
-			if (y < 0 || y > uHeight)
-				continue;
 
-			vec4 imageCol = imageLoad(src, ivec2(x,y));
-			float imageDiff = distance(imageCol.rgb, point.col.rgb);
+
+			vec2 tmpXY = vec2(x,y);
+			if(x < lookup.x) //round up if needed
+				tmpXY.x = ceil(x);
+			if(y < lookup.y)
+				tmpXY.y = ceil(y);
+			ivec2 imageXY = ivec2(tmpXY);
+			vec4 imageCol = imageLoad(src, imageXY);
+			float imageDiff = length(  point.col.rgb -imageCol.rgb  );
+
 			if(imageDiff < closestColL)
 			{
 				cohesionTarget = vec3(x,y,point.pos.z);//using same depth for now
@@ -138,7 +150,7 @@ void main(){
 	toTargetDist = clamp(toTargetDist, uMinCohDist, uMaxCohDist);
 	float cohAccelMag =  (toTargetDist/ uCohDistRange) * uMaxCohAccel;
 	// 4 - Add dir*accel strength to accel;
-	totalAccel += toTargetDir * cohAccelMag;
+	//totalAccel += toTargetDir * cohAccelMag;
 
 
 
@@ -154,33 +166,35 @@ void main(){
 			float dist = length(distVec);
 			if(dist > uPointSampleRadius) // only points within a certain radius
 				continue;
-			float sig = 1. - map(dist, uNearAlignDist, uFarAlignDist, 0.0, 1.0);
+			float distSig= 1. - (dist-uNearAlignDist / uFarAlignDist - uNearAlignDist);
 			
 			// work out heading-correction
 			vec3 sDir = safeNormalize(samplePoint.vel.xyz);
 			float hc = 1. - dot(pDir, sDir);
 			//compute fuzzy-heading
 			if(leftOrRight(pDir, sDir) == 1)
-				fuzzyHeading += correctionRt *hc* sig;
+				fuzzyHeading += correctionRt *hc* distSig;
 			else
-				fuzzyHeading -= correctionRt*hc* sig;
+				fuzzyHeading -= correctionRt*hc* distSig;
 
 
 			//compute fuzzy-speed & speed correction
 			vec3 speedDiffV = samplePoint.vel.xyz - point.vel.xyz;
 			float speedDiffF = length(speedDiffV);
-			float sc = map ( speedDiffF, 0, uAlignSpeedDiffMax, 0., 1.);
-			fuzzySpeed += speedDiffV * sc * sig * uAlignSpeedMag;
+			float sc = ( speedDiffF/ uAlignSpeedDiffMax);
+			fuzzySpeed += speedDiffV * sc * distSig * uAlignSpeedMag;
 
 
 			float colDiff = length(samplePoint.col.rgb - point.col.rgb);
-			sig = map(colDiff, 0., 256., .0, 1.0);
-			float sepStrength = map(dist, uNearSepDist, uFarSepDist, uSepMag, 0);
-			seperation += (-dist* sig) *sepStrength ;
+			float colSig = colDiff/255.; //force is less the more similar they are
+			distSig = 1. - (dist / uSepFalloffDist); // force is less the further away the point is
+			distSig*= uSepDistMag;
+			vec3 sepDir = -safeNormalize(distVec); // repulsive so minus the direction
+			seperation += sepDir*colSig *distSig;
 
 		}
 	}
-	totalAccel += fuzzySpeed;
+//	totalAccel += fuzzySpeed;
 	totalAccel += fuzzyHeading;
 	totalAccel += seperation;
 	totalAccel.z = 0.;
@@ -217,6 +231,8 @@ void main(){
 		point.pos += point.vel;
 
 	
+
+	//point.col.rg = (.7 + normalize(point.vel.xy) * .5)*255.;
 
 // WRITE OUT
 	np[gl_GlobalInvocationID.x ] = point;

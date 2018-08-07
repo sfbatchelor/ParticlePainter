@@ -101,7 +101,7 @@ void Content::update()
 
 	if (!m_pause)
 	{
-		m_compute.getShader().begin();		m_texture.bindAsImage(0, GL_READ_ONLY);		m_compute.getShader().setUniform1i("uNumPoints", m_numPoints);		m_compute.getShader().setUniform1i("uWidth", m_image.getWidth());		m_compute.getShader().setUniform1i("uHeight", m_image.getHeight());		m_compute.getShader().setUniform1f("uTime", ofGetElapsedTimef());		m_compute.getShader().dispatchCompute((m_points.size() + 1024 - 1) / 1024, 1, 1);		m_compute.getShader().end();
+		m_compute.getShader().begin();		m_texture.bindAsImage(0, GL_READ_ONLY);		m_compute.getShader().setUniform1i("uNumPoints", m_numPoints);		m_compute.getShader().setUniform1f("uWidth", m_image.getWidth());		m_compute.getShader().setUniform1f("uHeight", m_image.getHeight());		m_compute.getShader().setUniform1f("uTime", ofGetElapsedTimef());		m_compute.getShader().dispatchCompute((m_points.size() + 1024 - 1) / 1024, 1, 1);		m_compute.getShader().end();
 		m_pointsBuffer.copyTo(m_pointsBufferOld);
 	}
 
@@ -125,7 +125,7 @@ void Content::drawScene()
 
 	ofPointSmooth();
 	ofSetColor(255);
-	glPointSize(3);
+	glPointSize(6);
 	m_texture.draw(10000, 0, -1000, m_image.getWidth(), m_image.getHeight());
 
 	m_constantShader.getShader().begin();
