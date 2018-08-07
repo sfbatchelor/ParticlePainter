@@ -2,12 +2,13 @@
 
 Content::Content()
 {
+	ofSetFrameRate(30);
 	ofSetLogLevel(OF_LOG_VERBOSE);
 	ofSetVerticalSync(true);
 	ofSetWindowTitle("Digital Painting");
 	m_snapshot = false;
 	m_showGui = true;
-	m_numPoints = 1024 * 12;
+	m_numPoints = 1024 * 14;
 	m_constantShader.load("constantVert.glsl", "constantFrag.glsl");
 	m_imageShader.load("imageVert.glsl", "imageFrag.glsl");
 	m_compute.load( "compute.glsl");
@@ -34,7 +35,7 @@ Content::Content()
 			float z = ofMap(cur.getBrightness(), 0, 255, -300, 300);
 			cur.a = 255;
 			m_mesh.addColor(cur);
-			ofVec3f pos(x, y, z);
+			ofVec3f pos(x, y, 0);
 			m_mesh.addVertex(pos);
 
 			Point point{};
