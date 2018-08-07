@@ -23,14 +23,14 @@ uniform int uNumPoints = 0;
 uniform float uWidth = 1000.;
 uniform float uHeight = 1000.;
 uniform float uDepth = 1000.;
-uniform vec2 uPixSampleSize = vec2(50.);
+uniform vec2 uPixSampleSize = vec2(10.);// 100 sample pixels
 uniform float uAlignPointSampleRadius = 5; // ~10 pointrs - very close 
 uniform float uSeperationPointSampleRadius = 20; // ~100 points - surrounding area
 
-uniform float uMaxCohDist = 1000;
+uniform float uMaxCohDist = 100;
 uniform float uMinCohDist = 0;
 float uCohDistRange = uMaxCohDist - uMinCohDist;
-uniform float uMaxCohAccel = .05;
+uniform float uMaxCohAccel = 5;
 
 
 uniform float uNearAlignDist = 1.;
@@ -87,71 +87,50 @@ void main(){
 
 	// Lookup Pixels from underlying image
 	vec2 lookup = vec2(point.pos.xy);
-	float xMin = lookup.x - uPixSampleSize.x/2.;
-	float xMax = lookup.x + uPixSampleSize.x/2.;
-	float yMin = lookup.y - uPixSampleSize.y/2.;
-	float yMax = lookup.y + uPixSampleSize.y/2.;
+	float xMin = lookup.x - (uPixSampleSize.x/2.);
+	float xMax = lookup.x + (uPixSampleSize.x/2.);
+	float yMin = lookup.y - (uPixSampleSize.y/2.);
+	float yMax = lookup.y + (uPixSampleSize.y/2.);
 
 
-	if(xMin < 0.)
-	{
-		xMax -= xMin;
-		xMin = 0.;
-	}
-	else if(xMax > uWidth)
-	{
-		xMin += xMax - uWidth;
-		xMax = uWidth;
-	}
-	if(yMin < 0.)
-	{
-		yMax -= yMin;
-		yMin = 0.;
-	}
-	else if(yMax > uHeight)
-	{
-		yMin += yMax - uHeight;
-		yMax = uHeight;
-	}
 
 
 // COLOUR COHESION
 	// 1- find the closest matching pixel colour in an area, set that pixel pos to be the new 'target'
 	float closestColL = 100000.;
 	vec3 cohesionTarget = point.pos.xyz;
-	for (float x = xMin; x < xMax; x+= 1.)
+	for (float x = xMin; x <= xMax; x+= 1.)
 	{
-		for (float y = yMin; y < yMax; y+= 1.)
+		for (float y = yMin; y <= yMax; y+= 1.)
 		{
 
-
 			vec2 tmpXY = vec2(x,y);
-			if(x < lookup.x) //round up if needed
+			if(x < lookup.x) //round up if needed - due to pixel int value lookups
 				tmpXY.x = ceil(x);
 			if(y < lookup.y)
 				tmpXY.y = ceil(y);
 			ivec2 imageXY = ivec2(tmpXY);
 			vec4 imageCol = imageLoad(src, imageXY);
 			float imageDiff = length(  point.col.rgb -imageCol.rgb  );
+			cohesionTarget = vec3(x,y,point.pos.z);//using same depth for now
 
-			if(imageDiff < closestColL)
-			{
-				cohesionTarget = vec3(x,y,point.pos.z);//using same depth for now
-				closestColL = imageDiff;
-			}
+			// 2- 'Target' - point pos, normalize for direction
+			vec3 toTarget = cohesionTarget - point.pos.xyz;
+			toTarget.z = 0;
+			vec3 toTargetDir = safeNormalize(toTarget);
+			// 3 - Get distance to centre (float), clamp to min and max values (0 to 2). 
+			//     Calc accel strength = dist2Centre/distRange. So strength is faster the further away the point is
+			float toTargetDist = length(toTarget);
+			toTargetDist = clamp(toTargetDist, uMinCohDist, uMaxCohDist);
+			float cohAccelMag =  (toTargetDist/ uCohDistRange) * uMaxCohAccel;
+
+			float colSig = 1.0 - imageDiff; //force is more the more similar they are
+			
+			// 4 - Add dir*accel strength to accel;
+			totalAccel += toTargetDir * cohAccelMag * colSig;
 		}
 	}
-	// 2- 'Target' - point pos, normalize for direction
-	vec3 toTarget = cohesionTarget - point.pos.xyz;
-	toTarget.z = 0;
-	vec3 toTargetDir = safeNormalize(toTarget);
-	// 3 - Get distance to centre (float), clamp to min and max values (0 to 2). 
-	//     Calc accel strength = dist2Centre/distRange. So strength is faster the further away the point is
-	float toTargetDist = length(toTarget);
-	toTargetDist = clamp(toTargetDist, uMinCohDist, uMaxCohDist);
-	float cohAccelMag =  (toTargetDist/ uCohDistRange) * uMaxCohAccel;
-	// 4 - Add dir*accel strength to accel;
-	//totalAccel += toTargetDir * cohAccelMag;
+
 
 
 
@@ -198,9 +177,9 @@ void main(){
 
 		}
 	}
-	totalAccel += fuzzySpeed;
-	totalAccel += fuzzyHeading;
-	totalAccel += seperation;
+//	totalAccel += fuzzySpeed;
+//	totalAccel += fuzzyHeading;
+//	totalAccel += seperation;
 	totalAccel.z = 0.;
 
 
@@ -215,7 +194,7 @@ void main(){
 	// 2- Boundary check
 	if( point.pos.y < 0 || point.pos.y > uHeight || point.pos.x < 0 || point.pos.x > uWidth || point.pos.z < -uDepth || point.pos.z > uDepth)
 	{
-		point.vel *= -.8;
+		point.vel *= -.2;
 
 		if(point.pos.y < 0)
 			point.pos.y = 0;
