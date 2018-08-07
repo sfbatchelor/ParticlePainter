@@ -32,9 +32,9 @@ uniform float uMaxCohAccel = .01;
 
 
 uniform float uNearAlignDist = 1.;
-uniform float uFarAlignDist = 50.;
-uniform float uAlignSpeedMax = 50;
-uniform float uAlignSpeedMag = .0000001;
+uniform float uFarAlignDist = 1000.;
+uniform float uAlignSpeedMax = 500;
+uniform float uAlignSpeedMag = .01;
 
 uniform float uNearSepDist = 0.;
 uniform float uFarSepDist = 50000.;
