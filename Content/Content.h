@@ -37,15 +37,14 @@ public:
 
 	void initSimPoints();
 
-	void clearFbo();
+	void resetFbo();
 
 private:
 
 	ofImage m_screenGrab;
-	string m_screenGrabFilename;
 	bool m_snapshot;
 
-	ofFbo m_fbo;
+	std::shared_ptr<ofFbo> m_fbo;
 
 	ofEasyCam m_cam;
 	bool m_showGui;

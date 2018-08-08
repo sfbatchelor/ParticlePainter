@@ -59,16 +59,13 @@ Content::Content()
 	m_texture.loadData(m_image.getPixels());
 
 
-	m_fbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
-	clearFbo();
+	resetFbo();
 
 	// SETUP RAY BUFFER ON GPU
 	m_cam.setVFlip(true); //flip for upside down image
 	m_cam.setFarClip(100000000.);
 
 	ofEnableDepthTest();
-	glPointSize(6);
-	//ofSetBackgroundColor(10, 10, 10);
 	ofSetBackgroundColor(50, 50, 50);
 
 
@@ -95,7 +92,7 @@ void Content::update()
 	if (m_restart)
 	{
 		initSimPoints();
-		clearFbo();
+		resetFbo();
 		m_restart = false;
 	}
 
@@ -107,11 +104,11 @@ void Content::update()
 
 
 
-	if (m_fboActive)
+	if (m_fboActive && m_fbo)
 	{
-		m_fbo.begin();
+		m_fbo->begin();
 		drawScene();
-		m_fbo.end();
+		m_fbo->end();
 	}
 }
 
@@ -139,12 +136,11 @@ void Content::draw()
 {
 	///// WORLD
 	{
-		if (m_fboActive)			m_fbo.draw(0, 0);		else			drawScene();		/// SCREEN GRAB
+		if (m_fboActive && m_fbo)			m_fbo->draw(0, 0);		else			drawScene();		/// SCREEN GRAB
 		if (m_snapshot == true) {
 			m_screenGrab.grabScreen(0, 0, ofGetWidth(), ofGetHeight());
-			string fileName = "snapshot_" + ofGetTimestampString() + ".png";
+			string fileName = "screenshots\\snapshot_" + ofGetTimestampString() + ".png";
 			m_screenGrab.save(fileName);
-			m_screenGrabFilename = "saved " + fileName;
 			m_snapshot = false;
 		}
 
@@ -192,11 +188,15 @@ void Content::draw()
 }
 
 
-void Content::clearFbo()
+void Content::resetFbo()
 {
-	m_fbo.begin();
+
+	m_fbo.reset(new ofFbo());
+	m_fbo->allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
+	m_fbo->begin();
 	ofClear(0, 0, 0, 255);
-	m_fbo.end();
+	m_fbo->end();
+
 }
 
 void Content::drawInteractionArea()
