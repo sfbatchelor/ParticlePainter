@@ -118,8 +118,6 @@ void Content::drawScene()
 	m_cam.begin();
 	ofScale(2, -2, 2); // flip the y axis and zoom in a bit
 	ofTranslate(-m_image.getWidth() / 2, -m_image.getHeight() / 2);
-	//ofPointSmooth();
-	//m_mesh.draw();
 
 	ofPointSmooth();
 	ofSetColor(255);
