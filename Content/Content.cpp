@@ -114,6 +114,7 @@ void Content::update()
 
 void Content::drawScene()
 {
+	ofSetDepthTest(true);
 	m_cam.begin();
 	ofScale(2, -2, 2); // flip the y axis and zoom in a bit
 	ofTranslate(-m_image.getWidth() / 2, -m_image.getHeight() / 2);
