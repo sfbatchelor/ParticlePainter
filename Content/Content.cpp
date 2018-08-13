@@ -8,7 +8,7 @@ Content::Content()
 	ofSetWindowTitle("Digital Painting");
 	m_snapshot = false;
 	m_showGui = true;
-	m_numPoints = 1024 * 28;
+	m_numPoints = 1024 * 38;
 	m_constantShader.load("constantVert.glsl", "constantFrag.glsl");
 	m_imageShader.load("imageVert.glsl", "imageFrag.glsl");
 	m_compute.load( "compute.glsl");
