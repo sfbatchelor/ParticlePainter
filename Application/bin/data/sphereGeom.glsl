@@ -4,9 +4,9 @@
 uniform float thickness;
 uniform vec3 lightDir;
 uniform mat4 modelViewProjectionMatrix;
-uniform float radius = 10.1;
-uniform int uDivO = 5;
-uniform int uDivA = 5;
+uniform float radius = .5;
+uniform int uDivO = 8;
+uniform int uDivA = 7;
 
 layout (points) in;
 layout (triangle_strip, max_vertices = 128) out;
