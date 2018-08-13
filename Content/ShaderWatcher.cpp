@@ -8,6 +8,43 @@ ShaderWatcher::~ShaderWatcher()
 {
 }
 
+bool ShaderWatcher::load(const std::filesystem::path & vertName, const std::filesystem::path & fragName, const std::filesystem::path & geomName)
+{
+
+	if (m_shader.load(vertName, fragName, geomName))
+	{
+
+		m_vertex.m_fileWatcher.lock();
+		m_fragment.m_fileWatcher.lock();
+		m_geometry.m_fileWatcher.lock();
+		m_vertex.m_filePath = vertName;
+		m_fragment.m_filePath = fragName;
+		m_geometry.m_filePath = geomName;
+
+		m_vertex.m_fileWatcher.setFile(m_vertex.m_filePath, 100);
+		m_fragment.m_fileWatcher.setFile(m_fragment.m_filePath, 100);
+		m_geometry.m_fileWatcher.setFile(m_geometry.m_filePath, 100);
+
+		m_vertex.m_fileWatcher.registerCallback(std::function<void()>([this]() {onFileWasModified(); }));
+		m_fragment.m_fileWatcher.registerCallback(std::function<void()>([this]() {onFileWasModified(); }));
+		m_geometry.m_fileWatcher.registerCallback(std::function<void()>([this]() {onFileWasModified(); }));
+
+		m_frontShader = m_shader;
+
+		m_vertex.m_fileWatcher.unlock();
+		m_fragment.m_fileWatcher.unlock();
+		m_geometry.m_fileWatcher.unlock();
+		m_vertex.m_fileWatcher.startThread();
+		m_fragment.m_fileWatcher.startThread();
+		m_geometry.m_fileWatcher.startThread();
+		
+		return true;
+	}
+
+	return false;
+
+}
+
 bool ShaderWatcher::load(const std::filesystem::path & vertName, const std::filesystem::path & fragName)
 {
 	if (m_shader.load(vertName, fragName))
@@ -42,7 +79,11 @@ void  ShaderWatcher::update()
 	ofScopedLock(m_mutex);
 	if (m_needsUpdating)
 	{
-		load(m_vertex.m_filePath, m_fragment.m_filePath);
+		if(m_geometry.m_filePath != "")
+			load(m_vertex.m_filePath, m_fragment.m_filePath, m_geometry.m_filePath);
+		else
+			load(m_vertex.m_filePath, m_fragment.m_filePath);
+
 		m_needsUpdating = false;
 	}
 
@@ -52,6 +93,7 @@ void ShaderWatcher::exit()
 {
 	m_vertex.m_fileWatcher.waitForThread(true, 500);
 	m_fragment.m_fileWatcher.waitForThread(true, 500);
+	m_geometry.m_fileWatcher.waitForThread(true, 500);
 }
 
 const ofShader& ShaderWatcher::getShader() const

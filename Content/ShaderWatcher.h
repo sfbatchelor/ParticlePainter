@@ -18,6 +18,7 @@ public:
 	ShaderWatcher();
 	~ShaderWatcher();
 	bool load(const std::filesystem::path& vertName, const std::filesystem::path& fragName);
+	bool load(const std::filesystem::path & vertName, const std::filesystem::path & fragName, const std::filesystem::path & geomName);
 	void update();
 	void exit();
 	const ofShader& getShader() const;
@@ -29,6 +30,7 @@ private:
 	ofShader m_frontShader;
 	ThreadedShaderFile m_vertex;
 	ThreadedShaderFile m_fragment;
+	ThreadedShaderFile m_geometry;
 	void onFileWasModified();
 	bool m_needsUpdating;
 	ofMutex m_mutex;

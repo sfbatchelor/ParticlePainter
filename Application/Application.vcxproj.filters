@@ -24,5 +24,6 @@
   <ItemGroup>
     <None Include="bin\data\constantVert.glsl" />
     <None Include="bin\data\constantFrag.glsl" />
+    <None Include="bin\data\sphereGeom.glsl" />
   </ItemGroup>
 </Project>
