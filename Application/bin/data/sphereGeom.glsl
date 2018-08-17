@@ -4,7 +4,7 @@
 uniform float thickness;
 uniform vec3 lightDir;
 uniform mat4 modelViewProjectionMatrix;
-uniform float radius = .5;
+uniform float radius = 1.5;
 uniform int uDivO = 8;
 uniform int uDivA = 7;
 

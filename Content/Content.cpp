@@ -40,7 +40,6 @@ Content::Content()
 
 			Point point{};
 			point.m_col = ofFloatColor(cur.r, cur.g, cur.b, cur.a);
-			//point.m_col = ofFloatColor(.6, 0.7, 0, 1.0);
 			point.m_pos = ofVec4f(pos.x, pos.y, pos.z, 1.);
 			point.m_vel = ofVec4f(0);
 			m_points.push_back(point);
@@ -66,7 +65,7 @@ Content::Content()
 	m_cam.setFarClip(100000000.);
 
 	ofEnableDepthTest();
-	ofSetBackgroundColor(50, 50, 50);
+	ofSetBackgroundColor(10, 10, 10);
 
 
 }
@@ -98,7 +97,14 @@ void Content::update()
 
 	if (!m_pause)
 	{
-		m_compute.getShader().begin();		m_texture.bindAsImage(0, GL_READ_ONLY);		m_compute.getShader().setUniform1i("uNumPointsSF", m_numPoints/1024);		m_compute.getShader().setUniform1f("uWidth", m_image.getWidth());		m_compute.getShader().setUniform1f("uHeight", m_image.getHeight());		m_compute.getShader().setUniform1f("uTime", ofGetElapsedTimef());		m_compute.getShader().dispatchCompute((m_points.size() + 1024 - 1) / 1024, 1, 1);		m_compute.getShader().end();
+		m_compute.getShader().begin();
+		m_texture.bindAsImage(0, GL_READ_ONLY);
+		m_compute.getShader().setUniform1i("uNumPointsSF", m_numPoints/1024);
+		m_compute.getShader().setUniform1f("uWidth", m_image.getWidth());
+		m_compute.getShader().setUniform1f("uHeight", m_image.getHeight());
+		m_compute.getShader().setUniform1f("uTime", ofGetElapsedTimef());
+		m_compute.getShader().dispatchCompute((m_points.size() + 1024 - 1) / 1024, 1, 1);
+		m_compute.getShader().end();
 		m_pointsBuffer.copyTo(m_pointsBufferOld);
 	}
 
@@ -116,14 +122,9 @@ void Content::drawScene()
 {
 	ofSetDepthTest(true);
 	m_cam.begin();
-	ofScale(2, -2, 2); // flip the y axis and zoom in a bit
 	ofTranslate(-m_image.getWidth() / 2, -m_image.getHeight() / 2);
-
-	ofPointSmooth();
 	ofSetColor(255);
 	glPointSize(3);
-	m_texture.draw(10000, 0, -1000, m_image.getWidth(), m_image.getHeight());
-
 	m_constantShader.getShader().begin();
 	m_constantShader.getShader().setUniform1f("uAlpha", 1.f);
 	m_pointsVbo.draw(GL_POINTS, 0, m_points.size());
@@ -135,7 +136,13 @@ void Content::draw()
 {
 	///// WORLD
 	{
-		if (m_fboActive && m_fbo)			m_fbo->draw(0, 0);		else			drawScene();		/// SCREEN GRAB
+
+		if (m_fboActive && m_fbo)
+			m_fbo->draw(0, 0);
+		else
+			drawScene();
+
+		/// SCREEN GRAB
 		if (m_snapshot == true) {
 			m_screenGrab.grabScreen(0, 0, ofGetWidth(), ofGetHeight());
 			string fileName = "screenshots\\snapshot_" + ofGetTimestampString() + ".png";

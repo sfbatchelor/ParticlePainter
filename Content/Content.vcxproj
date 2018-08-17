@@ -114,8 +114,8 @@
       <AdditionalOptions>/ignore:4099 /ignore:4098 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
-      <Command>del "..\Application\bin\*.pdb" 
-xcopy /Y "$(OutDir)*.*" "..\Application\bin"</Command>
+      <Command>del "..\Application\bin\$(Configuration)\*.pdb" 
+xcopy /Y "$(OutDir)*.*" "..\Application\bin\$(Configuration)"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>del "$(OutDir)*.pdb"
@@ -163,7 +163,7 @@ rd /s /q "obj\$(Configuration)\"
       <AdditionalOptions>/ignore:4099 /ignore:4098 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /Y "$(OutDir)*.*" "..\Application\bin"</Command>
+      <Command>xcopy /Y "$(OutDir)*.*" "..\Application\bin\$(Configuration)"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>del "$(OutDir)*.pdb"
