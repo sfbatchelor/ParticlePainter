@@ -92,6 +92,8 @@ void Content::update()
 	{
 		initSimPoints();
 		resetFbo();
+		m_draggedImage.reset(new ofImage());
+		m_compositeImage = false;
 		m_restart = false;
 	}
 
@@ -108,11 +110,15 @@ void Content::update()
 		m_pointsBuffer.copyTo(m_pointsBufferOld);
 	}
 
-
-
 	if (m_fboActive && m_fbo)
 	{
 		m_fbo->begin();
+		if (m_compositeImage)
+		{
+			m_compositeImage = false;
+			m_draggedImage->draw(0, 0);
+			m_fbo->clearDepthBuffer(10000000.);
+		}
 		drawScene();
 		m_fbo->end();
 	}
@@ -288,14 +294,11 @@ void Content::windowResized(int w, int h)
 
 void Content::dragEvent(ofDragInfo info)
 {
-	//if (info.files.size() > 0) {
-
-	//	m_draggedImages.assign(info.files.size(), ofImage());
-	//	for (unsigned int k = 0; k < info.files.size(); k++) {
-	//		m_draggedImages[k].load(info.files[k]);
-	//	}
-	//	m_plane.mapTexCoordsFromTexture(m_draggedImages[0].getTexture());
-	//}
+	if (info.files.size() > 0) {
+		m_draggedImage.reset(new ofImage());
+		m_draggedImage->load(info.files[0]);
+		m_compositeImage = true;
+	}
 }
 
 void Content::gotMessage(ofMessage msg)

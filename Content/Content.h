@@ -49,6 +49,9 @@ private:
 	ofEasyCam m_cam;
 	bool m_showGui;
 
+	std::shared_ptr<ofImage> m_draggedImage;
+	bool m_compositeImage;
+
 	ShaderWatcher m_imageShader;
 	ShaderWatcher m_constantShader;
 	ComputeWatcher m_compute;
