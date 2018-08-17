@@ -1,6 +1,7 @@
 #pragma once
 #include "ofMain.h"
 #include "ShaderWatcher.h"
+#include "ofxGui.h"
 
 struct Point
 {
@@ -69,5 +70,7 @@ private:
 	bool m_pause;
 	bool m_restart;
 	bool m_fboActive;
+
+	ofxPanel m_gui;
 
 };
