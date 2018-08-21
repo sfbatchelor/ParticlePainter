@@ -1,7 +1,8 @@
 #pragma once
-#include "ofMain.h"
 #include "ShaderWatcher.h"
 #include "ofxGui.h"
+#include "DrawMode.h"
+
 
 struct Point
 {
@@ -42,6 +43,8 @@ public:
 
 private:
 
+	std::unique_ptr<DrawMode> m_state;
+
 	ofImage m_screenGrab;
 	bool m_snapshot;
 
@@ -72,5 +75,7 @@ private:
 	bool m_fboActive;
 
 	ofxPanel m_gui;
+
+	bool m_animateActive;
 
 };

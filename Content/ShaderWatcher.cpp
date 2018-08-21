@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "ShaderWatcher.h"
 
 ShaderWatcher::ShaderWatcher()

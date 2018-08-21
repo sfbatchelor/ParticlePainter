@@ -201,8 +201,11 @@ C:\_dev\openFrameworks\addons\ofxGui\src;%(AdditionalIncludeDirectories)</Additi
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="bin\data\compute.glsl" />
     <None Include="bin\data\constantFrag.glsl" />
     <None Include="bin\data\constantVert.glsl" />
+    <None Include="bin\data\imageFrag.glsl" />
+    <None Include="bin\data\imageVert.glsl" />
     <None Include="bin\data\sphereGeom.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

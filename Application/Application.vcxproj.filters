@@ -12,6 +12,9 @@
     <Filter Include="src">
       <UniqueIdentifier>{d8376475-7454-4a24-b08a-aac121d3ad6f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="data">
+      <UniqueIdentifier>{4784ad8b-63f1-4a1b-95aa-25df97f057ba}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ofApp.h">
@@ -22,8 +25,23 @@
     <ResourceCompile Include="icon.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="bin\data\constantVert.glsl" />
-    <None Include="bin\data\constantFrag.glsl" />
-    <None Include="bin\data\sphereGeom.glsl" />
+    <None Include="bin\data\compute.glsl">
+      <Filter>data</Filter>
+    </None>
+    <None Include="bin\data\constantFrag.glsl">
+      <Filter>data</Filter>
+    </None>
+    <None Include="bin\data\constantVert.glsl">
+      <Filter>data</Filter>
+    </None>
+    <None Include="bin\data\imageFrag.glsl">
+      <Filter>data</Filter>
+    </None>
+    <None Include="bin\data\imageVert.glsl">
+      <Filter>data</Filter>
+    </None>
+    <None Include="bin\data\sphereGeom.glsl">
+      <Filter>data</Filter>
+    </None>
   </ItemGroup>
 </Project>

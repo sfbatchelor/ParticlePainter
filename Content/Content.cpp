@@ -1,4 +1,6 @@
+#include "stdafx.h"
 #include "Content.h"
+#include "DrawMode_Drawing.h"
 
 Content::Content()
 {
@@ -257,6 +259,8 @@ void Content::keyPressed(int key)
 	case 'f':
 		m_fboActive = !m_fboActive;
 		break;
+	case 'a':
+		m_animateActive = !m_animateActive;
 	}
 }
 

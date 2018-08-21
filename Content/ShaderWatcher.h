@@ -1,6 +1,5 @@
 #pragma once
 #include <Filewatcher.h>
-#include <vector>
 #include "ofShader.h"
 
 struct ThreadedShaderFile

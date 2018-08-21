@@ -27,37 +27,46 @@
     <ClInclude Include="Content.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\addons\ofxGui\src\ofxToggle.h">
+    <ClInclude Include="DrawMode_Drawing.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DrawMode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ofxGuiGroup.h">
       <Filter>addons</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\addons\ofxGui\src\ofxBaseGui.h">
+    <ClInclude Include="ofxInputField.h">
       <Filter>addons</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\addons\ofxGui\src\ofxButton.h">
+    <ClInclude Include="ofxLabel.h">
       <Filter>addons</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\addons\ofxGui\src\ofxColorPicker.h">
+    <ClInclude Include="ofxPanel.h">
       <Filter>addons</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\addons\ofxGui\src\ofxGui.h">
+    <ClInclude Include="ofxSlider.h">
       <Filter>addons</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\addons\ofxGui\src\ofxGuiGroup.h">
+    <ClInclude Include="ofxSliderGroup.h">
       <Filter>addons</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\addons\ofxGui\src\ofxLabel.h">
+    <ClInclude Include="ofxToggle.h">
       <Filter>addons</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\addons\ofxGui\src\ofxPanel.h">
+    <ClInclude Include="ofxBaseGui.h">
       <Filter>addons</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\addons\ofxGui\src\ofxSlider.h">
+    <ClInclude Include="ofxButton.h">
       <Filter>addons</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\addons\ofxGui\src\ofxSliderGroup.h">
+    <ClInclude Include="ofxColorPicker.h">
       <Filter>addons</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\addons\ofxGui\src\ofxInputField.h">
+    <ClInclude Include="ofxGui.h">
       <Filter>addons</Filter>
     </ClInclude>
   </ItemGroup>
@@ -71,34 +80,43 @@
     <ClCompile Include="Content.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\addons\ofxGui\src\ofxBaseGui.cpp">
+    <ClCompile Include="DrawMode_Drawing.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DrawMode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ofxGuiGroup.cpp">
       <Filter>addons</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\addons\ofxGui\src\ofxButton.cpp">
+    <ClCompile Include="ofxInputField.cpp">
       <Filter>addons</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\addons\ofxGui\src\ofxColorPicker.cpp">
+    <ClCompile Include="ofxLabel.cpp">
       <Filter>addons</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\addons\ofxGui\src\ofxGuiGroup.cpp">
+    <ClCompile Include="ofxPanel.cpp">
       <Filter>addons</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\addons\ofxGui\src\ofxLabel.cpp">
+    <ClCompile Include="ofxSlider.cpp">
       <Filter>addons</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\addons\ofxGui\src\ofxPanel.cpp">
+    <ClCompile Include="ofxSliderGroup.cpp">
       <Filter>addons</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\addons\ofxGui\src\ofxSlider.cpp">
+    <ClCompile Include="ofxToggle.cpp">
       <Filter>addons</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\addons\ofxGui\src\ofxSliderGroup.cpp">
+    <ClCompile Include="ofxBaseGui.cpp">
       <Filter>addons</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\addons\ofxGui\src\ofxToggle.cpp">
+    <ClCompile Include="ofxButton.cpp">
       <Filter>addons</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\addons\ofxGui\src\ofxInputField.cpp">
+    <ClCompile Include="ofxColorPicker.cpp">
       <Filter>addons</Filter>
     </ClCompile>
   </ItemGroup>
