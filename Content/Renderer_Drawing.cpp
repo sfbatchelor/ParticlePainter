@@ -2,8 +2,8 @@
 #include "Renderer_Drawing.h"
 #include "Content.h"
 
-Drawing::Drawing(Content * parent):
-	Renderer(parent)
+Drawing::Drawing(Content * parent, std::shared_ptr<ofFbo> fbo):
+	Renderer(parent, fbo)
 {
 }
 

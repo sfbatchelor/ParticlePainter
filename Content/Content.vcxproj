@@ -202,6 +202,8 @@ xcopy /Y "$(OutDir)*.lib" "..\Application\bin\$(Configuration)"</Command>
   <ItemGroup>
     <ClInclude Include="Content.h" />
     <ClInclude Include="ContentLoader.h" />
+    <ClInclude Include="ImageSaverThread.h" />
+    <ClInclude Include="Renderer_Animation.h" />
     <ClInclude Include="Renderer_Drawing.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="ofxBaseGui.h" />
@@ -221,7 +223,9 @@ xcopy /Y "$(OutDir)*.lib" "..\Application\bin\$(Configuration)"</Command>
   <ItemGroup>
     <ClCompile Include="Content.cpp" />
     <ClCompile Include="ContentLoader.cpp" />
+    <ClCompile Include="ImageSaverThread.cpp" />
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="Renderer_Animation.cpp" />
     <ClCompile Include="Renderer_Drawing.cpp" />
     <ClCompile Include="ofxBaseGui.cpp" />
     <ClCompile Include="ofxButton.cpp" />

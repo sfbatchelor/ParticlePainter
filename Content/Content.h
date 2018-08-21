@@ -46,6 +46,8 @@ public:
 private:
 
 	std::unique_ptr<Renderer> m_renderer;
+	bool m_isDrawing;
+	bool m_changeRenderer;
 
 	ofImage m_screenGrab;
 	bool m_snapshot;

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Content.h"
 #include "Renderer_Drawing.h"
+#include "Renderer_Animation.h"
 
 
 Content::Content()
@@ -20,6 +21,8 @@ Content::Content()
 	m_restart = false;
 	m_fboActive = false;
 
+	m_isDrawing = true;
+	m_changeRenderer = false;
 
 	// GENERATE POINTS FROM IMAGE
 	// load an image from disk
@@ -115,6 +118,7 @@ void Content::drawOverlays()
 
 		stringstream ss;
 		ss << "FPS: " << ofToString(ofGetFrameRate(), 0) << endl << endl;
+		ss << "MODE:" << " " << m_renderer->getName() << endl;;
 		ss << "--CONTROLS--" << endl;
 		ss << "'R' TO RESET POINTS" << endl;
 		ss << "'F' TO DRAW TO FBO" << endl;
@@ -143,6 +147,21 @@ void Content::drawOverlays()
 
 void Content::update()
 {
+	if (m_changeRenderer)
+	{
+		if (m_isDrawing)
+		{
+			m_renderer = std::move(std::unique_ptr<Renderer>(new Animation(this, m_renderer->getFbo())));
+		}
+		else
+		{
+			m_renderer = std::move(std::unique_ptr<Renderer>(new Drawing(this, m_renderer->getFbo())));
+		}
+		m_renderer->init();
+		m_changeRenderer = false;
+		m_isDrawing = !m_isDrawing;
+	}
+
 	m_imageShader.update();
 	m_constantShader.update();
 	m_compute.update();
@@ -235,6 +254,9 @@ void Content::keyPressed(int key)
 		break;
 	case 'f':
 		m_renderer->switchRendering();
+		break;
+	case '1':
+		m_changeRenderer = true;
 		break;
 	}
 }

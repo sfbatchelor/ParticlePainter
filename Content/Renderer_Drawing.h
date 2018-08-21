@@ -7,7 +7,7 @@ class Drawing : public Renderer
 	
 public:
 
-	Drawing(Content* parent);
+	Drawing(Content* parent, std::shared_ptr<ofFbo> fbo = nullptr);
 
 	virtual void init();
 	virtual void update();
