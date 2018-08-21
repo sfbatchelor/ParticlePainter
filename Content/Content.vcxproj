@@ -84,7 +84,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IntDir>obj\$(Configuration)\$([System.DateTime]::Now.toString("MMddhhmmssfff"))\</IntDir>
+    <IntDir>obj\$(Configuration)\</IntDir>
     <OutDir>bin\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -102,7 +102,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalOptions>
       </AdditionalOptions>
-      <ProgramDataBaseFileName>$(IntDir)$(TargetName)_$([System.DateTime]::Now.toString("MMddhhmmssfff")).pdb</ProgramDataBaseFileName>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
       <AdditionalIncludeDirectories>$(OF)\libs\openFrameworks\;$(OF)\libs\openFrameworks\3d;$(OF)\libs\openFrameworks\app;$(OF)\libs\openFrameworks\communication;$(OF)\libs\openFrameworks\events;$(OF)\libs\openFrameworks\gl;$(OF)\libs\openFrameworks\gl\shaders;$(OF)\libs\openFrameworks\graphics;$(OF)\libs\openFrameworks\math;$(OF)\libs\openFrameworks\sound;$(OF)\libs\openFrameworks\types;$(OF)\libs\openFrameworks\utils;$(OF)\libs\openFrameworks\video;$(OF)\libs\glew\include;$(OF)\libs\boost\include;$(OF)\libs\cairo\include\cairo;$(OF)\libs\curl\include;$(OF)\libs\fmodex\include;$(OF)\libs\FreeImage\include;$(OF)\libs\freetype\include;$(OF)\libs\glfw\include;$(OF)\libs\glm\include;$(OF)\libs\json\include;$(OF)\libs\libpng;$(OF)\libs\openssl\include;$(OF)\libs\pixman;$(OF)\libs\pugixml\include;$(OF)\libs\rtAudio\include;$(OF)\libs\tess2\include;$(OF)\libs\uriparser\include;$(OF)\libs\utf8\include;$(OF)\libs\videoInput\include;$(OF)\libs\zlib;../Common;$(OF)\addons\ofxGui\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderOutputFile>obj\$(TargetName).pch</PrecompiledHeaderOutputFile>
     </ClCompile>
@@ -116,13 +116,17 @@
       <AdditionalOptions>/ignore:4099 /ignore:4098 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
-      <Command>del "..\Application\bin\$(Configuration)\*.pdb" 
-xcopy /Y "$(OutDir)*.*" "..\Application\bin\$(Configuration)"</Command>
+      <Command>
+xcopy /Y "$(OutDir)*.dll" "..\Application\bin\$(Configuration)"
+xcopy /Y "$(OutDir)*.lib" "..\Application\bin\$(Configuration)"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>del "$(OutDir)*.pdb" 
-del /s /q "obj\$(Configuration)\*.pdb" del /s /q "obj\$(Configuration)\*.idb"</Command>
+      <Command>
+      </Command>
     </PreBuildEvent>
+    <PreLinkEvent>
+      <Command>del "$(OutDir)*.pdb"</Command>
+    </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -149,9 +153,9 @@ del /s /q "obj\$(Configuration)\*.pdb" del /s /q "obj\$(Configuration)\*.idb"</C
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;CONTENT_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <ProgramDataBaseFileName>$(IntDir)$(TargetName)_$([System.DateTime]::Now.toString("MMddhhmmssfff")).pdb</ProgramDataBaseFileName>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
       <AdditionalIncludeDirectories>$(OF)\libs\openFrameworks\;$(OF)\libs\openFrameworks\3d;$(OF)\libs\openFrameworks\app;$(OF)\libs\openFrameworks\communication;$(OF)\libs\openFrameworks\events;$(OF)\libs\openFrameworks\gl;$(OF)\libs\openFrameworks\gl\shaders;$(OF)\libs\openFrameworks\graphics;$(OF)\libs\openFrameworks\math;$(OF)\libs\openFrameworks\sound;$(OF)\libs\openFrameworks\types;$(OF)\libs\openFrameworks\utils;$(OF)\libs\openFrameworks\video;$(OF)\libs\glew\include;$(OF)\libs\boost\include;$(OF)\libs\cairo\include\cairo;$(OF)\libs\curl\include;$(OF)\libs\fmodex\include;$(OF)\libs\FreeImage\include;$(OF)\libs\freetype\include;$(OF)\libs\glfw\include;$(OF)\libs\glm\include;$(OF)\libs\json\include;$(OF)\libs\libpng;$(OF)\libs\openssl\include;$(OF)\libs\pixman;$(OF)\libs\pugixml\include;$(OF)\libs\rtAudio\include;$(OF)\libs\tess2\include;$(OF)\libs\uriparser\include;$(OF)\libs\utf8\include;$(OF)\libs\videoInput\include;$(OF)\libs\zlib;../Common;$(OF)\addons\ofxGui\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <ObjectFileName>$(IntDir)$(TargetName)_$([System.DateTime]::Now.toString("MMddhhmmssfff"))</ObjectFileName>
+      <ObjectFileName>$(IntDir)$(TargetName)</ObjectFileName>
       <PrecompiledHeaderOutputFile>obj\$(TargetName).pch</PrecompiledHeaderOutputFile>
     </ClCompile>
     <Link>
@@ -159,18 +163,23 @@ del /s /q "obj\$(Configuration)\*.pdb" del /s /q "obj\$(Configuration)\*.idb"</C
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>$(OutDir)$(TargetName)_$([System.DateTime]::Now.toString("MMddhhmmssfff")).pdb</ProgramDatabaseFile>
+      <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
       <AdditionalLibraryDirectories>$(OF)\libs\openFrameworksCompiled\lib\vs\Win32;$(OF)\libs\boost\lib\vs\Win32;$(OF)\libs\cairo\lib\vs\Win32;$(OF)\libs\curl\lib\vs\Win32;$(OF)\libs\fmodex\lib\vs\Win32;$(OF)\libs\FreeImage\lib\vs\Win32;$(OF)\libs\freetype\lib\vs\Win32;$(OF)\libs\glew\lib\vs\Win32;$(OF)\libs\glfw\lib\vs\Win32;$(OF)\libs\openssl\lib\vs\Win32;$(OF)\libs\pugixml\lib\vs\Win32;$(OF)\libs\rtAudio\lib\vs\Win32;$(OF)\libs\uriparser\lib\vs\Win32;$(OF)\libs\videoInput\lib\vs\Win32;$(OF)\libs\tess2\lib\vs\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>openFrameworksLib.lib;cairo-static.lib;pixman-1.lib;libpng.lib;zlib.lib;msimg32.lib;OpenGL32.lib;GLu32.lib;kernel32.lib;setupapi.lib;Vfw32.lib;comctl32.lib;rtAudio.lib;videoInput.lib;libfreetype.lib;FreeImage.lib;dsound.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;glew32s.lib;fmodex_vc.lib;glu32.lib;libssl.lib;libcrypto.lib;crypt32.lib;libcurl.lib;uriparser.lib;pugixml.lib;Ws2_32.lib;tess2.lib;glfw3.lib;winmm.lib;odbc32.lib;odbccp32.lib;wldap32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/ignore:4099 /ignore:4098 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /Y "$(OutDir)*.*" "..\Application\bin\$(Configuration)"</Command>
+      <Command>
+xcopy /Y "$(OutDir)*.dll" "..\Application\bin\$(Configuration)"
+xcopy /Y "$(OutDir)*.lib" "..\Application\bin\$(Configuration)"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>del "$(OutDir)*.pdb"
-rd /s /q "obj\$(Configuration)\"</Command>
+      <Command>
+      </Command>
     </PreBuildEvent>
+    <PreLinkEvent>
+      <Command>del "$(OutDir)*.pdb"</Command>
+    </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>

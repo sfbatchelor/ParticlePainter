@@ -117,7 +117,7 @@ ComputeWatcher::ComputeWatcher()
 
 ComputeWatcher::~ComputeWatcher()
 {
-	m_compute.m_fileWatcher.stopThread();
+	m_compute.m_fileWatcher.waitForThread(true, 500);
 }
 
 bool ComputeWatcher::load(const std::filesystem::path & shaderName)
