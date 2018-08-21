@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Content.h"
-#include "DrawMode_Drawing.h"
+#include "Renderer_Drawing.h"
+
 
 Content::Content()
 {
@@ -60,8 +61,6 @@ Content::Content()
 	m_texture.loadData(m_image.getPixels());
 
 
-	resetFbo();
-
 	// SETUP RAY BUFFER ON GPU
 	m_cam.setVFlip(true); //flip for upside down image
 	m_cam.setFarClip(100000000.);
@@ -69,6 +68,9 @@ Content::Content()
 	ofEnableDepthTest();
 	ofSetBackgroundColor(10, 10, 10);
 
+
+	m_renderer = std::move(std::unique_ptr<Renderer>(new Drawing(this)));
+	m_renderer->init();
 
 }
 
@@ -83,19 +85,72 @@ void Content::initSimPoints()
 	m_pointsBufferOld.bindBase(GL_SHADER_STORAGE_BUFFER, 1);
 }
 
+ofxPanel & Content::getGui()
+{
+
+	return m_gui;
+}
+
+void Content::drawOverlays()
+{
+
+	/// SCREEN GRAB
+	if (m_snapshot == true) {
+		m_screenGrab.grabScreen(0, 0, ofGetWidth(), ofGetHeight());
+		string fileName = "screenshots\\snapshot_" + ofGetTimestampString() + ".png";
+		m_screenGrab.save(fileName);
+		m_snapshot = false;
+	}
+
+	if (m_showGui)
+	{
+		m_cam.begin();
+		ofDrawGrid(5000, 5, true, true, true, true);
+		m_cam.end();
+	}
+
+	///// GUI
+	if (m_showGui)
+	{
+
+		stringstream ss;
+		ss << "FPS: " << ofToString(ofGetFrameRate(), 0) << endl << endl;
+		ss << "--CONTROLS--" << endl;
+		ss << "'R' TO RESET POINTS" << endl;
+		ss << "'F' TO DRAW TO FBO" << endl;
+		ss << "' ' TO PAUSE" << endl;
+		const std::string string = ss.str();
+		ofDrawBitmapStringHighlight(string, glm::vec2(20, 100));
+		drawInteractionArea();
+
+		if (m_pause) // draw a pause symbol
+		{
+
+			ofSetColor(255);
+			ofDrawRectangle(glm::vec2(ofGetWidth() - 100, ofGetHeight() - 200), 35, 80);
+			ofDrawRectangle(glm::vec2(ofGetWidth() - 150, ofGetHeight() - 200), 35, 80);
+		}
+		else
+		{
+			ofSetColor(0, 255, 0);
+			ofDrawTriangle(glm::vec2(ofGetWidth() - 150, ofGetHeight() - 200), glm::vec2(ofGetWidth() - 150, ofGetHeight() - 120), glm::vec2(ofGetWidth() - 65, ofGetHeight() - 160));
+
+
+			ofSetColor(255);
+		}
+	}
+}
+
 void Content::update()
 {
 	m_imageShader.update();
 	m_constantShader.update();
 	m_compute.update();
-
+	m_renderer->update();
 
 	if (m_restart)
 	{
 		initSimPoints();
-		resetFbo();
-		m_draggedImage.reset(new ofImage());
-		m_compositeImage = false;
 		m_restart = false;
 	}
 
@@ -112,18 +167,6 @@ void Content::update()
 		m_pointsBuffer.copyTo(m_pointsBufferOld);
 	}
 
-	if (m_fboActive && m_fbo)
-	{
-		m_fbo->begin();
-		if (m_compositeImage)
-		{
-			m_compositeImage = false;
-			m_draggedImage->draw(0, 0);
-			m_fbo->clearDepthBuffer(10000000.);
-		}
-		drawScene();
-		m_fbo->end();
-	}
 }
 
 void Content::drawScene()
@@ -142,75 +185,8 @@ void Content::drawScene()
 
 void Content::draw()
 {
-	///// WORLD
-	{
-
-		if (m_fboActive && m_fbo)
-			m_fbo->draw(0, 0);
-		else
-			drawScene();
-
-		/// SCREEN GRAB
-		if (m_snapshot == true) {
-			m_screenGrab.grabScreen(0, 0, ofGetWidth(), ofGetHeight());
-			string fileName = "screenshots\\snapshot_" + ofGetTimestampString() + ".png";
-			m_screenGrab.save(fileName);
-			m_snapshot = false;
-		}
-
-		if (m_showGui)
-		{
-			m_cam.begin();
-			ofDrawGrid(5000, 5, true, true, true, true);
-			m_cam.end();
-		}
-
-	}
-
-	///// GUI
-	if (m_showGui)
-	{
-
-		stringstream ss;
-		ss << "FPS: " << ofToString(ofGetFrameRate(), 0) << endl << endl;
-		ss << "--CONTROLS--" << endl ;
-		ss << "'R' TO RESET POINTS" << endl;
-		ss << "'F' TO DRAW TO FBO" << endl;
-		ss << "' ' TO PAUSE" << endl;
-		const std::string string = ss.str();
-		ofDrawBitmapStringHighlight(string, glm::vec2(20, 100));
-		drawInteractionArea();
-
-		if (m_pause) // draw a pause symbol
-		{
-
-			ofSetColor(255);
-			ofDrawRectangle(glm::vec2(ofGetWidth() - 100, ofGetHeight() - 200), 35, 80);
-			ofDrawRectangle(glm::vec2(ofGetWidth() - 150, ofGetHeight() - 200), 35, 80);
-		}
-		else
-		{
-			ofSetColor(0,255, 0);
-			ofDrawTriangle(glm::vec2(ofGetWidth() - 150, ofGetHeight() - 200), glm::vec2(ofGetWidth() - 150, ofGetHeight() - 120),  glm::vec2(ofGetWidth() - 65, ofGetHeight() - 160));
-
-
-			ofSetColor(255);
-		}
-	}
-
-
-}
-
-
-void Content::resetFbo()
-{
-
-	m_fbo.reset(new ofFbo());
-	m_fbo->allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
-	m_fbo->begin();
-	ofClear(0, 0, 0, 255);
-	m_fbo->end();
-
+	m_renderer->draw();
+	drawOverlays();
 }
 
 void Content::drawInteractionArea()
@@ -255,12 +231,11 @@ void Content::keyPressed(int key)
 		break;
 	case 'r':
 		m_restart = true;
+		m_renderer->reset();
 		break;
 	case 'f':
-		m_fboActive = !m_fboActive;
+		m_renderer->switchRendering();
 		break;
-	case 'a':
-		m_animateActive = !m_animateActive;
 	}
 }
 

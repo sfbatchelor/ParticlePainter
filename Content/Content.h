@@ -1,7 +1,7 @@
 #pragma once
 #include "ShaderWatcher.h"
 #include "ofxGui.h"
-#include "DrawMode.h"
+#include "Renderer.h"
 
 
 struct Point
@@ -39,16 +39,17 @@ public:
 
 	void initSimPoints();
 
-	void resetFbo();
+	ofxPanel& getGui();
+	void drawOverlays();
+
 
 private:
 
-	std::unique_ptr<DrawMode> m_state;
+	std::unique_ptr<Renderer> m_renderer;
 
 	ofImage m_screenGrab;
 	bool m_snapshot;
 
-	std::shared_ptr<ofFbo> m_fbo;
 
 	ofEasyCam m_cam;
 	bool m_showGui;

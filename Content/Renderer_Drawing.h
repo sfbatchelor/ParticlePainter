@@ -1,8 +1,8 @@
 #pragma once
-#include "DrawMode.h"
+#include "Renderer.h"
 
 
-class Drawing : public DrawMode 
+class Drawing : public Renderer 
 {
 	
 public:

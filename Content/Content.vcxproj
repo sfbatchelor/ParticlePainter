@@ -100,8 +100,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;CONTENT_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalOptions>
-      </AdditionalOptions>
+      <AdditionalOptions>/FS</AdditionalOptions>
       <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
       <AdditionalIncludeDirectories>$(OF)\libs\openFrameworks\;$(OF)\libs\openFrameworks\3d;$(OF)\libs\openFrameworks\app;$(OF)\libs\openFrameworks\communication;$(OF)\libs\openFrameworks\events;$(OF)\libs\openFrameworks\gl;$(OF)\libs\openFrameworks\gl\shaders;$(OF)\libs\openFrameworks\graphics;$(OF)\libs\openFrameworks\math;$(OF)\libs\openFrameworks\sound;$(OF)\libs\openFrameworks\types;$(OF)\libs\openFrameworks\utils;$(OF)\libs\openFrameworks\video;$(OF)\libs\glew\include;$(OF)\libs\boost\include;$(OF)\libs\cairo\include\cairo;$(OF)\libs\curl\include;$(OF)\libs\fmodex\include;$(OF)\libs\FreeImage\include;$(OF)\libs\freetype\include;$(OF)\libs\glfw\include;$(OF)\libs\glm\include;$(OF)\libs\json\include;$(OF)\libs\libpng;$(OF)\libs\openssl\include;$(OF)\libs\pixman;$(OF)\libs\pugixml\include;$(OF)\libs\rtAudio\include;$(OF)\libs\tess2\include;$(OF)\libs\uriparser\include;$(OF)\libs\utf8\include;$(OF)\libs\videoInput\include;$(OF)\libs\zlib;../Common;$(OF)\addons\ofxGui\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderOutputFile>obj\$(TargetName).pch</PrecompiledHeaderOutputFile>
@@ -203,8 +202,8 @@ xcopy /Y "$(OutDir)*.lib" "..\Application\bin\$(Configuration)"</Command>
   <ItemGroup>
     <ClInclude Include="Content.h" />
     <ClInclude Include="ContentLoader.h" />
-    <ClInclude Include="DrawMode_Drawing.h" />
-    <ClInclude Include="DrawMode.h" />
+    <ClInclude Include="Renderer_Drawing.h" />
+    <ClInclude Include="Renderer.h" />
     <ClInclude Include="ofxBaseGui.h" />
     <ClInclude Include="ofxButton.h" />
     <ClInclude Include="ofxColorPicker.h" />
@@ -222,8 +221,8 @@ xcopy /Y "$(OutDir)*.lib" "..\Application\bin\$(Configuration)"</Command>
   <ItemGroup>
     <ClCompile Include="Content.cpp" />
     <ClCompile Include="ContentLoader.cpp" />
-    <ClCompile Include="DrawMode.cpp" />
-    <ClCompile Include="DrawMode_Drawing.cpp" />
+    <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="Renderer_Drawing.cpp" />
     <ClCompile Include="ofxBaseGui.cpp" />
     <ClCompile Include="ofxButton.cpp" />
     <ClCompile Include="ofxColorPicker.cpp" />
