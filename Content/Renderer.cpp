@@ -6,13 +6,24 @@ Renderer::Renderer(Content* parent, std::shared_ptr<ofFbo> fbo):
 	m_parent(parent),
 	m_fbo(fbo),
 	m_renderActive(false),
-	m_reset(false)
+	m_reset(false),
+	m_gui(ofxPanel())
 {
+}
+
+void Renderer::drawGui()
+{
+	m_gui.draw();
 }
 
 Content & Renderer::getParent()
 {
 	return *m_parent;
+}
+
+ofxPanel & Renderer::getGui()
+{
+	return m_gui;
 }
 
 std::shared_ptr<ofFbo> Renderer::getFbo()

@@ -60,7 +60,7 @@ ofxBaseGui::textColor(255),
 ofxBaseGui::fillColor(128);
 
 int ofxBaseGui::textPadding = 4;
-int ofxBaseGui::defaultWidth = 200;
+int ofxBaseGui::defaultWidth = 800;
 int ofxBaseGui::defaultHeight = 18;
 
 ofTrueTypeFont ofxBaseGui::font;

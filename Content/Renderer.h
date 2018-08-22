@@ -1,6 +1,8 @@
 #pragma once
 
+
 class Content;
+class ofxPanel;
 
 class Renderer 
 {
@@ -12,9 +14,11 @@ public:
 	virtual void init()=0;
 	virtual void update()=0;
 	virtual void draw()=0;
+	virtual void drawGui();
 
 	virtual std::string getName() = 0;
 	Content & getParent();
+	ofxPanel& getGui();
 	std::shared_ptr<ofFbo> getFbo();
 	void resetFbo();
 	void reset();
@@ -30,6 +34,7 @@ protected:
 private:
 
 	Content* m_parent;
+	ofxPanel m_gui;
 	std::shared_ptr<ofFbo> m_fbo;
 	bool m_reset;
 	bool m_renderActive;

@@ -11,6 +11,7 @@ void Drawing::init()
 {
 	setRender(false);
 	reset();
+	getGui().setup("Drawing");
 }
 
 void Drawing::update()

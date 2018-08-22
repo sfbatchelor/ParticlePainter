@@ -10,6 +10,7 @@
 
 ImageSaverThread::ImageSaverThread(){
 	startThread();
+	frame = 0;
 }
 
 ImageSaverThread::~ImageSaverThread(){
@@ -37,8 +38,61 @@ void ImageSaverThread::threadedFunction(){
 	// if the channel closes go out of the thread
 	unsigned char * p;
 	while(channel.receive(p)){
-		pixels.setFromPixels(p,1024,768,OF_PIXELS_RGB);
-		ofSaveImage(pixels, "sequences\\" + ofToString(ofGetFrameNum()) + ".jpg");
+		pixels.setFromPixels(p, ofGetWidth(), ofGetHeight(), OF_PIXELS_RGB);
+
+		// allocate a saver thread
+		std::shared_ptr<SaveToFileThread> saverThread;
+		for (auto saver : saverThreads)// get one if it's free
+		{
+			if (saver->isReady())
+				saverThread = saver;
+		}
+		if(!saverThread)//otherwise make a new one
+		{
+			saverThread = std::shared_ptr<SaveToFileThread>(new SaveToFileThread());
+			saverThreads.push_back(saverThread);
+		}
+		saverThread->save(pixels, "sequences\\" + ofToString(frame) + ".jpg");
+		channelReady.send(true);
+		frame++;
+	}
+}
+
+SaveToFileThread::SaveToFileThread()
+{
+	startThread();
+}
+
+SaveToFileThread::~SaveToFileThread()
+{
+	channelPixels.close();
+	channelName.close();
+	channelReady.close();
+	waitForThread(true);
+}
+
+void SaveToFileThread::save(ofPixels & pixels, std::string name)
+{
+	channelPixels.send(pixels);
+	channelName.send(name);
+}
+
+void SaveToFileThread::threadedFunction()
+{
+	ofPixels pixels;
+	std::string name;
+	while (channelPixels.receive(pixels))
+	{
+		channelName.receive(name);
+		ofSaveImage(pixels, name);
 		channelReady.send(true);
 	}
+
+}
+
+bool SaveToFileThread::isReady()
+{
+	// returns if it's not doing anything without blocking
+	bool ready;
+	return channelReady.tryReceive(ready);
 }

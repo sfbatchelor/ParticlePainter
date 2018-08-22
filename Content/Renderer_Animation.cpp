@@ -11,8 +11,20 @@ Animation::Animation(Content* parent, std::shared_ptr<ofFbo> fbo):
 void Animation::init()
 {
 
+	m_animationLayer.reset(new ofFbo());
+	m_finalLayer.reset(new ofFbo());
 	resetSequence();
 	std::vector<ofImage> m_imageSequence;
+	m_sceneView = ofxGuiBaseDraws(getFbo().get());
+	m_animationLayerView = ofxGuiBaseDraws( m_animationLayer.get());
+	m_finalLayerView = ofxGuiBaseDraws(m_finalLayer.get());
+	getGui().setup("Animation");
+	getGui().add(m_fadeAlpha.set("Fade Amount", 25, 0, 255));
+	ofParameterGroup scene;
+	scene.setName("Scene");
+	getGui().add(&m_sceneView);
+	getGui().add(&m_animationLayerView);
+	getGui().add(&m_finalLayerView);
 }
 
 void Animation::update()
@@ -63,29 +75,29 @@ void Animation::draw()
 	}
 	else
 	{
-		// otherwise render normally
-		getFbo()->draw(0, 0);
-		getParent().drawScene();
+	  // otherwise render normally
+	  getFbo()->draw(0, 0);
+	  getParent().drawScene();
 	}
 }
 
 void Animation::renderViewing()
 {
-	//if (m_maxCurrentSequenceIndex != 0)
-	//{
-	//	// then we play the sequence
-	//	if (m_currentIndex >= m_maxCurrentSequenceIndex)
-	//		m_currentIndex = 0;
-	//	ofSetColor(255);
-	//	m_imageSequence[m_currentIndex].draw(0, 0);
-	//	m_currentIndex++;
-	//}
-	//else
-	//{
-	//	// otherwise render normally
-	//	getFbo()->draw(0, 0);
-	//	getParent().drawScene();
-	//}
+	if (m_maxCurrentSequenceIndex != 0)
+	{
+		// then we play the sequence
+		if (m_currentIndex >= m_maxCurrentSequenceIndex)
+			m_currentIndex = 0;
+		ofSetColor(255);
+		m_imageSequence[m_currentIndex].draw(0, 0);
+		m_currentIndex++;
+	}
+	else
+	{
+		// otherwise render normally
+		getFbo()->draw(0, 0);
+		getParent().drawScene();
+	}
 
 	m_finalLayer->draw(100, 100);
 }
@@ -110,17 +122,20 @@ void Animation::updateRecording()
 
 	// draw a faded version of the scene
 	m_animationLayer->begin();
-	ofSetDepthTest(false);
-	ofFill();
-	ofSetColor(-100, -100, -100, 20);
-	ofDrawRectangle(0, 0, m_animationLayer->getWidth(), m_animationLayer->getHeight());
-	ofSetColor(255);
-	ofSetDepthTest(true);
+	ofClear(0);
+	//ofSetDepthTest(false);
+	//ofFill();
+	//ofSetColor(0, 0, 0, m_fadeAlpha.get());
+	//ofDrawRectangle(0, 0, m_animationLayer->getWidth(), m_animationLayer->getHeight());
+	//ofSetColor(255);
+	//ofSetDepthTest(true);
 	getParent().drawScene();
 	m_animationLayer->end();
 
 	// composite scene with animation layer
 	m_finalLayer->begin();
+	ofClear(0);
+	ofEnableAlphaBlending();
 	getFbo()->draw(0,0);
 	m_animationLayer->draw(0, 0);
 	m_finalLayer->end();
@@ -161,11 +176,11 @@ void Animation::resetSequence()
 	m_currentIndex = 0;
 
 
-	m_animationLayer.reset(new ofFbo());
-	m_finalLayer.reset(new ofFbo());
+	//m_animationLayer.reset(new ofFbo());
+	//m_finalLayer.reset(new ofFbo());
 	m_pixelBufferBack.reset(new ofBufferObject());
 	m_pixelBufferFront.reset(new ofBufferObject());
-	m_animationLayer->allocate(ofGetWidth(), ofGetHeight(), GL_RGB);
+	m_animationLayer->allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
 	m_finalLayer->allocate(ofGetWidth(), ofGetHeight(), GL_RGB);
 	m_pixelBufferBack->allocate(ofGetWidth()*ofGetHeight() * 3, GL_DYNAMIC_READ);
 	m_pixelBufferFront->allocate(ofGetWidth()*ofGetHeight() * 3, GL_DYNAMIC_READ);

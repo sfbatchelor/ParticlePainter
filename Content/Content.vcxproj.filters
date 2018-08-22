@@ -75,6 +75,9 @@
     <ClInclude Include="ImageSaverThread.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\addons\ofxGuiExtended-0.1\src\ofxGuiBaseDraws.h">
+      <Filter>addons</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ShaderWatcher.cpp">
@@ -130,6 +133,9 @@
     </ClCompile>
     <ClCompile Include="ImageSaverThread.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\addons\ofxGuiExtended-0.1\src\ofxGuiBaseDraws.cpp">
+      <Filter>addons</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

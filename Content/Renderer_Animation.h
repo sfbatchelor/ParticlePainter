@@ -1,6 +1,7 @@
 #pragma once
 #include "Renderer.h"
 #include "ImageSaverThread.h"
+#include "ofxGuiBaseDraws.h"
 
 
 class Animation : public Renderer 
@@ -44,6 +45,12 @@ protected:
 	static const int m_maxIndex = 600; // 20 secs @30fps
 
 	Mode m_mode;
+
+	ofParameter<float> m_fadeAlpha;
+
+	ofxGuiBaseDraws m_sceneView;
+	ofxGuiBaseDraws m_animationLayerView;
+	ofxGuiBaseDraws m_finalLayerView;
 
 };
 

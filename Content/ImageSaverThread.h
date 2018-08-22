@@ -6,6 +6,23 @@
  */
 #pragma once
 
+class SaveToFileThread : public ofThread {
+public:
+	SaveToFileThread();
+	~SaveToFileThread();
+
+	void save(ofPixels& pixels, std::string name);
+	void threadedFunction();
+	bool isReady();
+
+private:
+
+	ofThreadChannel<ofPixels> channelPixels;
+	ofThreadChannel<std::string> channelName;
+	ofThreadChannel<bool> channelReady;
+
+};
+
 class ImageSaverThread: public ofThread{
 public:
 	ImageSaverThread();
@@ -19,4 +36,6 @@ private:
 	ofPixels pixels;
 	ofThreadChannel<unsigned char *> channel;
 	ofThreadChannel<bool> channelReady;
+	int frame;
+	std::vector<std::shared_ptr<SaveToFileThread>> saverThreads;
 };

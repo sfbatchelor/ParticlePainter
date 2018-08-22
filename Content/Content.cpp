@@ -23,6 +23,9 @@ Content::Content()
 
 	m_isDrawing = true;
 	m_changeRenderer = false;
+	
+	m_gui.setup("HUD");
+
 
 	// GENERATE POINTS FROM IMAGE
 	// load an image from disk
@@ -90,7 +93,6 @@ void Content::initSimPoints()
 
 ofxPanel & Content::getGui()
 {
-
 	return m_gui;
 }
 
@@ -116,33 +118,39 @@ void Content::drawOverlays()
 	if (m_showGui)
 	{
 
-		stringstream ss;
-		ss << "FPS: " << ofToString(ofGetFrameRate(), 0) << endl << endl;
-		ss << "MODE:" << " " << m_renderer->getName() << endl;;
-		ss << "--CONTROLS--" << endl;
-		ss << "'R' TO RESET POINTS" << endl;
-		ss << "'F' TO DRAW TO FBO" << endl;
-		ss << "' ' TO PAUSE" << endl;
-		const std::string string = ss.str();
-		ofDrawBitmapStringHighlight(string, glm::vec2(20, 100));
-		drawInteractionArea();
+		ofDisableDepthTest();
+		//stringstream ss;
+		//ss << "FPS: " << ofToString(ofGetFrameRate(), 0) << endl << endl;
+		//ss << "MODE:" << " " << m_renderer->getName() << endl;;
+		//ss << "--CONTROLS--" << endl;
+		//ss << "'R' TO RESET POINTS" << endl;
+		//ss << "'F' TO DRAW TO FBO" << endl;
+		//ss << "' ' TO PAUSE" << endl;
+		//const std::string string = ss.str();
+		//ofDrawBitmapStringHighlight(string, glm::vec2(20, 100));
+		//drawInteractionArea();
 
-		if (m_pause) // draw a pause symbol
-		{
+		//if (m_pause) // draw a pause symbol
+		//{
 
-			ofSetColor(255);
-			ofDrawRectangle(glm::vec2(ofGetWidth() - 100, ofGetHeight() - 200), 35, 80);
-			ofDrawRectangle(glm::vec2(ofGetWidth() - 150, ofGetHeight() - 200), 35, 80);
-		}
-		else
-		{
-			ofSetColor(0, 255, 0);
-			ofDrawTriangle(glm::vec2(ofGetWidth() - 150, ofGetHeight() - 200), glm::vec2(ofGetWidth() - 150, ofGetHeight() - 120), glm::vec2(ofGetWidth() - 65, ofGetHeight() - 160));
+		//	ofSetColor(255);
+		//	ofDrawRectangle(glm::vec2(ofGetWidth() - 100, ofGetHeight() - 200), 35, 80);
+		//	ofDrawRectangle(glm::vec2(ofGetWidth() - 150, ofGetHeight() - 200), 35, 80);
+		//}
+		//else
+		//{
+		//	ofSetColor(0, 255, 0);
+		//	ofDrawTriangle(glm::vec2(ofGetWidth() - 150, ofGetHeight() - 200), glm::vec2(ofGetWidth() - 150, ofGetHeight() - 120), glm::vec2(ofGetWidth() - 65, ofGetHeight() - 160));
 
 
-			ofSetColor(255);
-		}
+		//	ofSetColor(255);
+		//}
+
+		m_renderer->drawGui();
 	}
+
+
+
 }
 
 void Content::update()
@@ -190,7 +198,7 @@ void Content::update()
 
 void Content::drawScene()
 {
-	ofSetDepthTest(true);
+	//ofSetDepthTest(true);
 	m_cam.begin();
 	ofTranslate(-m_image.getWidth() / 2, -m_image.getHeight() / 2);
 	ofSetColor(255);
