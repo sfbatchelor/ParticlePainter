@@ -13,6 +13,7 @@ public:
 	bool initialize(std::vector<std::string> syncedValues);
 	void resetSyncedValues(std::vector<std::string> syncedValues);
 	float getValue(std::string name);
+	void setValue(std::string name, float value);
 	float& getValueRef(std::string name);
 	void addValue(std::string name);
 

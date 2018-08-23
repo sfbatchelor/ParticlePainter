@@ -45,6 +45,9 @@ struct sync_io_cb {
 };
 void sync_set_io_cb(struct sync_device *d, struct sync_io_cb *cb);
 
+int sync_get_track_id(struct sync_device *d,
+	const char *name);
+int sync_fetch_track_data(struct sync_device *d, struct sync_track *t);
 const struct sync_track *sync_get_track(struct sync_device *, const char *);
 double sync_get_val(const struct sync_track *, double);
 

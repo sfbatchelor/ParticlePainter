@@ -82,6 +82,10 @@ int sync_find_key(const struct sync_track *t, int row)
 }
 
 #ifndef SYNC_PLAYER
+
+
+
+
 int sync_set_key(struct sync_track *t, const struct track_key *k)
 {
 	int idx = sync_find_key(t, k->row);

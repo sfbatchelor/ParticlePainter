@@ -437,6 +437,8 @@ static int handle_set_key_cmd(SOCKET sock, struct sync_device *data)
 	return sync_set_key(data->tracks[track], &key);
 }
 
+
+
 static int handle_del_key_cmd(SOCKET sock, struct sync_device *data)
 {
 	uint32_t track, row;
@@ -572,6 +574,22 @@ static int create_track(struct sync_device *d, const char *name)
 	d->tracks[d->num_tracks++] = t;
 
 	return (int)d->num_tracks - 1;
+}
+
+int sync_get_track_id(struct sync_device *d,
+	const char *name)
+{
+	int idx = find_track(d, name);
+	if (idx >= 0)
+		return idx;
+	return NULL;
+}
+
+int sync_fetch_track_data(struct sync_device *d, struct sync_track *t)
+{
+	if (d->sock != INVALID_SOCKET)
+		return fetch_track_data(d, t);
+	return -1;
 }
 
 const struct sync_track *sync_get_track(struct sync_device *d,

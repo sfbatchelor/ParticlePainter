@@ -78,6 +78,13 @@ float TrackerTimeline::getValue(std::string name)
 	return m_syncedValues[name];
 }
 
+void TrackerTimeline::setValue(std::string name, float value)
+{
+	if(m_connected == false)
+		connectToTracker();
+	SyncTracker::setSyncValue(name.c_str(), value);
+}
+
 float & TrackerTimeline::getValueRef(std::string name)
 {
 	return m_syncedValues[name];

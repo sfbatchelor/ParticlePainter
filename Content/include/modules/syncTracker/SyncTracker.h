@@ -13,6 +13,7 @@ extern "C"
 {
 #include "base\sync.h"
 #include "base\device.h"
+#include "base\track.h"
 }
 #include "utils\ProcessUtils.h"
 #include "ofLog.h"
@@ -229,6 +230,22 @@ namespace SyncTracker
 		{
 			return s_syncedValues[track];
 		}
+	}
+	static bool setSyncValue(const char* name, float value)
+	{
+		struct track_key key;
+		unsigned char type;
+		type = KEY_LINEAR;
+		key.row = s_frame;
+		key.value = value;
+		key.type = (enum key_type)type;
+		auto id = sync_get_track_id(s_device, name);
+		if (sync_set_key(s_device->tracks[id], &key) != -1)
+		{
+			sync_fetch_track_data(s_device, s_device->tracks[id]);
+			return true;
+		}
+		return false;
 	}
 
 	//!  retreive the current frame from the tracker, 

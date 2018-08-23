@@ -60,7 +60,6 @@ Content::Content():
 	ofSetBackgroundColor(10, 10, 10);
 
 	m_timeline.addValue("Time");
-	m_timeline.play();
 }
 
 void Content::initSimPoints()
@@ -71,12 +70,17 @@ void Content::initSimPoints()
 
 void Content::update()
 {
+
+	auto t = m_timeline.getValue("Time");
+
+	m_timeline.setValue("Time", 2000.);
 	m_timeline.update(ofGetLastFrameTime());
+	t = m_timeline.getValue("Time");
 
 	m_imageShader.update();
 	m_constantShader.update();
 	m_texture.bindAsImage(0, GL_READ_ONLY);
-	m_particleSim.update(m_timeline.getValue("Time"));
+	m_particleSim.update();
 
 	if (m_restart)
 	{
