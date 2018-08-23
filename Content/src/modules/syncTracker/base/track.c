@@ -2,9 +2,9 @@
 #include <assert.h>
 #include <math.h>
 
-#include "sync.h"
-#include "track.h"
-#include "base.h"
+#include "modules\syncTracker\base\sync.h"
+#include "modules\syncTracker\base\track.h"
+#include "modules\syncTracker\base\base.h"
 
 static double key_linear(const struct track_key k[2], double row)
 {

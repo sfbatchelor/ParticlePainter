@@ -1,6 +1,6 @@
 #pragma once
-#include "ShaderWatcher.h"
-#include "ofxGui.h"
+#include "utils/ShaderWatcher.h"
+#include "gui/ofxGui.h"
 
 
 struct Point

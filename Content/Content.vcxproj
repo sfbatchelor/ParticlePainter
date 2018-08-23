@@ -103,7 +103,7 @@
       <AdditionalOptions>
       </AdditionalOptions>
       <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
-      <AdditionalIncludeDirectories>$(OF)\libs\openFrameworks\;$(OF)\libs\openFrameworks\3d;$(OF)\libs\openFrameworks\app;$(OF)\libs\openFrameworks\communication;$(OF)\libs\openFrameworks\events;$(OF)\libs\openFrameworks\gl;$(OF)\libs\openFrameworks\gl\shaders;$(OF)\libs\openFrameworks\graphics;$(OF)\libs\openFrameworks\math;$(OF)\libs\openFrameworks\sound;$(OF)\libs\openFrameworks\types;$(OF)\libs\openFrameworks\utils;$(OF)\libs\openFrameworks\video;$(OF)\libs\glew\include;$(OF)\libs\boost\include;$(OF)\libs\cairo\include\cairo;$(OF)\libs\curl\include;$(OF)\libs\fmodex\include;$(OF)\libs\FreeImage\include;$(OF)\libs\freetype\include;$(OF)\libs\glfw\include;$(OF)\libs\glm\include;$(OF)\libs\json\include;$(OF)\libs\libpng;$(OF)\libs\openssl\include;$(OF)\libs\pixman;$(OF)\libs\pugixml\include;$(OF)\libs\rtAudio\include;$(OF)\libs\tess2\include;$(OF)\libs\uriparser\include;$(OF)\libs\utf8\include;$(OF)\libs\videoInput\include;$(OF)\libs\zlib;../Common;$(OF)\addons\ofxGui\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OF)\libs\openFrameworks\;$(OF)\libs\openFrameworks\3d;$(OF)\libs\openFrameworks\app;$(OF)\libs\openFrameworks\communication;$(OF)\libs\openFrameworks\events;$(OF)\libs\openFrameworks\gl;$(OF)\libs\openFrameworks\gl\shaders;$(OF)\libs\openFrameworks\graphics;$(OF)\libs\openFrameworks\math;$(OF)\libs\openFrameworks\sound;$(OF)\libs\openFrameworks\types;$(OF)\libs\openFrameworks\utils;$(OF)\libs\openFrameworks\video;$(OF)\libs\glew\include;$(OF)\libs\boost\include;$(OF)\libs\cairo\include\cairo;$(OF)\libs\curl\include;$(OF)\libs\fmodex\include;$(OF)\libs\FreeImage\include;$(OF)\libs\freetype\include;$(OF)\libs\glfw\include;$(OF)\libs\glm\include;$(OF)\libs\json\include;$(OF)\libs\libpng;$(OF)\libs\openssl\include;$(OF)\libs\pixman;$(OF)\libs\pugixml\include;$(OF)\libs\rtAudio\include;$(OF)\libs\tess2\include;$(OF)\libs\uriparser\include;$(OF)\libs\utf8\include;$(OF)\libs\videoInput\include;$(OF)\libs\zlib;..\Common;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderOutputFile>obj\$(TargetName).pch</PrecompiledHeaderOutputFile>
     </ClCompile>
     <Link>
@@ -154,7 +154,7 @@ xcopy /Y "$(OutDir)*.lib" "..\Application\bin\$(Configuration)"</Command>
       <PreprocessorDefinitions>WIN32;NDEBUG;CONTENT_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
-      <AdditionalIncludeDirectories>$(OF)\libs\openFrameworks\;$(OF)\libs\openFrameworks\3d;$(OF)\libs\openFrameworks\app;$(OF)\libs\openFrameworks\communication;$(OF)\libs\openFrameworks\events;$(OF)\libs\openFrameworks\gl;$(OF)\libs\openFrameworks\gl\shaders;$(OF)\libs\openFrameworks\graphics;$(OF)\libs\openFrameworks\math;$(OF)\libs\openFrameworks\sound;$(OF)\libs\openFrameworks\types;$(OF)\libs\openFrameworks\utils;$(OF)\libs\openFrameworks\video;$(OF)\libs\glew\include;$(OF)\libs\boost\include;$(OF)\libs\cairo\include\cairo;$(OF)\libs\curl\include;$(OF)\libs\fmodex\include;$(OF)\libs\FreeImage\include;$(OF)\libs\freetype\include;$(OF)\libs\glfw\include;$(OF)\libs\glm\include;$(OF)\libs\json\include;$(OF)\libs\libpng;$(OF)\libs\openssl\include;$(OF)\libs\pixman;$(OF)\libs\pugixml\include;$(OF)\libs\rtAudio\include;$(OF)\libs\tess2\include;$(OF)\libs\uriparser\include;$(OF)\libs\utf8\include;$(OF)\libs\videoInput\include;$(OF)\libs\zlib;../Common;$(OF)\addons\ofxGui\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OF)\libs\openFrameworks\;$(OF)\libs\openFrameworks\3d;$(OF)\libs\openFrameworks\app;$(OF)\libs\openFrameworks\communication;$(OF)\libs\openFrameworks\events;$(OF)\libs\openFrameworks\gl;$(OF)\libs\openFrameworks\gl\shaders;$(OF)\libs\openFrameworks\graphics;$(OF)\libs\openFrameworks\math;$(OF)\libs\openFrameworks\sound;$(OF)\libs\openFrameworks\types;$(OF)\libs\openFrameworks\utils;$(OF)\libs\openFrameworks\video;$(OF)\libs\glew\include;$(OF)\libs\boost\include;$(OF)\libs\cairo\include\cairo;$(OF)\libs\curl\include;$(OF)\libs\fmodex\include;$(OF)\libs\FreeImage\include;$(OF)\libs\freetype\include;$(OF)\libs\glfw\include;$(OF)\libs\glm\include;$(OF)\libs\json\include;$(OF)\libs\libpng;$(OF)\libs\openssl\include;$(OF)\libs\pixman;$(OF)\libs\pugixml\include;$(OF)\libs\rtAudio\include;$(OF)\libs\tess2\include;$(OF)\libs\uriparser\include;$(OF)\libs\utf8\include;$(OF)\libs\videoInput\include;$(OF)\libs\zlib;..\Common;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ObjectFileName>$(IntDir)$(TargetName)</ObjectFileName>
       <PrecompiledHeaderOutputFile>obj\$(TargetName).pch</PrecompiledHeaderOutputFile>
     </ClCompile>
@@ -201,59 +201,59 @@ xcopy /Y "$(OutDir)*.lib" "..\Application\bin\$(Configuration)"</Command>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="base.h" />
-    <ClInclude Include="Content.h" />
-    <ClInclude Include="ContentLoader.h" />
-    <ClInclude Include="device.h" />
-    <ClInclude Include="ofxBaseGui.h" />
-    <ClInclude Include="ofxButton.h" />
-    <ClInclude Include="ofxColorPicker.h" />
-    <ClInclude Include="ofxGui.h" />
-    <ClInclude Include="ofxGuiGroup.h" />
-    <ClInclude Include="ofxInputField.h" />
-    <ClInclude Include="ofxLabel.h" />
-    <ClInclude Include="ofxPanel.h" />
-    <ClInclude Include="ofxSlider.h" />
-    <ClInclude Include="ofxSliderGroup.h" />
-    <ClInclude Include="ofxToggle.h" />
-    <ClInclude Include="ProcessUtils.h" />
-    <ClInclude Include="ShaderWatcher.h" />
-    <ClInclude Include="stdafx.h" />
-    <ClInclude Include="sync.h" />
-    <ClInclude Include="SyncTracker.h" />
-    <ClInclude Include="track.h" />
-    <ClInclude Include="TrackerTimeline.h" />
+    <ClInclude Include="include\modules\syncTracker\base\base.h" />
+    <ClInclude Include="include\Content.h" />
+    <ClInclude Include="include\ContentLoader.h" />
+    <ClInclude Include="include\modules\syncTracker\base\device.h" />
+    <ClInclude Include="include\gui\ofxBaseGui.h" />
+    <ClInclude Include="include\gui\ofxButton.h" />
+    <ClInclude Include="include\gui\ofxColorPicker.h" />
+    <ClInclude Include="include\gui\ofxGui.h" />
+    <ClInclude Include="include\gui\ofxGuiGroup.h" />
+    <ClInclude Include="include\gui\ofxInputField.h" />
+    <ClInclude Include="include\gui\ofxLabel.h" />
+    <ClInclude Include="include\gui\ofxPanel.h" />
+    <ClInclude Include="include\gui\ofxSlider.h" />
+    <ClInclude Include="include\gui\ofxSliderGroup.h" />
+    <ClInclude Include="include\gui\ofxToggle.h" />
+    <ClInclude Include="include\utils\ProcessUtils.h" />
+    <ClInclude Include="include\utils\ShaderWatcher.h" />
+    <ClInclude Include="include\stdafx.h" />
+    <ClInclude Include="include\modules\syncTracker\base\sync.h" />
+    <ClInclude Include="include\modules\syncTracker\SyncTracker.h" />
+    <ClInclude Include="include\modules\syncTracker\base\track.h" />
+    <ClInclude Include="include\modules\syncTracker\TrackerTimeline.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Content.cpp" />
-    <ClCompile Include="ContentLoader.cpp" />
-    <ClCompile Include="device.c">
+    <ClCompile Include="src\Content.cpp" />
+    <ClCompile Include="src\ContentLoader.cpp" />
+    <ClCompile Include="src\modules\syncTracker\base\device.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="ofxBaseGui.cpp" />
-    <ClCompile Include="ofxButton.cpp" />
-    <ClCompile Include="ofxColorPicker.cpp" />
-    <ClCompile Include="ofxGuiGroup.cpp" />
-    <ClCompile Include="ofxInputField.cpp" />
-    <ClCompile Include="ofxLabel.cpp" />
-    <ClCompile Include="ofxPanel.cpp" />
-    <ClCompile Include="ofxSlider.cpp" />
-    <ClCompile Include="ofxSliderGroup.cpp" />
-    <ClCompile Include="ofxToggle.cpp" />
-    <ClCompile Include="ShaderWatcher.cpp" />
-    <ClCompile Include="stdafx.cpp">
+    <ClCompile Include="src\gui\ofxBaseGui.cpp" />
+    <ClCompile Include="src\gui\ofxButton.cpp" />
+    <ClCompile Include="src\gui\ofxColorPicker.cpp" />
+    <ClCompile Include="src\gui\ofxGuiGroup.cpp" />
+    <ClCompile Include="src\gui\ofxInputField.cpp" />
+    <ClCompile Include="src\gui\ofxLabel.cpp" />
+    <ClCompile Include="src\gui\ofxPanel.cpp" />
+    <ClCompile Include="src\gui\ofxSlider.cpp" />
+    <ClCompile Include="src\gui\ofxSliderGroup.cpp" />
+    <ClCompile Include="src\gui\ofxToggle.cpp" />
+    <ClCompile Include="src\utils\ShaderWatcher.cpp" />
+    <ClCompile Include="src\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">obj\$(TargetName).pch</PrecompiledHeaderOutputFile>
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">obj\$(TargetName).pch</PrecompiledHeaderOutputFile>
     </ClCompile>
-    <ClCompile Include="SyncTracker.cpp" />
-    <ClCompile Include="track.c">
+    <ClCompile Include="src\modules\syncTracker\SyncTracker.cpp" />
+    <ClCompile Include="src\modules\syncTracker\base\track.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="TrackerTimeline.cpp" />
+    <ClCompile Include="src\modules\syncTracker\TrackerTimeline.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

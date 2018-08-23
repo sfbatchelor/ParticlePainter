@@ -11,10 +11,10 @@
 
 extern "C"
 {
-#include "sync.h"
-#include "device.h"
+#include "base\sync.h"
+#include "base\device.h"
 }
-#include "ProcessUtils.h"
+#include "utils\ProcessUtils.h"
 #include "ofLog.h"
 
 

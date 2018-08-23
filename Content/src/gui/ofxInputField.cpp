@@ -7,7 +7,7 @@
 //
 
 #include "stdafx.h"
-#include "ofxInputField.h"
+#include "gui\ofxInputField.h"
 
 
 using namespace std;

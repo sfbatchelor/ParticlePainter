@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "ofxSliderGroup.h"
+#include "gui\ofxSliderGroup.h"
 using namespace std;
 
 template<class VecType>

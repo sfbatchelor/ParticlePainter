@@ -6,7 +6,7 @@
 //
 //
 #include "stdafx.h"
-#include "ofxColorPicker.h"
+#include "gui\ofxColorPicker.h"
 
 
 namespace {

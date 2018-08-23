@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "ofxSlider.h"
+#include "gui\ofxSlider.h"
 
 using namespace std;
 

@@ -6,7 +6,7 @@
  */
 
 #include "stdafx.h"
-#include "ofxPanel.h"
+#include "gui\ofxPanel.h"
 
 using namespace std;
 

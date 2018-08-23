@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "ofxToggle.h"
+#include "gui\ofxToggle.h"
 using namespace std;
 
 ofxToggle::ofxToggle(ofParameter<bool> _bVal, float width, float height){

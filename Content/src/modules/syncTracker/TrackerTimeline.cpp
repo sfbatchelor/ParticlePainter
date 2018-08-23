@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "TrackerTimeline.h"
-#include "SyncTracker.h"
+#include "modules\syncTracker\TrackerTimeline.h"
+#include "modules\syncTracker\SyncTracker.h"
 #include "ofFileUtils.h"
 
 TrackerTimeline::TrackerTimeline(int fps):

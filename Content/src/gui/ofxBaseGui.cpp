@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "ofxBaseGui.h"
+#include "gui\ofxBaseGui.h"
 using namespace std;
 
 

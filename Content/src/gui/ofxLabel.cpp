@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "ofxLabel.h"
+#include "gui\ofxLabel.h"
 using namespace std;
 
 ofxLabel::ofxLabel(ofParameter<string> _label, float width, float height){

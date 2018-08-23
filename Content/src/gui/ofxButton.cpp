@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "ofxButton.h"
+#include "gui\ofxButton.h"
 using namespace std;
 
 ofxButton::ofxButton(){

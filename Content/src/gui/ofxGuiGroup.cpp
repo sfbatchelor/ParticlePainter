@@ -1,9 +1,9 @@
 #include "stdafx.h"
-#include "ofxGuiGroup.h"
-#include "ofxPanel.h"
-#include "ofxSliderGroup.h"
-#include "ofxLabel.h"
-#include "ofxInputField.h"
+#include "gui\ofxGuiGroup.h"
+#include "gui\ofxPanel.h"
+#include "gui\ofxSliderGroup.h"
+#include "gui\ofxLabel.h"
+#include "gui\ofxInputField.h"
 
 using namespace std;
 
