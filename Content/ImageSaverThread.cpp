@@ -11,9 +11,14 @@
 ImageSaverThread::ImageSaverThread(){
 	startThread();
 	frame = 0;
+	for (int i = 0; i < 100; i++)//otherwise make a new one
+	{
+		saverThreads.push_back(std::shared_ptr<SaveToFileThread>(new SaveToFileThread()));
+	}
+
 }
 
-ImageSaverThread::~ImageSaverThread(){
+ImageSaverThread::~ImageSaverThread() {
 	channel.close();
 	channelReady.close();
 	waitForThread(true);
@@ -42,16 +47,18 @@ void ImageSaverThread::threadedFunction(){
 
 		// allocate a saver thread
 		std::shared_ptr<SaveToFileThread> saverThread;
-		for (auto saver : saverThreads)// get one if it's free
+		while (!saverThread)
 		{
-			if (saver->isReady())
-				saverThread = saver;
+			for (auto saver : saverThreads)// get one if it's free
+			{
+				if (saver->isReady())
+				{
+					saverThread = saver;
+					break;
+				}
+			}
 		}
-		if(!saverThread)//otherwise make a new one
-		{
-			saverThread = std::shared_ptr<SaveToFileThread>(new SaveToFileThread());
-			saverThreads.push_back(saverThread);
-		}
+
 		saverThread->save(pixels, "sequences\\" + ofToString(frame) + ".jpg");
 		channelReady.send(true);
 		frame++;
@@ -61,6 +68,7 @@ void ImageSaverThread::threadedFunction(){
 SaveToFileThread::SaveToFileThread()
 {
 	startThread();
+	channelReady.send(true);
 }
 
 SaveToFileThread::~SaveToFileThread()
