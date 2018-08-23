@@ -110,8 +110,8 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)$(TargetName)_$([System.DateTime]::Now.toString("MMddhhmmssfff")).pdb</ProgramDatabaseFile>
-      <AdditionalLibraryDirectories>$(OF)\libs\openFrameworksCompiled\lib\vs\Win32;$(OF)\libs\boost\lib\vs\Win32;$(OF)\libs\cairo\lib\vs\Win32;$(OF)\libs\curl\lib\vs\Win32;$(OF)\libs\fmodex\lib\vs\Win32;$(OF)\libs\FreeImage\lib\vs\Win32;$(OF)\libs\freetype\lib\vs\Win32;$(OF)\libs\glew\lib\vs\Win32;$(OF)\libs\glfw\lib\vs\Win32;$(OF)\libs\openssl\lib\vs\Win32;$(OF)\libs\pugixml\lib\vs\Win32;$(OF)\libs\rtAudio\lib\vs\Win32;$(OF)\libs\uriparser\lib\vs\Win32;$(OF)\libs\videoInput\lib\vs\Win32;$(OF)\libs\tess2\lib\vs\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>openFrameworksLib_debug.lib;cairo-static.lib;pixman-1.lib;libpng.lib;zlib.lib;msimg32.lib;OpenGL32.lib;GLu32.lib;kernel32.lib;setupapi.lib;Vfw32.lib;comctl32.lib;rtAudioD.lib;videoInputD.lib;libfreetype.lib;FreeImage.lib;dsound.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;glew32s.lib;fmodex_vc.lib;glu32.lib;libssl.lib;libcrypto.lib;crypt32.lib;libcurl.lib;uriparser.lib;pugixmld.lib;Ws2_32.lib;tess2.lib;glfw3.lib;winmm.lib;odbc32.lib;odbccp32.lib;wldap32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OF)\libs\openFrameworksCompiled\lib\vs\Win32;$(OF)\libs\boost\lib\vs\Win32;$(OF)\libs\cairo\lib\vs\Win32;$(OF)\libs\curl\lib\vs\Win32;$(OF)\libs\fmodex\lib\vs\Win32;$(OF)\libs\FreeImage\lib\vs\Win32;$(OF)\libs\freetype\lib\vs\Win32;$(OF)\libs\glew\lib\vs\Win32;$(OF)\libs\glfw\lib\vs\Win32;$(OF)\libs\openssl\lib\vs\Win32;$(OF)\libs\pugixml\lib\vs\Win32;$(OF)\libs\rtAudio\lib\vs\Win32;$(OF)\libs\uriparser\lib\vs\Win32;$(OF)\libs\videoInput\lib\vs\Win32;$(OF)\libs\tess2\lib\vs\Win32;../deps/libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>openFrameworksLib_debug.lib;cairo-static.lib;pixman-1.lib;libpng.lib;zlib.lib;msimg32.lib;OpenGL32.lib;GLu32.lib;kernel32.lib;setupapi.lib;Vfw32.lib;comctl32.lib;rtAudioD.lib;videoInputD.lib;libfreetype.lib;FreeImage.lib;dsound.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;glew32s.lib;fmodex_vc.lib;glu32.lib;libssl.lib;libcrypto.lib;crypt32.lib;libcurl.lib;uriparser.lib;pugixmld.lib;Ws2_32.lib;tess2.lib;glfw3.lib;winmm.lib;odbc32.lib;odbccp32.lib;wldap32.lib;librocket-playerd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateMapFile>true</GenerateMapFile>
       <AdditionalOptions>/ignore:4099 /ignore:4098 %(AdditionalOptions)</AdditionalOptions>
     </Link>
@@ -164,8 +164,8 @@ xcopy /Y "$(OutDir)*.lib" "..\Application\bin\$(Configuration)"</Command>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
-      <AdditionalLibraryDirectories>$(OF)\libs\openFrameworksCompiled\lib\vs\Win32;$(OF)\libs\boost\lib\vs\Win32;$(OF)\libs\cairo\lib\vs\Win32;$(OF)\libs\curl\lib\vs\Win32;$(OF)\libs\fmodex\lib\vs\Win32;$(OF)\libs\FreeImage\lib\vs\Win32;$(OF)\libs\freetype\lib\vs\Win32;$(OF)\libs\glew\lib\vs\Win32;$(OF)\libs\glfw\lib\vs\Win32;$(OF)\libs\openssl\lib\vs\Win32;$(OF)\libs\pugixml\lib\vs\Win32;$(OF)\libs\rtAudio\lib\vs\Win32;$(OF)\libs\uriparser\lib\vs\Win32;$(OF)\libs\videoInput\lib\vs\Win32;$(OF)\libs\tess2\lib\vs\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>openFrameworksLib.lib;cairo-static.lib;pixman-1.lib;libpng.lib;zlib.lib;msimg32.lib;OpenGL32.lib;GLu32.lib;kernel32.lib;setupapi.lib;Vfw32.lib;comctl32.lib;rtAudio.lib;videoInput.lib;libfreetype.lib;FreeImage.lib;dsound.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;glew32s.lib;fmodex_vc.lib;glu32.lib;libssl.lib;libcrypto.lib;crypt32.lib;libcurl.lib;uriparser.lib;pugixml.lib;Ws2_32.lib;tess2.lib;glfw3.lib;winmm.lib;odbc32.lib;odbccp32.lib;wldap32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OF)\libs\openFrameworksCompiled\lib\vs\Win32;$(OF)\libs\boost\lib\vs\Win32;$(OF)\libs\cairo\lib\vs\Win32;$(OF)\libs\curl\lib\vs\Win32;$(OF)\libs\fmodex\lib\vs\Win32;$(OF)\libs\FreeImage\lib\vs\Win32;$(OF)\libs\freetype\lib\vs\Win32;$(OF)\libs\glew\lib\vs\Win32;$(OF)\libs\glfw\lib\vs\Win32;$(OF)\libs\openssl\lib\vs\Win32;$(OF)\libs\pugixml\lib\vs\Win32;$(OF)\libs\rtAudio\lib\vs\Win32;$(OF)\libs\uriparser\lib\vs\Win32;$(OF)\libs\videoInput\lib\vs\Win32;$(OF)\libs\tess2\lib\vs\Win32;../deps/libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>openFrameworksLib.lib;cairo-static.lib;pixman-1.lib;libpng.lib;zlib.lib;msimg32.lib;OpenGL32.lib;GLu32.lib;kernel32.lib;setupapi.lib;Vfw32.lib;comctl32.lib;rtAudio.lib;videoInput.lib;libfreetype.lib;FreeImage.lib;dsound.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;glew32s.lib;fmodex_vc.lib;glu32.lib;libssl.lib;libcrypto.lib;crypt32.lib;libcurl.lib;uriparser.lib;pugixml.lib;Ws2_32.lib;tess2.lib;glfw3.lib;winmm.lib;odbc32.lib;odbccp32.lib;wldap32.lib;librocket-playerd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/ignore:4099 /ignore:4098 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
@@ -201,10 +201,10 @@ xcopy /Y "$(OutDir)*.lib" "..\Application\bin\$(Configuration)"</Command>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="base.h" />
     <ClInclude Include="Content.h" />
     <ClInclude Include="ContentLoader.h" />
-    <ClInclude Include="DrawMode_Drawing.h" />
-    <ClInclude Include="DrawMode.h" />
+    <ClInclude Include="device.h" />
     <ClInclude Include="ofxBaseGui.h" />
     <ClInclude Include="ofxButton.h" />
     <ClInclude Include="ofxColorPicker.h" />
@@ -216,14 +216,21 @@ xcopy /Y "$(OutDir)*.lib" "..\Application\bin\$(Configuration)"</Command>
     <ClInclude Include="ofxSlider.h" />
     <ClInclude Include="ofxSliderGroup.h" />
     <ClInclude Include="ofxToggle.h" />
+    <ClInclude Include="ProcessUtils.h" />
     <ClInclude Include="ShaderWatcher.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="sync.h" />
+    <ClInclude Include="SyncTracker.h" />
+    <ClInclude Include="track.h" />
+    <ClInclude Include="TrackerTimeline.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Content.cpp" />
     <ClCompile Include="ContentLoader.cpp" />
-    <ClCompile Include="DrawMode.cpp" />
-    <ClCompile Include="DrawMode_Drawing.cpp" />
+    <ClCompile Include="device.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="ofxBaseGui.cpp" />
     <ClCompile Include="ofxButton.cpp" />
     <ClCompile Include="ofxColorPicker.cpp" />
@@ -241,6 +248,12 @@ xcopy /Y "$(OutDir)*.lib" "..\Application\bin\$(Configuration)"</Command>
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">obj\$(TargetName).pch</PrecompiledHeaderOutputFile>
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">obj\$(TargetName).pch</PrecompiledHeaderOutputFile>
     </ClCompile>
+    <ClCompile Include="SyncTracker.cpp" />
+    <ClCompile Include="track.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="TrackerTimeline.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

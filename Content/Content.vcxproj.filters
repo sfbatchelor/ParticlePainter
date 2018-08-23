@@ -27,12 +27,6 @@
     <ClInclude Include="Content.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DrawMode_Drawing.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DrawMode.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="stdafx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -69,6 +63,27 @@
     <ClInclude Include="ofxGui.h">
       <Filter>addons</Filter>
     </ClInclude>
+    <ClInclude Include="SyncTracker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TrackerTimeline.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="base.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="device.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sync.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="track.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ShaderWatcher.cpp">
@@ -78,12 +93,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Content.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DrawMode_Drawing.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DrawMode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp">
@@ -118,6 +127,18 @@
     </ClCompile>
     <ClCompile Include="ofxColorPicker.cpp">
       <Filter>addons</Filter>
+    </ClCompile>
+    <ClCompile Include="SyncTracker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TrackerTimeline.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="device.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="track.c">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

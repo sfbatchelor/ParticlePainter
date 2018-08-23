@@ -17,3 +17,4 @@
 #include "ofGraphics.h"
 #include "ofImage.h"
 #include "ofColor.h"
+#include "ofxPanel.h"

@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "Content.h"
-#include "DrawMode_Drawing.h"
 
 Content::Content()
 {
