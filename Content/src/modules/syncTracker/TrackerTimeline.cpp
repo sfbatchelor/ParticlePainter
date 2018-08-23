@@ -85,6 +85,8 @@ float & TrackerTimeline::getValueRef(std::string name)
 
 void TrackerTimeline::addValue(std::string name)
 {
+	if(m_connected == false)
+		connectToTracker();
 	SyncTracker::addSyncValue(name.c_str());
 	m_syncedValues[name] = SyncTracker::getSyncValue(name.c_str());
 }
@@ -106,6 +108,8 @@ int TrackerTimeline::getFrame()
 
 void TrackerTimeline::setFrame(int frame)
 {
+	if(m_connected == false)
+		connectToTracker();
 	m_frame = glm::max(frame, 0);
 	m_time = (float)m_frame / (float)m_fps;
 	if (!isPlaying())
@@ -154,6 +158,8 @@ float TrackerTimeline::getTimePerFrame()
 
 void TrackerTimeline::play()
 {
+	if(m_connected == false)
+		connectToTracker();
 	if (!m_connected)
 	{
 		ofLogError() << ("Play failed: not connected to tracker");
@@ -165,6 +171,8 @@ void TrackerTimeline::play()
 
 void TrackerTimeline::pause()
 {
+	if(m_connected == false)
+		connectToTracker();
 	if (!m_connected)
 	{
 		ofLogError() << "Pause failed: not connected to tracker";
@@ -200,6 +208,8 @@ void TrackerTimeline::connectToTracker()
 
 void TrackerTimeline::syncValues()
 {
+	if(m_connected == false)
+		connectToTracker();
 	for (auto& value : m_syncedValues)
 	{
 		value.second = SyncTracker::getSyncValue(value.first.c_str());
@@ -209,16 +219,18 @@ void TrackerTimeline::syncValues()
 void TrackerTimeline::update(float elapsedTime)
 {
 
-	if (isPlaying())
+	if(m_connected == false)
+		connectToTracker();
+	if (isPlaying()) // if playing then app decides what frame on the timeline we are
 	{
 		m_time += elapsedTime;
 		m_frame = (int)(m_time * (float)m_fps);
-		if (m_frame > 6000) // todo - make this a flexibly defined loop. (curently loops every 100 secs at 60fps)
+		if (m_frame > 6000) // loops the playback on frame 6000
 			setFrame(0);
 	}
 	else
 	{
-		setFrame(SyncTracker::getFrame());
+		setFrame(SyncTracker::getFrame()); //otherwise whatever frame is in the tracker decides (so scrubbing it works too)
 	}
 	if (!SyncTracker::update(m_frame))
 		connectToTracker();

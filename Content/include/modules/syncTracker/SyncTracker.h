@@ -21,6 +21,7 @@ extern "C"
 //! Namespace that encapsulates sync interface to connect to the
 //! server and send/receive data to/from it (has to be static data as callback pointers are void*)
 // SYNC_PLAYER macro defines when the program reads from a .track file instead of connecting with rocket
+// Will try to create a device and connect to rocket within any function that depends on that communication
 namespace SyncTracker
 {
 
@@ -63,8 +64,14 @@ namespace SyncTracker
 	{
 		return s_playing;
 	}
+	static bool isDeviceAlive()
+	{
+		if (s_device == NULL)
+			return false;
+		return true;
+	}
 
-	//! File prefix is the naem of the track file the sync tracker will export 
+	//! File prefix is the name of the track file the sync tracker will export 
 	static void createDevice(const char * filePrefix)
 	{
 		s_device = sync_create_device(filePrefix);
@@ -82,6 +89,8 @@ namespace SyncTracker
 	//! Connect to host/port, returns if connection failed.
 	static bool connect(const char* host = "localhost", unsigned short port = SYNC_DEFAULT_PORT)
 	{
+		if (!isDeviceAlive())
+			createDevice("");
 #ifndef SYNC_PLAYER
 		return (bool)sync_tcp_connect(s_device, host, port);
 #else 
@@ -93,6 +102,14 @@ namespace SyncTracker
 	//! if the tracker is playing this value will be used.
 	static bool update(int clientFrame)
 	{
+		if (!isDeviceAlive())
+		{
+			createDevice("");
+			connect();
+		}
+		if (!isDeviceAlive())
+			return false ;
+
 		if (s_dirtyFrame)
 		{
 			s_dirtyFrame = false;
@@ -120,19 +137,14 @@ namespace SyncTracker
 	{
 		s_syncedTracks.clear();
 		s_syncedValues.clear();
-		if (s_device != NULL)
+		if (!isDeviceAlive())
 		{
 			ofLogNotice() << "Killing Sync Connection Device";
 			sync_destroy_device(s_device);
 		}
 	}
 
-	static bool isDeviceAlive()
-	{
-		if (s_device == NULL)
-			return false;
-		return true;
-	}
+
 
 	static void saveTracks()
 	{
@@ -169,6 +181,14 @@ namespace SyncTracker
 	//! set a value to instance and receive on the sync server
 	static void addSyncValue(const char * name)
 	{
+		if (!isDeviceAlive())
+		{
+			createDevice("");
+			connect();
+		}
+		if (!isDeviceAlive())
+			return;
+
 		const sync_track* track;
 
 		track = sync_get_track(s_device, name);
@@ -181,6 +201,15 @@ namespace SyncTracker
 	//! get a value from the sync server
 	static double getSyncValue(const char * name)
 	{
+		if (!isDeviceAlive())
+		{
+			createDevice("");
+			connect();
+		}
+		if (!isDeviceAlive())
+			return 0.0;
+
+
 		const sync_track* track;
 		if (s_syncedTracks.find(name) == s_syncedTracks.end())
 		{

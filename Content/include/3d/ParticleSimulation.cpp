@@ -31,8 +31,10 @@ void ParticleSimulation::loadCompute(std::string computeShader)
 }
 
 
-void ParticleSimulation::update()
+void ParticleSimulation::update(float currentTime)
 {
+
+	m_currentTime = currentTime;
 	m_computeShader->update();
 	if (!isValid())
 	{
@@ -42,12 +44,18 @@ void ParticleSimulation::update()
 	if (m_playing)
 	{
 		m_computeShader->getShader().begin();
-		auto time = ofGetElapsedTimef();
-		m_computeShader->getShader().setUniform1f("uTime", time);
+		m_computeShader->getShader().setUniform1f("uTime", m_currentTime);
+		m_computeShader->getShader().setUniform1f("uPrevTime", m_prevTime);
 		m_computeShader->getShader().setUniform1i("uNumPointsSF", m_particles.size()/1024);
 		m_computeShader->getShader().dispatchCompute((m_particles.size() + 1024 - 1) / 1024, 1, 1);
 		m_computeShader->getShader().end();
 		m_particlesBuffer.copyTo(m_particlesBufferOld);
+		m_prevTime = currentTime;
+	}
+	else
+	{
+		m_prevTime = currentTime;
+		m_currentTime= currentTime;
 	}
 }
 

@@ -19,11 +19,12 @@ layout(std140, binding=1) buffer prevPoints{
 layout(rgba8, binding=0) uniform readonly image2D src;
 
 uniform float uTime = 1.0;
+uniform float uPrevTime = 1.0;
 uniform int uNumPointsSF = 1;
 uniform float uWidth = 2000.;
 uniform float uHeight = 2000.;
 uniform float uDepth = 1000.;
-uniform float uAccelScale = .01;
+uniform float uAccelScale = .1;
 uniform vec2 uPixSampleSize = vec2(10.);// 100 sample pixels
 uniform float uAlignPointSampleRadius = 5; // ~10 pointrs - very close 
 uniform float uSeperationPointSampleRadius = 20; // ~100 points - surrounding area
@@ -212,7 +213,10 @@ void main(){
 			point.pos.z = -uDepth;
 	}
 	else 
-		point.pos += point.vel;
+	{
+		float timeDelta = uTime - uPrevTime;
+		point.pos += point.vel * timeDelta;
+	}
 
 	
 

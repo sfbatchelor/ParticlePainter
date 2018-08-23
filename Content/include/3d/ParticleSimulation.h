@@ -18,7 +18,7 @@ public:
 	ParticleSimulation(std::string computeShader = "");
 	void loadParticles(std::vector<ComputeParticle>& particles);
 	void loadCompute(std::string computeShader);
-	void update();
+	void update(float currentTime);
 	void draw(int drawMode = GL_POINTS);
 
 	void reset();
@@ -37,6 +37,8 @@ private:
 	ofBufferObject m_particlesBuffer;
 	ofBufferObject m_particlesBufferOld;
 	bool m_playing;
+	float m_currentTime;
+	float m_prevTime;
 
 
 };

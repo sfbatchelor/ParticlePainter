@@ -3,7 +3,7 @@
 #include "gui/ofxGui.h"
 #include "3d\ParticleSimulation.h"
 #include "utils\ProcessLauncher.h"
-
+#include "modules\syncTracker\TrackerTimeline.h"
 
 
 class Content {
@@ -39,7 +39,9 @@ public:
 private:
 
 
+	ProcessLauncher m_rocketLauncher;
 	ParticleSimulation m_particleSim;
+	TrackerTimeline m_timeline;
 
 	ofImage m_screenGrab;
 	bool m_snapshot;
@@ -69,9 +71,8 @@ private:
 	bool m_fboActive;
 
 	ofxPanel m_gui;
+	float m_time;
 
-	bool m_animateActive;
 
-	ProcessLauncher m_rocketLauncher;
 
 };

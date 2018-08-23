@@ -2,7 +2,8 @@
 #include "Content.h"
 
 Content::Content():
-	m_rocketLauncher(L"rocket.exe")
+	m_rocketLauncher(L"rocket.exe"),
+	m_timeline(TrackerTimeline(30))
 {
 	ofSetFrameRate(30);
 	ofSetLogLevel(OF_LOG_VERBOSE);
@@ -58,7 +59,8 @@ Content::Content():
 	ofEnableDepthTest();
 	ofSetBackgroundColor(10, 10, 10);
 
-
+	m_timeline.addValue("Time");
+	m_timeline.play();
 }
 
 void Content::initSimPoints()
@@ -69,11 +71,12 @@ void Content::initSimPoints()
 
 void Content::update()
 {
+	m_timeline.update(ofGetLastFrameTime());
+
 	m_imageShader.update();
 	m_constantShader.update();
-
 	m_texture.bindAsImage(0, GL_READ_ONLY);
-	m_particleSim.update();
+	m_particleSim.update(m_timeline.getValue("Time"));
 
 	if (m_restart)
 	{
@@ -108,7 +111,6 @@ void Content::drawScene()
 	glPointSize(3);
 	m_constantShader.getShader().begin();
 	m_constantShader.getShader().setUniform1f("uAlpha", 1.f);
-	//m_pointsVbo.draw(GL_POINTS, 0, m_points.size());
 	m_particleSim.draw(GL_POINTS);
 	m_constantShader.getShader().end();
 	m_cam.end();
@@ -227,6 +229,10 @@ void Content::keyPressed(int key)
 	case ' ':
 		m_particleSim.setPlay(m_pause);
 		m_pause = !m_pause;
+		if (m_pause)
+			m_timeline.pause();
+		else
+			m_timeline.play();
 		break;
 	case 'r':
 		m_restart = true;
@@ -234,8 +240,6 @@ void Content::keyPressed(int key)
 	case 'f':
 		m_fboActive = !m_fboActive;
 		break;
-	case 'a':
-		m_animateActive = !m_animateActive;
 	}
 }
 
