@@ -2,6 +2,7 @@
 #include "utils/ShaderWatcher.h"
 #include "gui/ofxGui.h"
 #include "3d\ParticleSimulation.h"
+#include "utils\ProcessLauncher.h"
 
 
 
@@ -70,5 +71,7 @@ private:
 	ofxPanel m_gui;
 
 	bool m_animateActive;
+
+	ProcessLauncher m_rocketLauncher;
 
 };

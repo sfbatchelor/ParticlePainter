@@ -50,7 +50,7 @@ namespace ProcessUtils
 		return false;
 	}
 
-	static void killProcess(const WCHAR* process)
+	static bool killProcess(const WCHAR* process)
 	{
 		HANDLE hProcessSnap;
 		PROCESSENTRY32 pe32;
@@ -60,7 +60,8 @@ namespace ProcessUtils
 		if (hProcessSnap == INVALID_HANDLE_VALUE)
 		{
 			// todo - put error here
-			return;
+			return false;
+
 		}
 
 		// Set the size of the structure before using it.
@@ -71,7 +72,7 @@ namespace ProcessUtils
 		if (!Process32First(hProcessSnap, &pe32))
 		{
 			CloseHandle(hProcessSnap);  // clean the snapshot object
-			return;
+			return false;
 		}
 
 		// Now walk the snapshot of processes 
@@ -85,7 +86,7 @@ namespace ProcessUtils
 				BOOL  bInheritHandle = FALSE;
 				HANDLE hProcess = OpenProcess(dwDesiredAccess, bInheritHandle, pe32.th32ProcessID);
 				if (hProcess == NULL)
-					return;
+					return true;
 
 				BOOL result = TerminateProcess(hProcess, 1);
 
@@ -123,6 +124,7 @@ namespace ProcessUtils
 		);
 		if (!success)
 		{
+			ofLogError() << "Failed to start process: " << process;
 			return false;
 		}
 
@@ -133,10 +135,18 @@ namespace ProcessUtils
 	}
 
 
-	static void startProcessIfNotRunning(const WCHAR* exeLocation, const WCHAR* processName, WCHAR* args)
+	static void startProcessIfNotRunning(const WCHAR* exeLocation, const WCHAR* processName, WCHAR* args  )
 	{
 		if (!isProcessRunning(processName))
 			startProcess(exeLocation, args);
+	}
+	static void startProcessIfNotRunning(const WCHAR* exeLocation, const WCHAR* processName  )
+	{
+		if (!isProcessRunning(processName))
+		{
+			wchar_t args[1];
+			startProcess(exeLocation, args);
+		}
 	}
 
 #else
@@ -269,6 +279,14 @@ namespace ProcessUtils
 	{
 		if (!isProcessRunning(processName))
 			startProcess(exeLocation, args);
+	}
+	static void startProcessIfNotRunning(const WCHAR* exeLocation, const WCHAR* processName  )
+	{
+		if (!isProcessRunning(processName))
+		{
+			char args[1];
+			startProcess(exeLocation, args);
+		}
 	}
 
 #endif

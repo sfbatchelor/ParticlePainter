@@ -217,6 +217,7 @@ xcopy /Y "$(OutDir)*.lib" "..\Application\bin\$(Configuration)"</Command>
     <ClInclude Include="include\gui\ofxSlider.h" />
     <ClInclude Include="include\gui\ofxSliderGroup.h" />
     <ClInclude Include="include\gui\ofxToggle.h" />
+    <ClInclude Include="include\utils\ProcessLauncher.h" />
     <ClInclude Include="include\utils\ProcessUtils.h" />
     <ClInclude Include="include\utils\ShaderWatcher.h" />
     <ClInclude Include="include\stdafx.h" />
@@ -227,6 +228,7 @@ xcopy /Y "$(OutDir)*.lib" "..\Application\bin\$(Configuration)"</Command>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="include\3d\ParticleSimulation.cpp" />
+    <ClCompile Include="include\utils\ProcessLauncher.cpp" />
     <ClCompile Include="src\Content.cpp" />
     <ClCompile Include="src\ContentLoader.cpp" />
     <ClCompile Include="src\modules\syncTracker\base\device.c">

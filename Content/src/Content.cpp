@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "Content.h"
 
-Content::Content()
+Content::Content():
+	m_rocketLauncher(L"rocket.exe")
 {
 	ofSetFrameRate(30);
 	ofSetLogLevel(OF_LOG_VERBOSE);
@@ -210,6 +211,7 @@ void Content::exit()
 {
 	m_imageShader.exit();
 	m_constantShader.exit();
+	m_rocketLauncher.exit();
 }
 
 
