@@ -12,7 +12,8 @@ Content::Content()
 	m_numPoints = 1024 * 38;
 	m_constantShader.load("constantVert.glsl", "constantFrag.glsl", "sphereGeom.glsl");
 	m_imageShader.load("imageVert.glsl", "imageFrag.glsl");
-	m_compute.load( "compute.glsl");
+
+	m_particleSim.loadCompute("compute.glsl");
 
 	m_pause = false;
 	m_restart = false;
@@ -23,7 +24,6 @@ Content::Content()
 	// load an image from disk
 	m_image.load("paint1.png");
 	m_texture.allocate(m_image.getPixels());
-	m_mesh.setMode(OF_PRIMITIVE_POINTS);
 	// loop through the image in the x and y axes
 	for(int i = 0; i<m_numPoints; i++)
 	{
@@ -35,27 +35,16 @@ Content::Content()
 			// the alpha value encodes depth, let's remap it to a good depth range
 			float z = ofMap(cur.getBrightness(), 0, 255, -300, 300);
 			cur.a = 255;
-			m_mesh.addColor(cur);
 			ofVec3f pos(x, y, z);
-			m_mesh.addVertex(pos);
-
-			Point point{};
+			ComputeParticle point{};
 			point.m_col = ofFloatColor(cur.r, cur.g, cur.b, cur.a);
 			point.m_pos = ofVec4f(pos.x, pos.y, pos.z, 1.);
 			point.m_vel = ofVec4f(0);
 			m_points.push_back(point);
 		}
 	}
-	m_pointsBuffer.allocate(m_points, GL_DYNAMIC_DRAW);
-	m_pointsBufferOld.allocate(m_points, GL_DYNAMIC_DRAW);
-	m_pointsVbo.setVertexBuffer(m_pointsBuffer,4,sizeof(Point));
-	m_pointsVbo.setColorBuffer(m_pointsBuffer,sizeof(Point),sizeof(ofVec4f));
-	m_pointsVbo.enableColors();
-	m_pointsVbo.disableNormals();
-	m_pointsVbo.disableIndices();
-	m_pointsVbo.disableTexCoords();
-	m_pointsBuffer.bindBase(GL_SHADER_STORAGE_BUFFER, 0);
-	m_pointsBufferOld.bindBase(GL_SHADER_STORAGE_BUFFER, 1);
+
+	m_particleSim.loadParticles(m_points);
 	m_texture.loadData(m_image.getPixels());
 
 
@@ -73,43 +62,27 @@ Content::Content()
 
 void Content::initSimPoints()
 {
-	m_pointsBuffer.unbindBase(GL_SHADER_STORAGE_BUFFER, 0);
-	m_pointsBufferOld.allocate(m_points, GL_DYNAMIC_DRAW);
-	m_pointsBuffer.allocate(m_points, GL_DYNAMIC_DRAW);
-	m_pointsVbo.setVertexBuffer(m_pointsBuffer,4,sizeof(Point));
-	m_pointsVbo.setColorBuffer(m_pointsBuffer,sizeof(Point),sizeof(ofVec4f));
-	m_pointsBuffer.bindBase(GL_SHADER_STORAGE_BUFFER, 0);
-	m_pointsBufferOld.bindBase(GL_SHADER_STORAGE_BUFFER, 1);
+
+
 }
 
 void Content::update()
 {
 	m_imageShader.update();
 	m_constantShader.update();
-	m_compute.update();
 
+	m_texture.bindAsImage(0, GL_READ_ONLY);
+	m_particleSim.update();
 
 	if (m_restart)
 	{
-		initSimPoints();
+		m_particleSim.reset();
 		resetFbo();
 		m_draggedImage.reset(new ofImage());
 		m_compositeImage = false;
 		m_restart = false;
 	}
 
-	if (!m_pause)
-	{
-		m_compute.getShader().begin();
-		m_texture.bindAsImage(0, GL_READ_ONLY);
-		m_compute.getShader().setUniform1i("uNumPointsSF", m_numPoints/1024);
-		m_compute.getShader().setUniform1f("uWidth", m_image.getWidth());
-		m_compute.getShader().setUniform1f("uHeight", m_image.getHeight());
-		m_compute.getShader().setUniform1f("uTime", ofGetElapsedTimef());
-		m_compute.getShader().dispatchCompute((m_points.size() + 1024 - 1) / 1024, 1, 1);
-		m_compute.getShader().end();
-		m_pointsBuffer.copyTo(m_pointsBufferOld);
-	}
 
 	if (m_fboActive && m_fbo)
 	{
@@ -134,7 +107,8 @@ void Content::drawScene()
 	glPointSize(3);
 	m_constantShader.getShader().begin();
 	m_constantShader.getShader().setUniform1f("uAlpha", 1.f);
-	m_pointsVbo.draw(GL_POINTS, 0, m_points.size());
+	//m_pointsVbo.draw(GL_POINTS, 0, m_points.size());
+	m_particleSim.draw(GL_POINTS);
 	m_constantShader.getShader().end();
 	m_cam.end();
 }
@@ -236,7 +210,6 @@ void Content::exit()
 {
 	m_imageShader.exit();
 	m_constantShader.exit();
-	m_compute.exit();
 }
 
 
@@ -250,6 +223,7 @@ void Content::keyPressed(int key)
 		m_showGui = !m_showGui;
 		break;
 	case ' ':
+		m_particleSim.setPlay(m_pause);
 		m_pause = !m_pause;
 		break;
 	case 'r':

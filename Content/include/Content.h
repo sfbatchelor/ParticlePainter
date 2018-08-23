@@ -1,14 +1,9 @@
 #pragma once
 #include "utils/ShaderWatcher.h"
 #include "gui/ofxGui.h"
+#include "3d\ParticleSimulation.h"
 
 
-struct Point
-{
-	ofVec4f m_pos;
-	ofFloatColor m_col;
-	ofVec4f m_vel;
-};
 
 class Content {
 
@@ -43,6 +38,8 @@ public:
 private:
 
 
+	ParticleSimulation m_particleSim;
+
 	ofImage m_screenGrab;
 	bool m_snapshot;
 
@@ -56,12 +53,10 @@ private:
 
 	ShaderWatcher m_imageShader;
 	ShaderWatcher m_constantShader;
-	ComputeWatcher m_compute;
-	ofMesh m_mesh;
 	ofImage m_image;
 	ofTexture m_texture;
 
-	std::vector<Point> m_points;
+	std::vector<ComputeParticle> m_points;
 	ofBufferObject m_pointsBuffer;
 	ofBufferObject m_pointsBufferOld;
 	ofVbo m_pointsVbo;

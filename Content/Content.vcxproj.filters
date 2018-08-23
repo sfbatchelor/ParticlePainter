@@ -84,6 +84,9 @@
     <ClInclude Include="include\modules\syncTracker\TrackerTimeline.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\3d\ParticleSimulation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Content.cpp">
@@ -138,6 +141,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\modules\syncTracker\TrackerTimeline.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="include\3d\ParticleSimulation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

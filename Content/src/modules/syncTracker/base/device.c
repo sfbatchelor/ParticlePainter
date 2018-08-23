@@ -1,5 +1,5 @@
-#include "device.h"
-#include "track.h"
+#include "modules\syncTracker\base\device.h"
+#include "modules\syncTracker\base\track.h"
 #include <assert.h>
 #include <ctype.h>
 #include <math.h>

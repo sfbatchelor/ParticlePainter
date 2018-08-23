@@ -20,8 +20,8 @@ layout(rgba8, binding=0) uniform readonly image2D src;
 
 uniform float uTime = 1.0;
 uniform int uNumPointsSF = 1;
-uniform float uWidth = 1000.;
-uniform float uHeight = 1000.;
+uniform float uWidth = 2000.;
+uniform float uHeight = 2000.;
 uniform float uDepth = 1000.;
 uniform float uAccelScale = .01;
 uniform vec2 uPixSampleSize = vec2(10.);// 100 sample pixels

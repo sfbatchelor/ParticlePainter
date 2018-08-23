@@ -201,6 +201,7 @@ xcopy /Y "$(OutDir)*.lib" "..\Application\bin\$(Configuration)"</Command>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\3d\ParticleSimulation.h" />
     <ClInclude Include="include\modules\syncTracker\base\base.h" />
     <ClInclude Include="include\Content.h" />
     <ClInclude Include="include\ContentLoader.h" />
@@ -225,6 +226,7 @@ xcopy /Y "$(OutDir)*.lib" "..\Application\bin\$(Configuration)"</Command>
     <ClInclude Include="include\modules\syncTracker\TrackerTimeline.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="include\3d\ParticleSimulation.cpp" />
     <ClCompile Include="src\Content.cpp" />
     <ClCompile Include="src\ContentLoader.cpp" />
     <ClCompile Include="src\modules\syncTracker\base\device.c">
