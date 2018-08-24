@@ -35,7 +35,6 @@ static inline int key_idx_floor(const struct sync_track *t, int row)
 }
 
 #ifndef SYNC_PLAYER
-int sync_fetch_track_data(struct sync_device *d, struct sync_track *t);
 int sync_set_key(struct sync_track *, const struct track_key *);
 int sync_del_key(struct sync_track *, int);
 static inline int is_key_frame(const struct sync_track *t, int row)

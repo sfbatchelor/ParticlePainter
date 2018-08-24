@@ -408,6 +408,36 @@ static int fetch_track_data(struct sync_device *d, struct sync_track *t)
 	return 0;
 }
 
+static int send_set_key(struct sync_device *d, struct sync_track *t ,uint32_t row, float val, unsigned char type)
+{
+	unsigned char cmd = SET_KEY;
+	//uint32_t name_len;
+
+	//assert(strlen(t->name) <= UINT32_MAX);
+	//name_len = htonl((uint32_t)strlen(t->name));
+
+	///* send request data */
+	//if (xsend(d->sock, (char *)&cmd, 1, 0) ||
+	//    xsend(d->sock, (char *)&name_len, sizeof(name_len), 0) ||
+	//    xsend(d->sock, t->name, (int)strlen(t->name), 0))
+	//{
+	//	closesocket(d->sock);
+	//	d->sock = INVALID_SOCKET;
+	//	return -1;
+	//}
+
+
+	uint32_t i = val;
+	if (xsend(d->sock, (char *)&cmd, 1, 0) ||
+		xsend(d->sock, (char *)&t, sizeof(t), 0) ||
+	    xsend(d->sock, (char *)&row, sizeof(row), 0) ||
+	    xsend(d->sock, (char *)&i, sizeof(i), 0) ||
+	    xsend(d->sock, (char *)&type, 1, 0))
+		return -1;
+
+	return 0;
+}
+
 static int handle_set_key_cmd(SOCKET sock, struct sync_device *data)
 {
 	uint32_t track, row;
@@ -585,10 +615,10 @@ int sync_get_track_id(struct sync_device *d,
 	return NULL;
 }
 
-int sync_fetch_track_data(struct sync_device *d, struct sync_track *t)
+int sync_send_set_key(struct sync_device *d, struct sync_track *t, int row, float val, unsigned char type)
 {
 	if (d->sock != INVALID_SOCKET)
-		return fetch_track_data(d, t);
+		return send_set_key(d, t, row, val, type);
 	return -1;
 }
 

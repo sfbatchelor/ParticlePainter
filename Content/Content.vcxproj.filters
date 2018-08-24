@@ -90,6 +90,9 @@
     <ClInclude Include="include\utils\ProcessLauncher.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\3d\Particle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Content.cpp">
@@ -146,10 +149,13 @@
     <ClCompile Include="src\modules\syncTracker\TrackerTimeline.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\3d\ParticleSimulation.cpp">
+    <ClCompile Include="include\utils\ProcessLauncher.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\utils\ProcessLauncher.cpp">
+    <ClCompile Include="src\3d\ParticleSimulation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\3d\Particle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

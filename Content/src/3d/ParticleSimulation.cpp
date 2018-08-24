@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "ParticleSimulation.h"
+#include "3d\ParticleSimulation.h"
 
 ParticleSimulation::ParticleSimulation(std::string computeShader):
 	m_playing(true),
@@ -9,14 +9,14 @@ ParticleSimulation::ParticleSimulation(std::string computeShader):
 		m_computeShader->load(computeShader);
 }
 
-void ParticleSimulation::loadParticles(std::vector<ComputeParticle>& particles)
+void ParticleSimulation::loadParticles(std::vector<GpuParticle>& particles)
 {
 	m_particles.empty();
 	m_particles = particles;
 	m_particlesBufferOld.allocate( m_particles, GL_DYNAMIC_DRAW);
 	m_particlesBuffer.allocate( m_particles, GL_DYNAMIC_DRAW);
-	m_particlesVbo.setVertexBuffer(m_particlesBuffer, 4, sizeof(ComputeParticle));
-	m_particlesVbo.setColorBuffer(m_particlesBuffer, sizeof(ComputeParticle), sizeof(ofVec4f));
+	m_particlesVbo.setVertexBuffer(m_particlesBuffer, 4, sizeof(GpuParticle));
+	m_particlesVbo.setColorBuffer(m_particlesBuffer, sizeof(GpuParticle), sizeof(ofVec4f));
 	m_particlesVbo.enableColors();
 	m_particlesVbo.disableNormals();
 	m_particlesVbo.disableIndices();
@@ -66,8 +66,8 @@ void ParticleSimulation::reset()
 	m_particlesBuffer.unbindBase(GL_SHADER_STORAGE_BUFFER, 0);
 	m_particlesBufferOld.allocate( m_particles, GL_DYNAMIC_DRAW);
 	m_particlesBuffer.allocate( m_particles, GL_DYNAMIC_DRAW);
-	m_particlesVbo.setVertexBuffer(m_particlesBuffer, 4, sizeof(ComputeParticle));
-	m_particlesVbo.setColorBuffer(m_particlesBuffer, sizeof(ComputeParticle), sizeof(ofVec4f));
+	m_particlesVbo.setVertexBuffer(m_particlesBuffer, 4, sizeof(GpuParticle));
+	m_particlesVbo.setColorBuffer(m_particlesBuffer, sizeof(GpuParticle), sizeof(ofVec4f));
 	m_particlesBuffer.bindBase(GL_SHADER_STORAGE_BUFFER, 0);
 	m_particlesBufferOld.bindBase(GL_SHADER_STORAGE_BUFFER, 1);
 }

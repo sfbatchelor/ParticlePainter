@@ -39,9 +39,9 @@ public:
 private:
 
 
-	ProcessLauncher m_rocketLauncher;
+	//ProcessLauncher m_rocketLauncher;
 	ParticleSimulation m_particleSim;
-	TrackerTimeline m_timeline;
+	//TrackerTimeline m_timeline;
 
 	ofImage m_screenGrab;
 	bool m_snapshot;
@@ -59,7 +59,7 @@ private:
 	ofImage m_image;
 	ofTexture m_texture;
 
-	std::vector<ComputeParticle> m_points;
+	std::vector<GpuParticle> m_points;
 	ofBufferObject m_pointsBuffer;
 	ofBufferObject m_pointsBufferOld;
 	ofVbo m_pointsVbo;

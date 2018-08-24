@@ -138,7 +138,7 @@ namespace SyncTracker
 	{
 		s_syncedTracks.clear();
 		s_syncedValues.clear();
-		if (!isDeviceAlive())
+		if (isDeviceAlive())
 		{
 			ofLogNotice() << "Killing Sync Connection Device";
 			sync_destroy_device(s_device);
@@ -149,6 +149,8 @@ namespace SyncTracker
 
 	static void saveTracks()
 	{
+		if (!isDeviceAlive())
+			return;
 #ifndef SYNC_PLAYER
 		if (sync_save_tracks(s_device) == -1)
 		{
@@ -242,7 +244,7 @@ namespace SyncTracker
 		auto id = sync_get_track_id(s_device, name);
 		if (sync_set_key(s_device->tracks[id], &key) != -1)
 		{
-			sync_fetch_track_data(s_device, s_device->tracks[id]);
+			sync_send_set_key(s_device, s_device->tracks[id], key.row, key.value, type);
 			return true;
 		}
 		return false;

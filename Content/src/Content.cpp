@@ -1,9 +1,10 @@
 #include "stdafx.h"
 #include "Content.h"
+#include "3d\Particle.h"
 
-Content::Content():
-	m_rocketLauncher(L"rocket.exe"),
-	m_timeline(TrackerTimeline(30))
+Content::Content()
+	//:m_rocketLauncher(L"rocket.exe"),
+	//m_timeline(TrackerTimeline(30))
 {
 	ofSetFrameRate(30);
 	ofSetLogLevel(OF_LOG_VERBOSE);
@@ -26,26 +27,7 @@ Content::Content():
 	// load an image from disk
 	m_image.load("paint1.png");
 	m_texture.allocate(m_image.getPixels());
-	// loop through the image in the x and y axes
-	for(int i = 0; i<m_numPoints; i++)
-	{
-		int x = ofRandom(float(m_image.getWidth()));
-		int y = ofRandom(float(m_image.getHeight()));
-
-		ofColor cur = m_image.getColor(x, y);
-		if (cur.a > 0) {
-			// the alpha value encodes depth, let's remap it to a good depth range
-			float z = ofMap(cur.getBrightness(), 0, 255, -300, 300);
-			cur.a = 255;
-			ofVec3f pos(x, y, z);
-			ComputeParticle point{};
-			point.m_col = ofFloatColor(cur.r, cur.g, cur.b, cur.a);
-			point.m_pos = ofVec4f(pos.x, pos.y, pos.z, 1.);
-			point.m_vel = ofVec4f(0);
-			m_points.push_back(point);
-		}
-	}
-
+	m_points = GpuParticleFactory::fromImage(m_image, m_numPoints, -300, 300);
 	m_particleSim.loadParticles(m_points);
 	m_texture.loadData(m_image.getPixels());
 
@@ -59,7 +41,7 @@ Content::Content():
 	ofEnableDepthTest();
 	ofSetBackgroundColor(10, 10, 10);
 
-	m_timeline.addValue("Time");
+	//m_timeline.addValue("Time");
 }
 
 void Content::initSimPoints()
@@ -71,11 +53,11 @@ void Content::initSimPoints()
 void Content::update()
 {
 
-	auto t = m_timeline.getValue("Time");
+	//auto t = m_timeline.getValue("Time");
 
-	m_timeline.setValue("Time", 2000.);
-	m_timeline.update(ofGetLastFrameTime());
-	t = m_timeline.getValue("Time");
+	//m_timeline.setValue("Time", 1);
+	//m_timeline.update(ofGetLastFrameTime());
+	//t = m_timeline.getValue("Time");
 
 	m_imageShader.update();
 	m_constantShader.update();
@@ -207,6 +189,7 @@ void Content::drawInteractionArea()
 	glDepthMask(false);
 	ofSetCircleResolution(64);
 
+
 	ofDrawCircle(x, y, r);
 	glDepthMask(true);
 	ofPopStyle();
@@ -217,7 +200,7 @@ void Content::exit()
 {
 	m_imageShader.exit();
 	m_constantShader.exit();
-	m_rocketLauncher.exit();
+//	m_rocketLauncher.exit();
 }
 
 
@@ -233,10 +216,10 @@ void Content::keyPressed(int key)
 	case ' ':
 		m_particleSim.setPlay(m_pause);
 		m_pause = !m_pause;
-		if (m_pause)
-			m_timeline.pause();
-		else
-			m_timeline.play();
+		//if (m_pause)
+		//	m_timeline.pause();
+		//else
+		//	m_timeline.play();
 		break;
 	case 'r':
 		m_restart = true;
