@@ -95,6 +95,7 @@ namespace ProcessUtils
 		} while (Process32Next(hProcessSnap, &pe32));
 
 		CloseHandle(hProcessSnap);
+		return false;
 	}
 
 	static bool startProcess(const WCHAR* process, WCHAR* args)

@@ -7,7 +7,6 @@ ShaderWatcher::ShaderWatcher()
 
 ShaderWatcher::~ShaderWatcher()
 {
-	exit();
 }
 
 bool ShaderWatcher::load(const std::filesystem::path & vertName, const std::filesystem::path & fragName, const std::filesystem::path & geomName)
@@ -118,7 +117,6 @@ ComputeWatcher::ComputeWatcher()
 
 ComputeWatcher::~ComputeWatcher()
 {
-	exit();
 }
 
 bool ComputeWatcher::load(const std::filesystem::path & shaderName)

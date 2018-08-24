@@ -9,6 +9,8 @@ class ParticleSimulation
 public:
 
 	ParticleSimulation(std::string computeShader = "");
+	~ParticleSimulation();
+
 	void loadParticles(std::vector<GpuParticle>& particles);
 	void loadCompute(std::string computeShader);
 	void update();

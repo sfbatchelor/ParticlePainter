@@ -9,6 +9,11 @@ ParticleSimulation::ParticleSimulation(std::string computeShader):
 		m_computeShader->load(computeShader);
 }
 
+ParticleSimulation::~ParticleSimulation()
+{
+	m_computeShader->exit();
+}
+
 void ParticleSimulation::loadParticles(std::vector<GpuParticle>& particles)
 {
 	m_particles.empty();
