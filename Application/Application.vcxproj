@@ -100,6 +100,7 @@
       <CompileAs>CompileAsCpp</CompileAs>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>stdafx.h </PrecompiledHeaderFile>
+      <AdditionalOptions>/FS %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -111,6 +112,9 @@
     </Link>
     <PostBuildEvent>
     </PostBuildEvent>
+    <PreLinkEvent>
+      <Command>del $(OutDir)*.pdb</Command>
+    </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -143,6 +147,7 @@ C:\_dev\openFrameworks\addons\ofxGui\src;%(AdditionalIncludeDirectories)</Additi
       <AdditionalIncludeDirectories>$(SolutionDir)Content\include;$(SolutionDir)Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalOptions>/FS %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>

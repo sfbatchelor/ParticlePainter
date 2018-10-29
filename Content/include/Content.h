@@ -40,6 +40,7 @@ private:
 
 
 	//ProcessLauncher m_rocketLauncher;
+	std::vector<GpuParticle> m_points;
 	ParticleSimulation m_particleSim;
 	//TrackerTimeline m_timeline;
 
@@ -59,10 +60,6 @@ private:
 	ofImage m_image;
 	ofTexture m_texture;
 
-	std::vector<GpuParticle> m_points;
-	ofBufferObject m_pointsBuffer;
-	ofBufferObject m_pointsBufferOld;
-	ofVbo m_pointsVbo;
 
 	int m_numPoints;
 

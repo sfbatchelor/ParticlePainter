@@ -4,6 +4,7 @@
 //--------------------------------------------------------------
 void ofApp::setup() {
 
+	m_unload = false;
 	m_content = loadContentCode();
 	if (!m_content.m_isValid)
 	{
@@ -32,12 +33,17 @@ void ofApp::setup() {
 
 //--------------------------------------------------------------
 void ofApp::update() {
-	m_dllWatcher.lock();
 
+	m_dllWatcher.lock();
 	if (m_needsSetup)
 	{
 		m_content.m_setup();
 		m_needsSetup = false;
+	}
+	if(m_unload)
+	{
+		unloadContentCode(&m_content);
+		m_unload = false;
 	}
 
 	m_content.m_update();
@@ -168,20 +174,31 @@ void ofApp::onDllWasModified()
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key) {
+
+	if(m_unload)
+		return;
 	m_dllWatcher.lock();
-	m_content.m_keyPressed(key);
+	if (key != '0')
+		m_content.m_keyPressed(key);
 	m_dllWatcher.unlock();
 }
 
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key) {
+	if(m_unload)
+		return;
 	m_dllWatcher.lock();
-	m_content.m_keyReleased(key);
+	if (key == '0')
+		m_unload = true;
+	else
+		m_content.m_keyReleased(key);
 	m_dllWatcher.unlock();
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseMoved(int x, int y) {
+	if(m_unload)
+		return;
 	m_dllWatcher.lock();
 	m_content.m_mouseMoved(x, y);
 	m_dllWatcher.unlock();
@@ -189,6 +206,8 @@ void ofApp::mouseMoved(int x, int y) {
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button) {
+	if (m_unload)
+		return;
 	m_dllWatcher.lock();
 	m_content.m_mouseDragged(x, y, button);
 	m_dllWatcher.unlock();
@@ -197,6 +216,8 @@ void ofApp::mouseDragged(int x, int y, int button) {
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button) {
+	if (m_unload)
+		return;
 	m_dllWatcher.lock();
 	m_content.m_mousePressed(x, y, button);
 	m_dllWatcher.unlock();
@@ -205,6 +226,8 @@ void ofApp::mousePressed(int x, int y, int button) {
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button) {
+	if (m_unload)
+		return;
 	m_dllWatcher.lock();
 	m_content.m_mouseReleased(x, y, button);
 	m_dllWatcher.unlock();
@@ -212,6 +235,8 @@ void ofApp::mouseReleased(int x, int y, int button) {
 
 //--------------------------------------------------------------
 void ofApp::mouseEntered(int x, int y) {
+	if (m_unload)
+		return;
 	m_dllWatcher.lock();
 	m_content.m_mouseEntered(x, y);
 	m_dllWatcher.unlock();
@@ -219,6 +244,8 @@ void ofApp::mouseEntered(int x, int y) {
 
 //--------------------------------------------------------------
 void ofApp::mouseExited(int x, int y) {
+	if (m_unload)
+		return;
 	m_dllWatcher.lock();
 	m_content.m_mouseExited(x, y);
 	m_dllWatcher.unlock();
@@ -227,6 +254,8 @@ void ofApp::mouseExited(int x, int y) {
 
 //--------------------------------------------------------------
 void ofApp::windowResized(int w, int h) {
+	if (m_unload)
+		return;
 	m_dllWatcher.lock();
 	m_content.m_windowResized(w, h);
 	m_dllWatcher.unlock();
@@ -234,6 +263,8 @@ void ofApp::windowResized(int w, int h) {
 
 //--------------------------------------------------------------
 void ofApp::gotMessage(ofMessage msg) {
+	if (m_unload)
+		return;
 	m_dllWatcher.lock();
 	m_content.m_gotMessage(msg);
 	m_dllWatcher.unlock();

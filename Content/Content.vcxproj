@@ -71,7 +71,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LinkIncremental>false</LinkIncremental>
+    <LinkIncremental>true</LinkIncremental>
     <IntDir>obj\$(Configuration)\</IntDir>
     <OutDir>bin\$(Configuration)\</OutDir>
     <TargetName>$(ProjectName)_debug</TargetName>
@@ -100,11 +100,11 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;CONTENT_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalOptions>
-      </AdditionalOptions>
-      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
+      <AdditionalOptions>/FS </AdditionalOptions>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName)_obj.pdb</ProgramDataBaseFileName>
       <AdditionalIncludeDirectories>$(OF)\libs\openFrameworks\;$(OF)\libs\openFrameworks\3d;$(OF)\libs\openFrameworks\app;$(OF)\libs\openFrameworks\communication;$(OF)\libs\openFrameworks\events;$(OF)\libs\openFrameworks\gl;$(OF)\libs\openFrameworks\gl\shaders;$(OF)\libs\openFrameworks\graphics;$(OF)\libs\openFrameworks\math;$(OF)\libs\openFrameworks\sound;$(OF)\libs\openFrameworks\types;$(OF)\libs\openFrameworks\utils;$(OF)\libs\openFrameworks\video;$(OF)\libs\glew\include;$(OF)\libs\boost\include;$(OF)\libs\cairo\include\cairo;$(OF)\libs\curl\include;$(OF)\libs\fmodex\include;$(OF)\libs\FreeImage\include;$(OF)\libs\freetype\include;$(OF)\libs\glfw\include;$(OF)\libs\glm\include;$(OF)\libs\json\include;$(OF)\libs\libpng;$(OF)\libs\openssl\include;$(OF)\libs\pixman;$(OF)\libs\pugixml\include;$(OF)\libs\rtAudio\include;$(OF)\libs\tess2\include;$(OF)\libs\uriparser\include;$(OF)\libs\utf8\include;$(OF)\libs\videoInput\include;$(OF)\libs\zlib;..\Common;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderOutputFile>obj\$(TargetName).pch</PrecompiledHeaderOutputFile>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -114,18 +114,23 @@
       <AdditionalDependencies>openFrameworksLib_debug.lib;cairo-static.lib;pixman-1.lib;libpng.lib;zlib.lib;msimg32.lib;OpenGL32.lib;GLu32.lib;kernel32.lib;setupapi.lib;Vfw32.lib;comctl32.lib;rtAudioD.lib;videoInputD.lib;libfreetype.lib;FreeImage.lib;dsound.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;glew32s.lib;fmodex_vc.lib;glu32.lib;libssl.lib;libcrypto.lib;crypt32.lib;libcurl.lib;uriparser.lib;pugixmld.lib;Ws2_32.lib;tess2.lib;glfw3.lib;winmm.lib;odbc32.lib;odbccp32.lib;wldap32.lib;librocket-playerd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateMapFile>true</GenerateMapFile>
       <AdditionalOptions>/ignore:4099 /ignore:4098 %(AdditionalOptions)</AdditionalOptions>
+      <FullProgramDatabaseFile>true</FullProgramDatabaseFile>
     </Link>
     <PostBuildEvent>
       <Command>
 xcopy /Y "$(OutDir)*.dll" "..\Application\bin\$(Configuration)"
-xcopy /Y "$(OutDir)*.lib" "..\Application\bin\$(Configuration)"</Command>
+xcopy /Y "$(OutDir)*.lib" "..\Application\bin\$(Configuration)"
+xcopy /Y "$(OutDir)*.pdb" "..\Application\bin\$(Configuration)"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>
       </Command>
     </PreBuildEvent>
     <PreLinkEvent>
-      <Command>del "$(OutDir)*.pdb"</Command>
+      <Command>
+</Command>
+      <Message>
+      </Message>
     </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -157,6 +162,7 @@ xcopy /Y "$(OutDir)*.lib" "..\Application\bin\$(Configuration)"</Command>
       <AdditionalIncludeDirectories>$(OF)\libs\openFrameworks\;$(OF)\libs\openFrameworks\3d;$(OF)\libs\openFrameworks\app;$(OF)\libs\openFrameworks\communication;$(OF)\libs\openFrameworks\events;$(OF)\libs\openFrameworks\gl;$(OF)\libs\openFrameworks\gl\shaders;$(OF)\libs\openFrameworks\graphics;$(OF)\libs\openFrameworks\math;$(OF)\libs\openFrameworks\sound;$(OF)\libs\openFrameworks\types;$(OF)\libs\openFrameworks\utils;$(OF)\libs\openFrameworks\video;$(OF)\libs\glew\include;$(OF)\libs\boost\include;$(OF)\libs\cairo\include\cairo;$(OF)\libs\curl\include;$(OF)\libs\fmodex\include;$(OF)\libs\FreeImage\include;$(OF)\libs\freetype\include;$(OF)\libs\glfw\include;$(OF)\libs\glm\include;$(OF)\libs\json\include;$(OF)\libs\libpng;$(OF)\libs\openssl\include;$(OF)\libs\pixman;$(OF)\libs\pugixml\include;$(OF)\libs\rtAudio\include;$(OF)\libs\tess2\include;$(OF)\libs\uriparser\include;$(OF)\libs\utf8\include;$(OF)\libs\videoInput\include;$(OF)\libs\zlib;..\Common;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ObjectFileName>$(IntDir)$(TargetName)</ObjectFileName>
       <PrecompiledHeaderOutputFile>obj\$(TargetName).pch</PrecompiledHeaderOutputFile>
+      <AdditionalOptions>/FS %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
