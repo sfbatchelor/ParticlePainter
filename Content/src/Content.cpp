@@ -3,8 +3,6 @@
 #include "3d\Particle.h"
 
 Content::Content()
-	//:m_rocketLauncher(L"rocket.exe"),
-	//m_timeline(TrackerTimeline(30))
 {
 	ofSetFrameRate(30);
 	ofSetLogLevel(OF_LOG_VERBOSE);
@@ -25,23 +23,26 @@ Content::Content()
 
 	// GENERATE POINTS FROM IMAGE
 	// load an image from disk
-	m_image.load("paint1.png");
-	m_texture.allocate(m_image.getPixels());
-	m_points = GpuParticleFactory::fromImage(m_image, m_numPoints, -300, 300);
-	m_particleSim.loadParticles(m_points);
-	m_texture.loadData(m_image.getPixels());
-
+	if (!m_image.load("paint1.png"))
+	{
+		ofLogError() << "Failed to find particle image spawner";
+	}
+	else
+	{
+		m_texture.allocate(m_image.getPixels());
+		m_points = GpuParticleFactory::fromImage(m_image, m_numPoints, -300, 300);
+		m_particleSim.loadParticles(m_points);
+		m_texture.loadData(m_image.getPixels());
+	}
 
 	resetFbo();
-
 	// SETUP RAY BUFFER ON GPU
 	m_cam.setVFlip(true); //flip for upside down image
 	m_cam.setFarClip(100000000.);
 
 	ofEnableDepthTest();
-	ofSetBackgroundColor(100, 10, 10);
+	ofSetBackgroundColor(10, 10, 10);
 
-	//m_timeline.addValue("Time");
 }
 
 void Content::initSimPoints()
@@ -53,11 +54,6 @@ void Content::initSimPoints()
 void Content::update()
 {
 
-	//auto t = m_timeline.getValue("Time");
-
-	//m_timeline.setValue("Time", 1);
-	//m_timeline.update(ofGetLastFrameTime());
-	//t = m_timeline.getValue("Time");
 
 	m_imageShader.update();
 	m_constantShader.update();
@@ -200,7 +196,6 @@ void Content::exit()
 {
 	m_imageShader.exit();
 	m_constantShader.exit();
-//	m_rocketLauncher.exit();
 }
 
 
@@ -216,10 +211,6 @@ void Content::keyPressed(int key)
 	case ' ':
 		m_particleSim.setPlay(m_pause);
 		m_pause = !m_pause;
-		//if (m_pause)
-		//	m_timeline.pause();
-		//else
-		//	m_timeline.play();
 		break;
 	case 'r':
 		m_restart = true;

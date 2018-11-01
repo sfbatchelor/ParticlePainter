@@ -94,7 +94,7 @@ void ParticleSimulation::setPlay(bool play)
 
 bool ParticleSimulation::isValid()
 {
-	if(!m_computeShader)
+	if(!m_computeShader || !m_particlesBufferOld.isAllocated() || !m_particlesBuffer.isAllocated())
 		return false;
 	return true;
 }

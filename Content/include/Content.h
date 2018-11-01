@@ -39,10 +39,8 @@ public:
 private:
 
 
-	//ProcessLauncher m_rocketLauncher;
 	std::vector<GpuParticle> m_points;
 	ParticleSimulation m_particleSim;
-	//TrackerTimeline m_timeline;
 
 	ofImage m_screenGrab;
 	bool m_snapshot;
