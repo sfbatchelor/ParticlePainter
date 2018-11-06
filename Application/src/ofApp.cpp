@@ -1,6 +1,6 @@
 #include "ofApp.h"
 #include "Windows.h"
-
+#include "utils\ProcessUtils.h"
 //--------------------------------------------------------------
 void ofApp::setup() {
 
@@ -44,6 +44,14 @@ void ofApp::update() {
 	{
 		unloadContentCode(&m_content);
 		m_unload = false;
+	}
+	if (m_buildContent)
+	{
+		std::wstring buildExe = (L"C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\MSBuild.exe ");
+		std::wstring args = (L"MSBuild.exe");
+		args += (L" C:\\_dev\\openFrameworks\\apps\\myApps\\particlePainter\\Content\\Content.vcxproj");
+		ProcessUtils::startProcess(buildExe.c_str(), &args[0]);
+		m_buildContent = false;
 	}
 
 	m_content.m_update();
@@ -175,7 +183,7 @@ void ofApp::onDllWasModified()
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key) {
 
-	if(m_unload)
+	if(m_unload || m_buildContent)
 		return;
 	m_dllWatcher.lock();
 	if (key != '0')
@@ -190,6 +198,8 @@ void ofApp::keyReleased(int key) {
 	m_dllWatcher.lock();
 	if (key == '0')
 		m_unload = true;
+	else if (key = OF_KEY_F5)
+		m_buildContent = true;
 	else
 		m_content.m_keyReleased(key);
 	m_dllWatcher.unlock();

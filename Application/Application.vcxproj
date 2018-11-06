@@ -113,7 +113,8 @@
     <PostBuildEvent>
     </PostBuildEvent>
     <PreLinkEvent>
-      <Command>del $(OutDir)*.pdb</Command>
+      <Command>
+      </Command>
     </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
