@@ -1,2 +1,5 @@
-# Digital Painting Framework
-Framework for developing a process to remix paint with digital capabilities.
+# Particle Painter
+System for painting compute particle simulations to the framebuffer.
+
+Mirrored from Digital_Painting_Framework on 06/11/18. 
+
