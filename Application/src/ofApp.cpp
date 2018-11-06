@@ -47,10 +47,8 @@ void ofApp::update() {
 	}
 	if (m_buildContent)
 	{
-		std::wstring buildExe = (L"C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\MSBuild.exe ");
-		std::wstring args = (L"MSBuild.exe");
-		args += (L" C:\\_dev\\openFrameworks\\apps\\myApps\\particlePainter\\Content\\Content.vcxproj");
-		ProcessUtils::startProcess(buildExe.c_str(), &args[0]);
+		std::string buildExe = ("C:\\_dev\\openFrameworks\\apps\\myApps\\ParticlePainter\\deps\\buildContent.bat");
+		system(buildExe.c_str());
 		m_buildContent = false;
 	}
 
@@ -198,7 +196,7 @@ void ofApp::keyReleased(int key) {
 	m_dllWatcher.lock();
 	if (key == '0')
 		m_unload = true;
-	else if (key = OF_KEY_F5)
+	else if (key == OF_KEY_F5)
 		m_buildContent = true;
 	else
 		m_content.m_keyReleased(key);
