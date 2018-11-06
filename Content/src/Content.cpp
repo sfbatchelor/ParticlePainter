@@ -7,7 +7,7 @@ Content::Content()
 	ofSetFrameRate(30);
 	ofSetLogLevel(OF_LOG_VERBOSE);
 	ofSetVerticalSync(true);
-	ofSetWindowTitle("Digital Painting");
+	ofSetWindowTitle("Particle Painter");
 	m_snapshot = false;
 	m_showGui = true;
 	m_numPoints = 1024 * 38;
