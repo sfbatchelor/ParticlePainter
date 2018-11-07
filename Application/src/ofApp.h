@@ -57,6 +57,5 @@ private:
 	SystemThread m_processStarter;
 	bool m_needsSetup;
 	bool m_unload;
-	bool m_buildContent;
 		
 };

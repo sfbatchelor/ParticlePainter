@@ -46,15 +46,6 @@ void ofApp::update() {
 		unloadContentCode(&m_content);
 		m_unload = false;
 	}
-	if (m_buildContent)
-	{
-		//std::string buildExe = ("C:\\_dev\\openFrameworks\\apps\\myApps\\ParticlePainter\\deps\\buildContent.bat");
-		//system(buildExe.c_str());
-
-		//m_processStarter.setup("C:\\_dev\\openFrameworks\\apps\\myApps\\ParticlePainter\\deps\\buildContent.bat");
-		//m_processStarter.start
-		//m_buildContent = false;
-	}
 
 	m_content.m_update();
 	m_dllWatcher.unlock();
@@ -186,7 +177,7 @@ void ofApp::onDllWasModified()
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key) {
 
-	if(m_unload || m_buildContent)
+	if (m_unload)
 		return;
 	m_dllWatcher.lock();
 	if (key != '0')
@@ -204,7 +195,8 @@ void ofApp::keyReleased(int key) {
 	else if (key == OF_KEY_F5)
 	{
 		m_processStarter.waitForThread(true);
-		m_processStarter.setup("C:\\_dev\\openFrameworks\\apps\\myApps\\ParticlePainter\\deps\\buildContent.bat");
+		std::string vbsScriptPath = (boost::filesystem::current_path().string() + "\\..\\..\\..\\deps\\buildContentHidden.vbs");
+		m_processStarter.setup(vbsScriptPath);
 		m_processStarter.startThread();
 	}
 	else
