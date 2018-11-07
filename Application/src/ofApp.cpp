@@ -61,6 +61,8 @@ void ofApp::update() {
 
 	m_content.m_update();
 	m_dllWatcher.unlock();
+
+	m_logDisplay.update();
 }
 
 //--------------------------------------------------------------
@@ -68,6 +70,8 @@ void ofApp::draw() {
 	m_dllWatcher.lock();
 	m_content.m_render(ofGetCurrentWindow()->renderer());
 	m_dllWatcher.unlock();
+
+	m_logDisplay.draw();
 }
 
 void ofApp::exit()

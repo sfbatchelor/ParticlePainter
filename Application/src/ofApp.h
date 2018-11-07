@@ -3,6 +3,7 @@
 #include "ContentLoader.h"
 #include "Filewatcher.h"
 #include "SystemThread.h"
+#include "LogDisplay.h"
 
 struct WindowsContentCode
 {
@@ -59,4 +60,5 @@ private:
 	bool m_unload;
 		
 	std::string m_logFilename;
+	LogDisplay m_logDisplay;
 };
