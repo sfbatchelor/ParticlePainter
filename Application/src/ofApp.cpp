@@ -5,6 +5,13 @@
 //--------------------------------------------------------------
 void ofApp::setup() {
 
+	//setup log file
+	m_logFilename = "\\logs\\";
+	m_logFilename += (ofToString(ofGetDay()).length() > 1 ? ofToString(ofGetDay()) : "0" + ofToString(ofGetDay()))  + "_";
+	m_logFilename += (ofToString(ofGetMonth()).length() > 1 ? ofToString(ofGetMonth()) : "0" + ofToString(ofGetMonth()))  + "_";
+	m_logFilename += ofToString(ofGetYear()) + ".log";
+	ofLogToFile(m_logFilename, true);
+
 	m_unload = false;
 	m_content = loadContentCode();
 	if (!m_content.m_isValid)
@@ -30,6 +37,10 @@ void ofApp::setup() {
 	m_dllWatcher.registerCallback(std::function<void()>([this]() {onDllWasModified(); }));
 	m_dllWatcher.unlock();
 	m_dllWatcher.startThread();
+
+
+
+
 }
 
 //--------------------------------------------------------------

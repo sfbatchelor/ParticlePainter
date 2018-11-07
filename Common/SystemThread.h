@@ -14,7 +14,7 @@ public:
 
 	void threadedFunction() {
 		if (isThreadRunning()) {
-			system(cmd.c_str());
+			ofLog() << " ------------ COMPILING ------------ " << system(cmd.c_str());
 		}
 	};
 };

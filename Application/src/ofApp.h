@@ -58,4 +58,5 @@ private:
 	bool m_needsSetup;
 	bool m_unload;
 		
+	std::string m_logFilename;
 };
