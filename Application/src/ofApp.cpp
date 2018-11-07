@@ -71,6 +71,7 @@ void ofApp::exit()
 {
 	m_dllWatcher.waitForThread(true, 100);
 	m_content.m_exit();
+	m_processStarter.waitForThread(true);
 }
 
 WindowsContentCode ofApp::loadContentCode(void)
