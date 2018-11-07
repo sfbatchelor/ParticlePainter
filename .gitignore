@@ -31,3 +31,4 @@ _ReSharper*/
 *.suo
 *.lastBuildState
 *.gif*.mp4
+*.build

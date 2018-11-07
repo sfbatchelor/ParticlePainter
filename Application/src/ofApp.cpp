@@ -7,9 +7,10 @@ void ofApp::setup() {
 
 	//setup log file
 	m_logFilename = "\\logs\\";
-	m_logFilename += (ofToString(ofGetDay()).length() > 1 ? ofToString(ofGetDay()) : "0" + ofToString(ofGetDay()))  + "_";
+	m_logFilename += ofToString(ofGetYear()) + "_";
 	m_logFilename += (ofToString(ofGetMonth()).length() > 1 ? ofToString(ofGetMonth()) : "0" + ofToString(ofGetMonth()))  + "_";
-	m_logFilename += ofToString(ofGetYear()) + ".log";
+	m_logFilename += (ofToString(ofGetDay()).length() > 1 ? ofToString(ofGetDay()) : "0" + ofToString(ofGetDay()))  ;
+	m_logFilename += +".log";
 	ofLogToFile(m_logFilename, true);
 
 	m_unload = false;
