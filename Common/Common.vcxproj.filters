@@ -18,5 +18,8 @@
     <ClInclude Include="Filewatcher.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SystemThread.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

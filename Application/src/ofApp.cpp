@@ -1,6 +1,7 @@
 #include "ofApp.h"
 #include "Windows.h"
-#include "utils\ProcessUtils.h"
+
+
 //--------------------------------------------------------------
 void ofApp::setup() {
 
@@ -47,9 +48,12 @@ void ofApp::update() {
 	}
 	if (m_buildContent)
 	{
-		std::string buildExe = ("C:\\_dev\\openFrameworks\\apps\\myApps\\ParticlePainter\\deps\\buildContent.bat");
-		system(buildExe.c_str());
-		m_buildContent = false;
+		//std::string buildExe = ("C:\\_dev\\openFrameworks\\apps\\myApps\\ParticlePainter\\deps\\buildContent.bat");
+		//system(buildExe.c_str());
+
+		//m_processStarter.setup("C:\\_dev\\openFrameworks\\apps\\myApps\\ParticlePainter\\deps\\buildContent.bat");
+		//m_processStarter.start
+		//m_buildContent = false;
 	}
 
 	m_content.m_update();
@@ -197,7 +201,11 @@ void ofApp::keyReleased(int key) {
 	if (key == '0')
 		m_unload = true;
 	else if (key == OF_KEY_F5)
-		m_buildContent = true;
+	{
+		m_processStarter.waitForThread(true);
+		m_processStarter.setup("C:\\_dev\\openFrameworks\\apps\\myApps\\ParticlePainter\\deps\\buildContent.bat");
+		m_processStarter.startThread();
+	}
 	else
 		m_content.m_keyReleased(key);
 	m_dllWatcher.unlock();

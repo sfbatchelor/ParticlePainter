@@ -2,6 +2,7 @@
 #include "ofMain.h"
 #include "ContentLoader.h"
 #include "Filewatcher.h"
+#include "SystemThread.h"
 
 struct WindowsContentCode
 {
@@ -53,6 +54,7 @@ private:
 
 	WindowsContentCode m_content;
 	FileWatcher m_dllWatcher;
+	SystemThread m_processStarter;
 	bool m_needsSetup;
 	bool m_unload;
 	bool m_buildContent;

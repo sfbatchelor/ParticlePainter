@@ -41,7 +41,7 @@ Content::Content()
 	m_cam.setFarClip(100000000.);
 
 	ofEnableDepthTest();
-	ofSetBackgroundColor(100, 10, 10);
+	ofSetBackgroundColor(10, 10, 10);
 
 }
 
