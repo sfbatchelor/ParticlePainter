@@ -48,7 +48,7 @@ public:
 
 	void setHeight(float height)
 	{
-		m_dimensions.x = height;
+		m_dimensions.y = height;
 	};
 
 	glm::vec2 getCornerPosition(Corner corner)

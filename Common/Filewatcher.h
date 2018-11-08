@@ -34,6 +34,8 @@ class FileWatcher : public ofThread{
     }
 
     std::filesystem::path m_path;
+    std::string  m_abspathString;
+	std::string  m_filename;
 	time_t m_lastWriteTime;
 	ofFile m_file;
 	int m_sleepMS;
@@ -50,6 +52,8 @@ public:
 		{
 			this->m_lastWriteTime = std::filesystem::last_write_time(m_file);
 		}
+		this->m_abspathString = m_file.getAbsolutePath();
+		this->m_filename = m_file.getFileName();
 		m_file.close();
     }
 	
@@ -61,9 +65,20 @@ public:
 		{
 			this->m_lastWriteTime = std::filesystem::last_write_time(m_file);
 		}
+		this->m_abspathString = m_file.getAbsolutePath();
+		this->m_filename = m_file.getFileName();
 		m_file.close();
  
 	}
+	std::string getFileName()
+	{
+		return m_filename;
+	}
+	std::string getAbsolutePath()
+	{
+		return m_abspathString;
+	}
+
 	void registerCallback(std::function<void()> callback)
 	{
 		m_changedCallback = callback;

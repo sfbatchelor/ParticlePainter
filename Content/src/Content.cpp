@@ -96,6 +96,7 @@ void Content::drawScene()
 	m_particleSim.draw(GL_POINTS);
 	m_constantShader.getShader().end();
 	m_cam.end();
+
 }
 
 void Content::draw()

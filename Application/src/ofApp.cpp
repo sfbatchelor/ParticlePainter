@@ -6,12 +6,8 @@
 void ofApp::setup() {
 
 	//setup log file
-	m_logFilename = "\\logs\\";
-	m_logFilename += ofToString(ofGetYear()) + "_";
-	m_logFilename += (ofToString(ofGetMonth()).length() > 1 ? ofToString(ofGetMonth()) : "0" + ofToString(ofGetMonth()))  + "_";
-	m_logFilename += (ofToString(ofGetDay()).length() > 1 ? ofToString(ofGetDay()) : "0" + ofToString(ofGetDay()))  ;
-	m_logFilename += +".log";
-	ofLogToFile(m_logFilename, true);
+	ofLogToFile(m_logDisplay.getLogFilename(), true);
+	ofLogNotice() <<  "--------------------------------------- " << ofGetTimestampString() << endl;
 
 	m_unload = false;
 	m_content = loadContentCode();
@@ -284,6 +280,8 @@ void ofApp::windowResized(int w, int h) {
 	m_dllWatcher.lock();
 	m_content.m_windowResized(w, h);
 	m_dllWatcher.unlock();
+
+	m_logDisplay.resetBounds();
 }
 
 //--------------------------------------------------------------
