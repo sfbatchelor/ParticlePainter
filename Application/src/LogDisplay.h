@@ -1,9 +1,12 @@
 #pragma once
 #include "FileWatcher.h"
 #include "ofRectangle.h"
+#include "ofTrueTypeFont.h"
+#include "ofFbo.h"
 
 //! Whole screen log display that fades on and off when triggered
 //! Files are read line by line and displayed in chronological order.
+//! todo - could probs split this into clearer class impls
 class LogDisplay
 {
 	enum FadeState {
@@ -32,21 +35,26 @@ public:
 	std::string getLogFilename();
 	bool isVisible();
 
-	void resetBounds();
 	void updateDisplay();
+	void resizeEvent();
 
 private:
 
+	void resetBounds();
 	void onFileWasModified();
+	void updateTextTexture();
 
+	ofFbo m_textTexture;
 	float m_alpha;
 	FadeState m_fadeState;
-	static float m_fadeRate;
-
+	static float s_fadeRate;
 	std::vector<LogFile> m_logSources;
-	std::vector<std::string> m_lines;
+	std::deque<std::string> m_lines;
+	static int s_maxLines;
+	static int s_maxWidth;
 	ofMutex m_mutex;
 	bool m_updateDisplay;
 	ofRectangle m_bounds;
 	std::string m_logFilename;//filename of main .log file. Other files may be added.
+
 };

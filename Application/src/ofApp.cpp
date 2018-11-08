@@ -7,7 +7,7 @@ void ofApp::setup() {
 
 	//setup log file
 	ofLogToFile(m_logDisplay.getLogFilename(), true);
-	ofLogNotice() <<  "--------------------------------------- " << ofGetTimestampString() << endl;
+	ofLogNotice() <<  "--------------------------------------- " << ofGetTimestampString();
 
 	m_unload = false;
 	m_content = loadContentCode();
@@ -280,8 +280,7 @@ void ofApp::windowResized(int w, int h) {
 	m_dllWatcher.lock();
 	m_content.m_windowResized(w, h);
 	m_dllWatcher.unlock();
-
-	m_logDisplay.resetBounds();
+	m_logDisplay.resizeEvent();
 }
 
 //--------------------------------------------------------------

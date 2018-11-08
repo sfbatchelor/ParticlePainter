@@ -1,7 +1,9 @@
 #include "LogDisplay.h"
 #include "ofMain.h"
 
-float LogDisplay::m_fadeRate = .01;
+float LogDisplay::s_fadeRate = .01;
+int LogDisplay::s_maxLines= 100;
+int LogDisplay::s_maxWidth= 1200;
 
 LogDisplay::LogDisplay():
 	m_alpha(1.f),
@@ -23,12 +25,12 @@ LogDisplay::~LogDisplay()
 void LogDisplay::draw()
 {
 
-	m_mutex.lock();
-	ofPushStyle();
-	ofSetColor(255,255.);
-	ofDrawRectangle(m_bounds);
-	ofPopStyle();
-	m_mutex.unlock();
+	if (!m_textTexture.isAllocated())
+		return;
+	ofPushMatrix();
+	ofTranslate(m_bounds.getPosition());
+	m_textTexture.draw(0, 0);
+	ofPopMatrix();
 }
 
 void LogDisplay::update()
@@ -36,11 +38,11 @@ void LogDisplay::update()
 
 	if (m_alpha > .0f && m_fadeState == FadeState::EXITING)
 	{
-		m_alpha -= m_fadeRate;
+		m_alpha -= s_fadeRate;
 	}
 	else if(m_alpha < 1.f && m_fadeState == FadeState::ENTERING)
 	{
-		m_alpha += m_fadeRate;
+		m_alpha += s_fadeRate;
 	}
 
 	updateDisplay();
@@ -110,9 +112,39 @@ bool LogDisplay::isVisible()
 
 void LogDisplay::resetBounds()
 {
-	m_bounds.setWidth(ofGetWidth() - (ofGetWidth()*.1f));
-	m_bounds.setHeight(ofGetHeight() - (ofGetHeight()*.1f));
-	m_bounds.setPosition(ofGetWidth()*.05, ofGetHeight()*.05);
+	int maxLineLength = 0;
+	for (int i = 0; i < (int)m_lines.size(); i++) {
+		// tabs are not rendered
+		const string & line(m_lines[i]);
+		int currentLineLength = 0;
+		for (int j = 0; j < (int)line.size(); j++) {
+			if (line[j] == '\t') {
+				currentLineLength += 8 - (currentLineLength % 8);
+			}
+			else {
+				currentLineLength++;
+			}
+		}
+		maxLineLength = MAX(maxLineLength, currentLineLength);
+	}
+	int padding = 7;
+	int fontSize = 8;
+	float leading = 15./8.;
+	int height = m_lines.size() * fontSize * leading - 1;
+	int width = maxLineLength * fontSize;
+
+	if (width > s_maxWidth)
+		width = s_maxWidth;
+
+	if (width == 0)
+		width = 1;
+	if (height == 0)
+		height = 1;
+
+	m_bounds.setWidth(width);
+	m_bounds.setHeight(height);
+	m_bounds.setPosition(ofGetWidth() - m_bounds.getWidth() - 50, 50);
+	m_textTexture.allocate(m_bounds.getWidth(), m_bounds.getHeight(), GL_RGBA);
 }
 
 void LogDisplay::updateDisplay()
@@ -140,9 +172,22 @@ void LogDisplay::updateDisplay()
 			}
 			logFile.m_watcher->unlock();
 		}
+		while (m_lines.size() > s_maxLines)
+		{
+			m_lines.pop_front();
+		}
+		updateTextTexture();
 		m_updateDisplay = false;
 	}
 	ofLogToFile(m_logFilename, true);
+	m_mutex.unlock();
+}
+
+void LogDisplay::resizeEvent()
+{
+	m_mutex.lock();
+	resetBounds();
+	updateTextTexture();
 	m_mutex.unlock();
 }
 
@@ -151,4 +196,23 @@ void LogDisplay::onFileWasModified()
 	m_mutex.lock();
 	m_updateDisplay = true;
 	m_mutex.unlock();
+}
+
+void LogDisplay::updateTextTexture()
+{
+	resetBounds();
+	m_textTexture.begin();
+	ofClear(255, 255, 255, 80.);
+	ofPushStyle();
+	ofPushMatrix();
+	auto pos = glm::vec2(0);
+	for (auto line : m_lines)
+	{
+		ofSetColor(255,255.);
+		ofDrawBitmapString(line, pos.x, pos.y);
+		pos.y += 15;
+	}
+	ofPopStyle();
+	ofPopMatrix();
+	m_textTexture.end();
 }
