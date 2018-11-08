@@ -10,7 +10,8 @@ LogDisplay::LogDisplay():
 	m_updateDisplay(false)
 {
 	resetBounds();
-	setLogFilename();
+	setLogFilenames();
+	addStreamSource(m_logBuildFilename);
 	addStreamSource(m_logFilename);
 }
 
@@ -84,7 +85,7 @@ void LogDisplay::setVisibleImmediately(bool isVisible)
 		m_alpha= 0.;
 }
 
-void LogDisplay::setLogFilename(std::string filename)
+void LogDisplay::setLogFilenames(std::string filename)
 {
 	if (filename.empty())
 	{
@@ -92,10 +93,17 @@ void LogDisplay::setLogFilename(std::string filename)
 		m_logFilename += ofToString(ofGetYear()) + "_";
 		m_logFilename += (ofToString(ofGetMonth()).length() > 1 ? ofToString(ofGetMonth()) : "0" + ofToString(ofGetMonth())) + "_";
 		m_logFilename += (ofToString(ofGetDay()).length() > 1 ? ofToString(ofGetDay()) : "0" + ofToString(ofGetDay()));
+		m_logBuildFilename = m_logFilename;
 		m_logFilename += +".log";
+		m_logBuildFilename += ".build";
 	}
 	else
-		m_logFilename = filename;
+	{
+		m_logFilename = filename ;
+		m_logFilename += ".log";
+		m_logBuildFilename = filename;
+		m_logBuildFilename += ".build";
+	}
 }
 
 std::string LogDisplay::getLogFilename()

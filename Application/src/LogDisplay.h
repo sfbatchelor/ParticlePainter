@@ -31,7 +31,7 @@ public:
 
 	void setVisible(bool isVisible);
 	void setVisibleImmediately(bool isVisible);
-	void setLogFilename(std::string filename = "");
+	void setLogFilenames(std::string filename = "");
 	std::string getLogFilename();
 	bool isVisible();
 
@@ -56,5 +56,6 @@ private:
 	bool m_updateDisplay;
 	ofRectangle m_bounds;
 	std::string m_logFilename;//filename of main .log file. Other files may be added.
+	std::string m_logBuildFilename;//filename of main .log file. Other files may be added.
 
 };
