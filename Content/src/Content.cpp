@@ -86,7 +86,6 @@ void Content::update()
 
 void Content::drawScene()
 {
-	ofSetDepthTest(true);
 	m_cam.begin();
 	ofTranslate(-m_image.getWidth() / 2, -m_image.getHeight() / 2);
 	ofSetColor(255);
@@ -104,6 +103,8 @@ void Content::draw()
 	///// WORLD
 	{
 
+		ofSetDepthTest(true);
+		ofEnableAlphaBlending();
 		if (m_fboActive && m_fbo)
 			m_fbo->draw(0, 0);
 		else

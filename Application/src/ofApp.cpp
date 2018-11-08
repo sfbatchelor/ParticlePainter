@@ -192,7 +192,7 @@ void ofApp::keyPressed(int key) {
 	if (m_unload)
 		return;
 	m_dllWatcher.lock();
-	if (key != '0')
+	if (key != '0' || key != 'l' || key != OF_KEY_F5) 
 		m_content.m_keyPressed(key);
 	m_dllWatcher.unlock();
 }
@@ -204,6 +204,8 @@ void ofApp::keyReleased(int key) {
 	m_dllWatcher.lock();
 	if (key == '0')
 		m_unload = true;
+	if (key == 'l')
+		m_logDisplay.setVisible(!m_logDisplay.isVisible());
 	else if (key == OF_KEY_F5)
 	{
 		m_processStarter.waitForThread(true);

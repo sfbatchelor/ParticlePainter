@@ -25,27 +25,23 @@ LogDisplay::~LogDisplay()
 
 void LogDisplay::draw()
 {
-
-	if (!m_textTexture.isAllocated())
+	if (!m_textTexture.isAllocated() ||  m_alpha < .0)
 		return;
+
+	ofSetDepthTest(true);
 	ofPushMatrix();
+	ofPushStyle();
 	ofTranslate(m_bounds.getPosition());
+	ofSetColor(255, 255 * m_alpha);
 	m_textTexture.draw(0, 0);
+	ofPopStyle();
 	ofPopMatrix();
 }
 
 void LogDisplay::update()
 {
-
-	if (m_alpha > .0f && m_fadeState == FadeState::EXITING)
-	{
+	if (!m_isVisible && m_alpha > .0f)
 		m_alpha -= s_fadeRate;
-	}
-	else if(m_alpha < 1.f && m_fadeState == FadeState::ENTERING)
-	{
-		m_alpha += s_fadeRate;
-	}
-
 	updateDisplay();
 }
 
@@ -69,20 +65,10 @@ void LogDisplay::addStreamSource(std::string filepath)
 
 void LogDisplay::setVisible(bool isVisible)
 {
-	if (isVisible)
-	{
-		m_fadeState = FadeState::ENTERING;
-	}
-	else
-		m_fadeState = FadeState::EXITING;
-}
-
-void LogDisplay::setVisibleImmediately(bool isVisible)
-{
-	if (isVisible)
-		m_alpha= 1.;
-	else
-		m_alpha= 0.;
+	ofScopedLock(m_mutex);
+	m_isVisible = isVisible;
+	if(m_isVisible)
+		m_alpha = 1.0;
 }
 
 void LogDisplay::setLogFilenames(std::string filename)
@@ -113,9 +99,7 @@ std::string LogDisplay::getLogFilename()
 
 bool LogDisplay::isVisible()
 {
-	if (m_alpha > 0.0)
-		return true;
-	return false;
+	return m_isVisible;
 }
 
 void LogDisplay::resetBounds()
@@ -186,6 +170,7 @@ void LogDisplay::updateDisplay()
 		}
 		updateTextTexture();
 		m_updateDisplay = false;
+		m_alpha = 1.0f;
 	}
 	ofLogToFile(m_logFilename, true);
 	m_mutex.unlock();
