@@ -215,6 +215,7 @@ void main(){
 		point.pos += point.vel;
 
 	
+	point.col.a =  length(point.col.rgb/vec3(255));
 
 	//point.col.rg = (.7 + normalize(point.vel.xy) * .5)*255.;
 

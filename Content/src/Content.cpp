@@ -97,6 +97,7 @@ void Content::update()
 void Content::drawScene()
 {
 	m_cam.begin();
+	ofEnableAlphaBlending();
 	ofTranslate(-m_paintImage.getWidth() / 2, -m_paintImage.getHeight() / 2); //move to origin
 	ofSetColor(255);
 	glPointSize(3);

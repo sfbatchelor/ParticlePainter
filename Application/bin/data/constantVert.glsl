@@ -17,7 +17,6 @@ void main()
 	gl_Position = position;
 
 	vColour = colour/255.;
-	vColour.rgb *= uAlpha;
-	vColour.a = uAlpha;
+	vColour.a = colour.a;
 
 }
