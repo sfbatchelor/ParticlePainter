@@ -179,6 +179,7 @@ void Content::resetFbo()
 	m_fbo->allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
 	m_fbo->begin();
 	ofClear(0, 0, 0, 255);
+	ofDisableDepthTest();
 	m_canvasTexture.draw(0, 0);
 	m_fbo->end();
 
