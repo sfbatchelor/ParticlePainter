@@ -55,8 +55,10 @@ private:
 
 	ShaderWatcher m_imageShader;
 	ShaderWatcher m_constantShader;
-	ofImage m_image;
-	ofTexture m_texture;
+	ofImage m_paintImage;
+	ofTexture m_paintTexture;
+	ofImage m_canvasImage;
+	ofTexture m_canvasTexture;
 
 
 	int m_numPoints;

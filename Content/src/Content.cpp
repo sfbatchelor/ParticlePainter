@@ -23,16 +23,26 @@ Content::Content()
 
 	// GENERATE POINTS FROM IMAGE
 	// load an image from disk
-	if (!m_image.load("paint1.png"))
+	if (!m_paintImage.load("paint1.png"))
 	{
 		ofLogError() << "Failed to find particle image spawner";
 	}
 	else
 	{
-		m_texture.allocate(m_image.getPixels());
-		m_points = GpuParticleFactory::fromImage(m_image, m_numPoints, -300, 300);
+		m_paintTexture.allocate(m_paintImage.getPixels());
+		m_points = GpuParticleFactory::fromImage(m_paintImage, m_numPoints, -300, 300);
 		m_particleSim.loadParticles(m_points);
-		m_texture.loadData(m_image.getPixels());
+		m_paintTexture.loadData(m_paintImage.getPixels());
+	}
+
+	if (!m_canvasImage.load("canvas.jpg"))
+	{
+		ofLogError() << "Failed to find canvas image";
+	}
+	else
+	{
+		m_canvasTexture.allocate(m_canvasImage.getPixels());
+		m_canvasTexture.loadData(m_canvasImage.getPixels());
 	}
 
 	resetFbo();
@@ -57,7 +67,7 @@ void Content::update()
 
 	m_imageShader.update();
 	m_constantShader.update();
-	m_texture.bindAsImage(0, GL_READ_ONLY);
+	m_paintTexture.bindAsImage(0, GL_READ_ONLY);
 	m_particleSim.update();
 
 	if (m_restart)
@@ -87,7 +97,7 @@ void Content::update()
 void Content::drawScene()
 {
 	m_cam.begin();
-	ofTranslate(-m_image.getWidth() / 2, -m_image.getHeight() / 2);
+	ofTranslate(-m_paintImage.getWidth() / 2, -m_paintImage.getHeight() / 2); //move to origin
 	ofSetColor(255);
 	glPointSize(3);
 	m_constantShader.getShader().begin();
@@ -169,6 +179,7 @@ void Content::resetFbo()
 	m_fbo->allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
 	m_fbo->begin();
 	ofClear(0, 0, 0, 255);
+	m_canvasTexture.draw(0, 0);
 	m_fbo->end();
 
 }
