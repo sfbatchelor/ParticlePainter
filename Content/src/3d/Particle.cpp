@@ -19,7 +19,7 @@ std::vector<GpuParticle> GpuParticleFactory::fromImage(const ofImage & image, co
 
 			ofColor cur = image.getColor(x, y);
 			if (cur.a > 0) {
-				// the alpha value encodes depth, let's remap it to a good depth range
+				// the brightness value encodes depth, let's remap it to a good depth range
 				float z = ofMap(cur.getBrightness(), minBrightness, maxBrightness, minDepth, maxDepth);
 				cur.a = 255;
 				ofVec3f pos(x, y, z);

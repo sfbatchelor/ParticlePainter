@@ -32,3 +32,4 @@ _ReSharper*/
 *.lastBuildState
 *.gif*.mp4
 *.build
+!example.png
