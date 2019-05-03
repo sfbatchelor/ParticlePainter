@@ -68,6 +68,7 @@ void ParticleSimulation::draw(int drawMode)
 
 void ParticleSimulation::reset()
 {
+
 	m_particlesBuffer.unbindBase(GL_SHADER_STORAGE_BUFFER, 0);
 	m_particlesBufferOld.allocate( m_particles, GL_DYNAMIC_DRAW);
 	m_particlesBuffer.allocate( m_particles, GL_DYNAMIC_DRAW);
@@ -75,6 +76,15 @@ void ParticleSimulation::reset()
 	m_particlesVbo.setColorBuffer(m_particlesBuffer, sizeof(GpuParticle), sizeof(ofVec4f));
 	m_particlesBuffer.bindBase(GL_SHADER_STORAGE_BUFFER, 0);
 	m_particlesBufferOld.bindBase(GL_SHADER_STORAGE_BUFFER, 1);
+	m_computeShader->update();
+	m_computeShader->getShader().begin();
+	auto time = ofGetElapsedTimef();
+	m_computeShader->getShader().setUniform1f("uTime", time);
+	m_computeShader->getShader().setUniform1i("uNumPointsSF", m_particles.size()/1024);
+	m_computeShader->getShader().dispatchCompute((m_particles.size() + 1024 - 1) / 1024, 1, 1);
+	m_computeShader->getShader().end();
+	m_particlesBuffer.copyTo(m_particlesBufferOld);
+
 }
 
 void ParticleSimulation::pause()

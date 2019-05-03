@@ -33,3 +33,5 @@ _ReSharper*/
 *.gif*.mp4
 *.build
 !example.png
+/.vs/ParticlePainter/v16/ipch/859d083a6a305c62.ipch
+/.vs/ParticlePainter/v16/ipch/AutoPCH/3b071d083056a815/OFXCAMERASAVELOAD.ipch

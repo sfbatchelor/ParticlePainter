@@ -1,6 +1,5 @@
 #pragma once
 #include "utils/ShaderWatcher.h"
-#include "gui/ofxGui.h"
 #include "3d\ParticleSimulation.h"
 #include "utils\ProcessLauncher.h"
 #include "modules\syncTracker\TrackerTimeline.h"
@@ -67,7 +66,6 @@ private:
 	bool m_restart;
 	bool m_fboActive;
 
-	ofxPanel m_gui;
 	float m_time;
 
 

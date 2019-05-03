@@ -23,32 +23,32 @@
     <ProjectGuid>{3CA235C0-1D71-4285-8A6C-7CDA585F206A}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Content</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -102,7 +102,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalOptions>/FS </AdditionalOptions>
       <ProgramDataBaseFileName>$(IntDir)$(TargetName)_obj.pdb</ProgramDataBaseFileName>
-      <AdditionalIncludeDirectories>$(OF)\libs\openFrameworks\;$(OF)\libs\openFrameworks\3d;$(OF)\libs\openFrameworks\app;$(OF)\libs\openFrameworks\communication;$(OF)\libs\openFrameworks\events;$(OF)\libs\openFrameworks\gl;$(OF)\libs\openFrameworks\gl\shaders;$(OF)\libs\openFrameworks\graphics;$(OF)\libs\openFrameworks\math;$(OF)\libs\openFrameworks\sound;$(OF)\libs\openFrameworks\types;$(OF)\libs\openFrameworks\utils;$(OF)\libs\openFrameworks\video;$(OF)\libs\glew\include;$(OF)\libs\boost\include;$(OF)\libs\cairo\include\cairo;$(OF)\libs\curl\include;$(OF)\libs\fmodex\include;$(OF)\libs\FreeImage\include;$(OF)\libs\freetype\include;$(OF)\libs\glfw\include;$(OF)\libs\glm\include;$(OF)\libs\json\include;$(OF)\libs\libpng;$(OF)\libs\openssl\include;$(OF)\libs\pixman;$(OF)\libs\pugixml\include;$(OF)\libs\rtAudio\include;$(OF)\libs\tess2\include;$(OF)\libs\uriparser\include;$(OF)\libs\utf8\include;$(OF)\libs\videoInput\include;$(OF)\libs\zlib;..\Common;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OF)\libs\openFrameworks\;$(OF)\libs\openFrameworks\3d;$(OF)\libs\openFrameworks\app;$(OF)\libs\openFrameworks\communication;$(OF)\libs\openFrameworks\events;$(OF)\libs\openFrameworks\gl;$(OF)\libs\openFrameworks\gl\shaders;$(OF)\libs\openFrameworks\graphics;$(OF)\libs\openFrameworks\math;$(OF)\libs\openFrameworks\sound;$(OF)\libs\openFrameworks\types;$(OF)\libs\openFrameworks\utils;$(OF)\libs\openFrameworks\video;$(OF)\libs\glew\include;$(OF)\libs\boost\include;$(OF)\libs\cairo\include\cairo;$(OF)\libs\curl\include;$(OF)\libs\fmodex\include;$(OF)\libs\FreeImage\include;$(OF)\libs\freetype\include;$(OF)\libs\glfw\include;$(OF)\libs\glm\include;$(OF)\libs\json\include;$(OF)\libs\libpng;$(OF)\libs\openssl\include;$(OF)\libs\pixman;$(OF)\libs\pugixml\include;$(OF)\libs\rtAudio\include;$(OF)\libs\tess2\include;$(OF)\libs\uriparser\include;$(OF)\libs\utf8\include;$(OF)\libs\videoInput\include;$(OF)\libs\zlib;..\Common;include;$(OF)\libs\openFrameworks\gui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderOutputFile>obj\$(TargetName).pch</PrecompiledHeaderOutputFile>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
@@ -160,7 +160,7 @@ del $(OutDir)*.pdb
       <PreprocessorDefinitions>WIN32;NDEBUG;CONTENT_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
-      <AdditionalIncludeDirectories>$(OF)\libs\openFrameworks\;$(OF)\libs\openFrameworks\3d;$(OF)\libs\openFrameworks\app;$(OF)\libs\openFrameworks\communication;$(OF)\libs\openFrameworks\events;$(OF)\libs\openFrameworks\gl;$(OF)\libs\openFrameworks\gl\shaders;$(OF)\libs\openFrameworks\graphics;$(OF)\libs\openFrameworks\math;$(OF)\libs\openFrameworks\sound;$(OF)\libs\openFrameworks\types;$(OF)\libs\openFrameworks\utils;$(OF)\libs\openFrameworks\video;$(OF)\libs\glew\include;$(OF)\libs\boost\include;$(OF)\libs\cairo\include\cairo;$(OF)\libs\curl\include;$(OF)\libs\fmodex\include;$(OF)\libs\FreeImage\include;$(OF)\libs\freetype\include;$(OF)\libs\glfw\include;$(OF)\libs\glm\include;$(OF)\libs\json\include;$(OF)\libs\libpng;$(OF)\libs\openssl\include;$(OF)\libs\pixman;$(OF)\libs\pugixml\include;$(OF)\libs\rtAudio\include;$(OF)\libs\tess2\include;$(OF)\libs\uriparser\include;$(OF)\libs\utf8\include;$(OF)\libs\videoInput\include;$(OF)\libs\zlib;..\Common;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OF)\libs\openFrameworks\;$(OF)\libs\openFrameworks\3d;$(OF)\libs\openFrameworks\app;$(OF)\libs\openFrameworks\communication;$(OF)\libs\openFrameworks\events;$(OF)\libs\openFrameworks\gl;$(OF)\libs\openFrameworks\gl\shaders;$(OF)\libs\openFrameworks\graphics;$(OF)\libs\openFrameworks\math;$(OF)\libs\openFrameworks\sound;$(OF)\libs\openFrameworks\types;$(OF)\libs\openFrameworks\utils;$(OF)\libs\openFrameworks\video;$(OF)\libs\glew\include;$(OF)\libs\boost\include;$(OF)\libs\cairo\include\cairo;$(OF)\libs\curl\include;$(OF)\libs\fmodex\include;$(OF)\libs\FreeImage\include;$(OF)\libs\freetype\include;$(OF)\libs\glfw\include;$(OF)\libs\glm\include;$(OF)\libs\json\include;$(OF)\libs\libpng;$(OF)\libs\openssl\include;$(OF)\libs\pixman;$(OF)\libs\pugixml\include;$(OF)\libs\rtAudio\include;$(OF)\libs\tess2\include;$(OF)\libs\uriparser\include;$(OF)\libs\utf8\include;$(OF)\libs\videoInput\include;$(OF)\libs\zlib;..\Common;include;$(OF)\libs\openFrameworks\gui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ObjectFileName>$(IntDir)$(TargetName)</ObjectFileName>
       <PrecompiledHeaderOutputFile>obj\$(TargetName).pch</PrecompiledHeaderOutputFile>
       <AdditionalOptions>/FS %(AdditionalOptions)</AdditionalOptions>
@@ -214,17 +214,6 @@ xcopy /Y "$(OutDir)*.lib" "..\Application\bin\$(Configuration)"</Command>
     <ClInclude Include="include\Content.h" />
     <ClInclude Include="include\ContentLoader.h" />
     <ClInclude Include="include\modules\syncTracker\base\device.h" />
-    <ClInclude Include="include\gui\ofxBaseGui.h" />
-    <ClInclude Include="include\gui\ofxButton.h" />
-    <ClInclude Include="include\gui\ofxColorPicker.h" />
-    <ClInclude Include="include\gui\ofxGui.h" />
-    <ClInclude Include="include\gui\ofxGuiGroup.h" />
-    <ClInclude Include="include\gui\ofxInputField.h" />
-    <ClInclude Include="include\gui\ofxLabel.h" />
-    <ClInclude Include="include\gui\ofxPanel.h" />
-    <ClInclude Include="include\gui\ofxSlider.h" />
-    <ClInclude Include="include\gui\ofxSliderGroup.h" />
-    <ClInclude Include="include\gui\ofxToggle.h" />
     <ClInclude Include="include\utils\ProcessLauncher.h" />
     <ClInclude Include="include\utils\ProcessUtils.h" />
     <ClInclude Include="include\utils\ShaderWatcher.h" />
@@ -244,16 +233,6 @@ xcopy /Y "$(OutDir)*.lib" "..\Application\bin\$(Configuration)"</Command>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="src\gui\ofxBaseGui.cpp" />
-    <ClCompile Include="src\gui\ofxButton.cpp" />
-    <ClCompile Include="src\gui\ofxColorPicker.cpp" />
-    <ClCompile Include="src\gui\ofxGuiGroup.cpp" />
-    <ClCompile Include="src\gui\ofxInputField.cpp" />
-    <ClCompile Include="src\gui\ofxLabel.cpp" />
-    <ClCompile Include="src\gui\ofxPanel.cpp" />
-    <ClCompile Include="src\gui\ofxSlider.cpp" />
-    <ClCompile Include="src\gui\ofxSliderGroup.cpp" />
-    <ClCompile Include="src\gui\ofxToggle.cpp" />
     <ClCompile Include="src\utils\ShaderWatcher.cpp" />
     <ClCompile Include="src\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

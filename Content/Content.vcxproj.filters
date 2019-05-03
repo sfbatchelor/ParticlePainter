@@ -33,39 +33,6 @@
     <ClInclude Include="include\utils\ProcessUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\gui\ofxBaseGui.h">
-      <Filter>addons</Filter>
-    </ClInclude>
-    <ClInclude Include="include\gui\ofxButton.h">
-      <Filter>addons</Filter>
-    </ClInclude>
-    <ClInclude Include="include\gui\ofxColorPicker.h">
-      <Filter>addons</Filter>
-    </ClInclude>
-    <ClInclude Include="include\gui\ofxGui.h">
-      <Filter>addons</Filter>
-    </ClInclude>
-    <ClInclude Include="include\gui\ofxGuiGroup.h">
-      <Filter>addons</Filter>
-    </ClInclude>
-    <ClInclude Include="include\gui\ofxInputField.h">
-      <Filter>addons</Filter>
-    </ClInclude>
-    <ClInclude Include="include\gui\ofxLabel.h">
-      <Filter>addons</Filter>
-    </ClInclude>
-    <ClInclude Include="include\gui\ofxPanel.h">
-      <Filter>addons</Filter>
-    </ClInclude>
-    <ClInclude Include="include\gui\ofxSlider.h">
-      <Filter>addons</Filter>
-    </ClInclude>
-    <ClInclude Include="include\gui\ofxSliderGroup.h">
-      <Filter>addons</Filter>
-    </ClInclude>
-    <ClInclude Include="include\gui\ofxToggle.h">
-      <Filter>addons</Filter>
-    </ClInclude>
     <ClInclude Include="include\modules\syncTracker\base\base.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -103,36 +70,6 @@
     </ClCompile>
     <ClCompile Include="src\stdafx.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\gui\ofxBaseGui.cpp">
-      <Filter>addons</Filter>
-    </ClCompile>
-    <ClCompile Include="src\gui\ofxButton.cpp">
-      <Filter>addons</Filter>
-    </ClCompile>
-    <ClCompile Include="src\gui\ofxColorPicker.cpp">
-      <Filter>addons</Filter>
-    </ClCompile>
-    <ClCompile Include="src\gui\ofxGuiGroup.cpp">
-      <Filter>addons</Filter>
-    </ClCompile>
-    <ClCompile Include="src\gui\ofxInputField.cpp">
-      <Filter>addons</Filter>
-    </ClCompile>
-    <ClCompile Include="src\gui\ofxLabel.cpp">
-      <Filter>addons</Filter>
-    </ClCompile>
-    <ClCompile Include="src\gui\ofxPanel.cpp">
-      <Filter>addons</Filter>
-    </ClCompile>
-    <ClCompile Include="src\gui\ofxSlider.cpp">
-      <Filter>addons</Filter>
-    </ClCompile>
-    <ClCompile Include="src\gui\ofxSliderGroup.cpp">
-      <Filter>addons</Filter>
-    </ClCompile>
-    <ClCompile Include="src\gui\ofxToggle.cpp">
-      <Filter>addons</Filter>
     </ClCompile>
     <ClCompile Include="src\utils\ShaderWatcher.cpp">
       <Filter>Source Files</Filter>
